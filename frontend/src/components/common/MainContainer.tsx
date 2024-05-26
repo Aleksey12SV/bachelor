@@ -5,7 +5,7 @@ import { ScrollArea } from "../ui/scroll-area";
 export const MainContainer = () => {
   const outlet = useOutlet();
   return (
-    <div className="h-screen min-h-screen flex flex-col overflow-hidden">
+    <div className="min-h-screen flex flex-col overflow-hidden">
       <div className="w-full flex py-4 px-8">
         <Navbar />
       </div>
