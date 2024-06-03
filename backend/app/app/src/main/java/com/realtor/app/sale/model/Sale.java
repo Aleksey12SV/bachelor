@@ -1,9 +1,12 @@
 package com.realtor.app.sale.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.realtor.app.seller.model.Seller;
 import com.realtor.app.real_estate.model.RealEstate;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -31,12 +34,11 @@ public class Sale {
     @JoinColumn (name = "real_estate_id")
     private RealEstate realEstate;
 
+
     @ManyToMany
-    @JoinTable(
-            name = "sales_seller_junction",
-            joinColumns = @JoinColumn(name = "sale_id"),
-            inverseJoinColumns = @JoinColumn(name = "seller_id"))
-    Set<Seller> sellers;
+    @JoinTable(name = "sales_sellers", joinColumns = @JoinColumn(name = "sale_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "seller_id", referencedColumnName = "id"))
+    private Set<Seller> sellers;
 
     public Sale() {
     }

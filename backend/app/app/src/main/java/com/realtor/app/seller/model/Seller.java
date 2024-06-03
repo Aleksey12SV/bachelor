@@ -3,6 +3,8 @@ package com.realtor.app.seller.model;
 import com.realtor.app.sale.model.Sale;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.Set;
 
@@ -24,8 +26,11 @@ public class Seller {
     @Column (name = "phone_number")
     private String phoneNumber;
 
-    @ManyToMany(mappedBy = "sellers")
-    Set<Sale> sales;
+    @ManyToMany
+    private Set<Sale> sales;
+
+    public Seller() {
+    }
 
     public Set<Sale> getSales() {
         return sales;
@@ -33,9 +38,6 @@ public class Seller {
 
     public void setSales(Set<Sale> sales) {
         this.sales = sales;
-    }
-
-    public Seller() {
     }
 
     public int getId() {
