@@ -36,8 +36,8 @@ public class Sale {
 
 
     @ManyToMany
-    @JoinTable(name = "sales_sellers", joinColumns = @JoinColumn(name = "sale_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "seller_id", referencedColumnName = "id"))
+    @JoinTable(name = "sellers_sales", joinColumns = @JoinColumn(name = "sales_id"),
+            inverseJoinColumns = @JoinColumn(name = "seller_id"))
     private Set<Seller> sellers;
 
     public Sale() {

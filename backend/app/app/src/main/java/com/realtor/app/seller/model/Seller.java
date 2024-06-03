@@ -26,18 +26,7 @@ public class Seller {
     @Column (name = "phone_number")
     private String phoneNumber;
 
-    @ManyToMany
-    private Set<Sale> sales;
-
     public Seller() {
-    }
-
-    public Set<Sale> getSales() {
-        return sales;
-    }
-
-    public void setSales(Set<Sale> sales) {
-        this.sales = sales;
     }
 
     public int getId() {
