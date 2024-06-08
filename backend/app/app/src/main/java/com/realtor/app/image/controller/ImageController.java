@@ -1,5 +1,7 @@
 package com.realtor.app.image.controller;
 
+import com.realtor.app.building.model.Building;
+import com.realtor.app.building.service.BuildingService;
 import com.realtor.app.image.model.Image;
 import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.image.service.ImageService;
@@ -15,6 +17,15 @@ class ImageRequest {
     private String description;
 
     private int propertyId;
+    private int buildingId;
+
+    public int getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(int buildingId) {
+        this.buildingId = buildingId;
+    }
 
     public String getImage64() {
         return image64;
@@ -49,11 +60,17 @@ public class ImageController {
 
     @Autowired
     private RealEstateService realEstateService;
+
+    @Autowired
+    private BuildingService buildingService;
+
     @PostMapping("/add")
     public String add(@RequestBody ImageRequest imageRequest){
         byte[] imageBlob = Base64.getDecoder().decode((imageRequest.getImage64()));
-        RealEstate property = realEstateService.getAllProperties().stream().filter(p -> p.getId() == imageRequest.getPropertyId()).findFirst().orElseThrow();
-        Image imageToSave = new Image(imageRequest.getDescription(), imageBlob, property);
+        RealEstate property = realEstateService.getAllProperties().stream().filter(p -> p.getId() == imageRequest.getPropertyId()).findFirst().orElse(null);
+        Building building = buildingService.getAllBuildings().stream().filter(p -> p.getId() == imageRequest.getBuildingId()).findFirst().orElse(null);
+        if(property == null && building == null) { throw new Error("Both property and building null"); }
+        Image imageToSave = new Image(imageRequest.getDescription(), imageBlob, property, building);
         imageService.saveImage(imageToSave);
         return "New Image is saved";
     }
@@ -61,5 +78,10 @@ public class ImageController {
     @GetMapping("/getAll")
     public List<Image> getAllImages(){
         return imageService.getAllImages();
+    }
+
+    @GetMapping("/getAll/{buildingId}")
+    public List<Image> getAllImagesByBuildingId(@PathVariable Long buildingId) {
+        return imageService.getAllImagesByBuildingId(buildingId);
     }
 }

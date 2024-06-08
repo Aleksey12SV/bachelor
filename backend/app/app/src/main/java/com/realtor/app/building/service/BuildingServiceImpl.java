@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.realtor.app.building.model.specifications.BuildingSpecification.getBuildingsInCity;
 import static com.realtor.app.building.model.specifications.BuildingSpecification.hasYearInRange;
 
@@ -23,7 +25,12 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public Page<Building> getAllBuildings(Pageable pageable){
+    public List<Building> getAllBuildings(){
+        return buildingRepo.findAll();
+    }
+
+    @Override
+    public Page<Building> getAllBuildingsPaginated(Pageable pageable){
         return buildingRepo.findAll(pageable);
     }
 

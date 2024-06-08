@@ -1,5 +1,6 @@
 package com.realtor.app.image.model;
 
+import com.realtor.app.building.model.Building;
 import com.realtor.app.real_estate.model.RealEstate;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -21,16 +22,21 @@ public class Image {
     private byte[] image;
 
     @ManyToOne
+    @JoinColumn (name = "building_id")
+    private Building building;
+
+    @ManyToOne
     @JoinColumn (name = "property_id")
     private RealEstate realEstate;
 
     public Image() {
     }
 
-    public Image(String description, byte[] imageBlob, RealEstate realEstate) {
+    public Image(String description, byte[] imageBlob, RealEstate realEstate, Building building) {
         this.description = description;
         this.image = imageBlob;
         this.realEstate = realEstate;
+        this.building = building;
     }
 
     public int getId() {
@@ -55,6 +61,14 @@ public class Image {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Building building) {
+        this.building = building;
     }
 
     public RealEstate getRealEstate() {

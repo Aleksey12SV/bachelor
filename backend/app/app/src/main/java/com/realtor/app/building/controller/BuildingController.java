@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 class BuildingRequest{
     private Integer startYear;
     private Integer endYear;
@@ -67,9 +69,15 @@ public class BuildingController {
     }
 
     @GetMapping(value = "/getAll")
-    public Page<Building> getAllBuildings( @RequestParam(defaultValue = "0") int page,
+    public List<Building> getAllBuildings(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int size){
+        return buildingService.getAllBuildings();
+    }
+
+    @GetMapping(value = "/getAll/paginated")
+    public Page<Building> getAllBuildingsPaginated( @RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "10") int size){
-        return buildingService.getAllBuildings(PageRequest.of(page,size));
+        return buildingService.getAllBuildingsPaginated(PageRequest.of(page,size));
     }
 
     @PostMapping("/getFiltered")

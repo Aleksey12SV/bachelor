@@ -11,19 +11,19 @@ DROP TABLE IF EXISTS districts;
 DROP TABLE IF EXISTS cities;
 
 CREATE TABLE cities (
-  id integer PRIMARY KEY,
+  id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   name varchar(255)
 );
 
 CREATE TABLE districts (
-  id integer PRIMARY KEY,
+  id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   name varchar(255),
   city_id integer,
   FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
 CREATE TABLE buildings (
-  id integer PRIMARY KEY,
+  id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   name varchar(255),
   district_id integer,
   floors integer,
@@ -32,13 +32,13 @@ CREATE TABLE buildings (
 );
 
 CREATE TABLE property_type (
-  id integer PRIMARY KEY,
+  id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   name varchar(255),
   description varchar(255)
 );
 
 CREATE TABLE real_estates (
-  id integer PRIMARY KEY,
+  id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   building_id integer,
   price float,
   size float,
@@ -48,15 +48,19 @@ CREATE TABLE real_estates (
 );
 
 CREATE TABLE images (
-  id integer PRIMARY KEY,
+  id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   property_id integer,
+  building_id INTEGER,
   description varchar(255),
-  image tinyblob,
-  FOREIGN KEY (property_id) REFERENCES real_estates (id)
+  image longblob,
+  FOREIGN KEY (property_id) REFERENCES real_estates (id),
+  FOREIGN KEY (building_id) REFERENCES buildings (id),
+  CHECK (building_id IS NOT NULL OR property_id IS NOT NULL),
+  CHECK (NOT (building_id IS NOT NULL AND property_id IS NOT NULL))
 );
 
 CREATE TABLE sales (
-  id integer PRIMARY KEY,
+  id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   real_estate_id integer,
   sale_date date,
   status enum('ACTIVE','COMPLETED','PENDING'),
@@ -65,7 +69,7 @@ CREATE TABLE sales (
 );
 
 CREATE TABLE sellers (
-  id integer PRIMARY KEY,
+  id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   first_name varchar(255),
   last_name varchar(255),
   phone_number varchar(255)

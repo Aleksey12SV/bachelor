@@ -20,4 +20,9 @@ public class ImageServiceImpl implements ImageService {
     public List<Image> getAllImages() {
         return imageRepo.findAll();
     }
+
+    @Override
+    public List<Image> getAllImagesByBuildingId(Long buildingId) {
+        return imageRepo.getAllImagesByBuildingId(buildingId);
+    }
 }

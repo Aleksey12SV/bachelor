@@ -7,4 +7,5 @@ import java.util.List;
 public interface ImageService {
     public Image saveImage(Image city);
     public List<Image> getAllImages();
+    public List<Image> getAllImagesByBuildingId(Long buildingId);
 }
