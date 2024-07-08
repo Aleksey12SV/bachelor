@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -24,5 +25,15 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public List<Image> getAllImagesByBuildingId(Long buildingId) {
         return imageRepo.getAllImagesByBuildingId(buildingId);
+    }
+
+    @Override
+    public Optional<Image> getMainImageByBuildingId(Long buildingId){
+        return imageRepo.findByBuildingIdAndMainImageTrue(buildingId);
+    }
+
+    @Override
+    public Optional<Image> getMainImageByPropertyId(Long buildingId){
+        return imageRepo.findByRealEstateIdAndMainImageTrue(buildingId);
     }
 }

@@ -17,6 +17,9 @@ public class Image {
     @Column (name = "description")
     private String description;
 
+    @Column (name = "is_main_image")
+    private boolean mainImage;
+
     @Column (name = "image")
     @Lob
     private byte[] image;
@@ -32,11 +35,12 @@ public class Image {
     public Image() {
     }
 
-    public Image(String description, byte[] imageBlob, RealEstate realEstate, Building building) {
+    public Image(String description, byte[] imageBlob, RealEstate realEstate, Building building, boolean mainImage) {
         this.description = description;
         this.image = imageBlob;
         this.realEstate = realEstate;
         this.building = building;
+        this.mainImage = mainImage;
     }
 
     public int getId() {
@@ -77,5 +81,13 @@ public class Image {
 
     public void setRealEstate(RealEstate realEstate) {
         this.realEstate = realEstate;
+    }
+
+    public Boolean getMainImage() {
+        return mainImage;
+    }
+
+    public void setMainImage(Boolean mainImage) {
+        this.mainImage = mainImage;
     }
 }

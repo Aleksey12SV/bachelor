@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 class ImageRequest {
     private String image64;
     private String description;
+    private Boolean isMainImage;
 
     private int propertyId;
     private int buildingId;
@@ -50,6 +52,14 @@ class ImageRequest {
     public void setPropertyId(int propertyId) {
         this.propertyId = propertyId;
     }
+
+    public Boolean getIsMainImage() {
+        return Boolean.TRUE.equals(isMainImage);
+    }
+
+    public void setIsMainImage(Boolean isMainImage) {
+        this.isMainImage = isMainImage;
+    }
 }
 
 @RestController
@@ -70,7 +80,12 @@ public class ImageController {
         RealEstate property = realEstateService.getAllProperties().stream().filter(p -> p.getId() == imageRequest.getPropertyId()).findFirst().orElse(null);
         Building building = buildingService.getAllBuildings().stream().filter(p -> p.getId() == imageRequest.getBuildingId()).findFirst().orElse(null);
         if(property == null && building == null) { throw new Error("Both property and building null"); }
-        Image imageToSave = new Image(imageRequest.getDescription(), imageBlob, property, building);
+        if(imageRequest.getIsMainImage() && building != null){
+            if(imageService.getMainImageByBuildingId((long) building.getId()).isPresent()){
+                throw new Error("Main image was already saved");
+            };
+        }
+        Image imageToSave = new Image(imageRequest.getDescription(), imageBlob, property, building, imageRequest.getIsMainImage());
         imageService.saveImage(imageToSave);
         return "New Image is saved";
     }
@@ -80,8 +95,18 @@ public class ImageController {
         return imageService.getAllImages();
     }
 
-    @GetMapping("/getAll/{buildingId}")
+    @GetMapping("/getAll/building/{buildingId}")
     public List<Image> getAllImagesByBuildingId(@PathVariable Long buildingId) {
         return imageService.getAllImagesByBuildingId(buildingId);
+    }
+
+    @GetMapping("main/building/{buildingId}")
+    public Optional<Image> getMainImageByBuildingId(@PathVariable Long buildingId) {
+        return imageService.getMainImageByBuildingId(buildingId);
+    }
+
+    @GetMapping("main/real-estate/{propertyId}")
+    public Optional<Image> getMainImageByPropertyId(@PathVariable Long propertyId) {
+        return imageService.getMainImageByPropertyId(propertyId);
     }
 }
