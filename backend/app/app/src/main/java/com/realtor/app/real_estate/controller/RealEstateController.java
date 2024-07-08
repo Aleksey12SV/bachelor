@@ -1,8 +1,11 @@
 package com.realtor.app.real_estate.controller;
 
+import com.realtor.app.building.model.Building;
 import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.real_estate.service.RealEstateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,5 +18,9 @@ public class RealEstateController {
         realEstateService.saveRealEstate(realEstate);
         return "New real estate is saved";
     }
-
+    @GetMapping(value = "/getAll/paginated")
+    public Page<RealEstate> getAllPaginatedRealEstates(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "10") int size){
+        return realEstateService.getAllPaginatedRealEstates(PageRequest.of(page,size));
+    }
 }
