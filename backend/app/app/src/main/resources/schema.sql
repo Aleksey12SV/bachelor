@@ -53,6 +53,7 @@ CREATE TABLE images (
   building_id INTEGER,
   description varchar(255),
   image longblob,
+  is_main_image BOOLEAN,
   FOREIGN KEY (property_id) REFERENCES real_estates (id),
   FOREIGN KEY (building_id) REFERENCES buildings (id),
   CHECK (building_id IS NOT NULL OR property_id IS NOT NULL),
