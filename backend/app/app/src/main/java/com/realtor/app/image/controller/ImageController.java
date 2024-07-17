@@ -7,6 +7,7 @@ import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.image.service.ImageService;
 import com.realtor.app.real_estate.service.RealEstateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
@@ -75,6 +76,7 @@ public class ImageController {
     private BuildingService buildingService;
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public String add(@RequestBody ImageRequest imageRequest){
         byte[] imageBlob = Base64.getDecoder().decode((imageRequest.getImage64()));
         RealEstate property = realEstateService.getAllProperties().stream().filter(p -> p.getId() == imageRequest.getPropertyId()).findFirst().orElse(null);

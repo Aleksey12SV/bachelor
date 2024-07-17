@@ -2,6 +2,7 @@ package com.realtor.app.city.controller;
 
 import com.realtor.app.city.model.City;
 import com.realtor.app.city.service.CityService;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ public class CityController {
     @Autowired
     private CityService cityService;
     @PostMapping("/add")
+    @RolesAllowed({"ADMIN"})
     public String add(@RequestBody City city){
         cityService.saveCity(city);
         return "New city is saved";
