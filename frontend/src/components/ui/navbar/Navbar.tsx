@@ -1,70 +1,84 @@
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./navigation-menu";
-import realtorBGLogo from "../../../assets/realtorBG.svg";
-import { Link } from "react-router-dom";
+import RealtorBGLogo from "../../../assets/realtorBG.svg?react";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import { useKeycloak } from "@/components/auth/KeycloakProvider";
 
 export const Navbar = () => {
+  const navigate = useNavigate();
+  const {
+    i18n: { changeLanguage, language },
+  } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
+  const { keycloakInstance } = useKeycloak();
+  const handleChangeLanguage = () => {
+    const newLanguage = currentLanguage === "en" ? "bg" : "en";
+    setCurrentLanguage(newLanguage);
+    changeLanguage(newLanguage);
+  };
   return (
     <div className="w-full flex flex-row justify-around gap-10 relative ">
-      <NavigationMenu onValueChange={(value) => console.log(value)}>
+      <NavigationMenu onValueChange={(value) => navigate(value)}>
         <NavigationMenuList className="gap-10">
           <NavigationMenuItem
             value="projects"
             id="projects"
             className="w-[120px]"
           >
-            <NavigationMenuTrigger>Projects</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <NavigationMenuLink>Link</NavigationMenuLink>
-            </NavigationMenuContent>
+            <Link className={navigationMenuTriggerStyle()} to="/projects">
+              Projects
+            </Link>
           </NavigationMenuItem>
           <NavigationMenuItem
             value="property-list"
             id="property-list"
             className="w-[120px]"
           >
-            <Link to="/property-list">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Property List
-              </NavigationMenuLink>
+            <Link className={navigationMenuTriggerStyle()} to="/property-list">
+              Property List
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <img src={realtorBGLogo} alt="realtor-logo" className="w-24" />
+      <RealtorBGLogo
+        className="w-24"
+        onClick={() => navigate("/")}
+      />
       <NavigationMenu>
         <NavigationMenuList className="gap-10">
           <NavigationMenuItem id="gallery" className="w-[120px]">
-            <NavigationMenuTrigger>Gallery</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <NavigationMenuLink>Link</NavigationMenuLink>
-            </NavigationMenuContent>
+            <NavigationMenuLink>Gallery</NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem id="Test" className="w-[120px]">
             <NavigationMenuTrigger>Test</NavigationMenuTrigger>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <div className="flex flex-row items-center gap-4 right-0 top-6">
-        <Avatar className="h-6 w-6">
+      <div className="absolute flex flex-row items-center gap-4 right-0 top-6">
+        <Avatar onClick={handleChangeLanguage} className="h-6 w-6">
           <AvatarImage
-            src="
-https://www.worldometers.info//img/flags/small/tn_bu-flag.gif"
+            src={`
+https://www.worldometers.info//img/flags/small/tn_${
+              currentLanguage === "bg" ? "uk" : "bu"
+            }-flag.gif`}
           />
           <AvatarFallback>BG</AvatarFallback>
         </Avatar>
-        <Avatar className="h-6 w-6">
-          <AvatarImage />
-          <AvatarFallback>A</AvatarFallback>
-        </Avatar>
+        {keycloakInstance && (
+          <Avatar className="h-6 w-6">
+            <AvatarImage />
+            <AvatarFallback>A</AvatarFallback>
+          </Avatar>
+        )}
       </div>
     </div>
   );

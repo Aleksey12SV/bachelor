@@ -11,19 +11,21 @@ import { axiosInstance } from "@/lib/axios";
 import { RealEstate } from "@/models/RealEstate";
 import { useQuery } from "@tanstack/react-query";
 
+import ImagePlaceholder from '../../../assets/image-placeholder.svg?react';
+
 const getMainImageForProperty = (
   id: number
 ): Promise<{ id: number; desription: string; image: string }> =>
   axiosInstance.get(`image/main/real-estate/${id}`).then(({ data }) => data);
 
-const PropertyCard = ({ property }: { property: RealEstate }) => {
+const PropertyCard = ({ property, onPreview }: { property: RealEstate, onPreview: () => void; }) => {
   const { data: image, isPending } = useQuery({
     queryKey: ["images", property.id],
     queryFn: async () => await getMainImageForProperty(property.id),
   });
-  
+
   return (
-    <Card className="flex flex-col cursor-pointer hover:bg-slate-200">
+    <Card className="flex flex-col cursor-pointer hover:bg-slate-200" onClick={onPreview}>
       <CardHeader>
         <CardTitle>{property.propertyType.description}</CardTitle>
         <CardDescription>{`From ${property.building.year}`}</CardDescription>
@@ -33,10 +35,10 @@ const PropertyCard = ({ property }: { property: RealEstate }) => {
           <Loader />
         ) : (
           <div className="h-[9rem] w-[16rem]">
-            <img
+            {image?.image ? <img
               src={`data:image/jpeg;base64,${image?.image}`}
               className="object-fit h-[9rem] w-[16rem]"
-            />
+            /> : <ImagePlaceholder className="object-fit h-[9rem] w-[16rem]" />}
           </div>
         )}
       </CardContent>

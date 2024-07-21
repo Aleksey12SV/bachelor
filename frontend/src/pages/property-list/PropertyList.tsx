@@ -15,6 +15,7 @@ const getProperties = (
 
 const PropertyList = () => {
   const [height, setHeight] = useState<number>();
+  const [selectedProperty, setSelectedProperty] = useState<RealEstate>();
   const { data, isFetching, fetchNextPage } = useInfiniteQuery({
     queryKey: ["real-estates"],
     initialPageParam: 0,
@@ -44,7 +45,6 @@ const PropertyList = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (scrollableRef.current) {
-        console.log("scroll");
         const { scrollTop, clientHeight, scrollHeight } = scrollableRef.current;
         if (scrollTop + clientHeight >= scrollHeight - 20) {
           fetchNextPage();
@@ -60,18 +60,20 @@ const PropertyList = () => {
   const realEstates = data?.pages.flatMap((p) => p.content) ?? [];
 
   return (
-    <div className="h-full w-full grid grid-cols-2">
+    <div className="h-full w-full grid grid-cols-[2fr_3fr]">
       <div
         ref={scrollableRef}
         className="flex flex-col overflow-auto p-2 gap-2"
         style={{ height }}
       >
         {realEstates.map((property) => (
-          <PropertyCard property={property} />
+          <PropertyCard key={property.id} property={property} onPreview={() => setSelectedProperty(property)} />
         ))}
         {isFetching && <p>Loading...</p>}
       </div>
-      <div className="w-full h-full bg-red-500"></div>
+      <div className="w-full h-full">
+        {selectedProperty?.building.year}
+      </div>
     </div>
   );
 };
