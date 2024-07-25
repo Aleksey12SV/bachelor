@@ -28,6 +28,8 @@ CREATE TABLE buildings (
   district_id integer,
   floors integer,
   year integer,
+  construction varchar(255),
+  description varchar(65535),
   FOREIGN KEY (district_id) REFERENCES districts (id)
 );
 
@@ -43,6 +45,11 @@ CREATE TABLE real_estates (
   price float,
   size float,
   property_type_id integer,
+  floor integer,
+  heating varchar(255),
+  description varchar(65535),
+  publish_date date,
+  status varchar(255),
   FOREIGN KEY (property_type_id) REFERENCES property_type (id),
   FOREIGN KEY (building_id) REFERENCES buildings (id)
 );

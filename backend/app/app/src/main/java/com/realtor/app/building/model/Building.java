@@ -26,6 +26,12 @@ public class Building {
     @Column (name = "year")
     private int year;
 
+    @Column (name = "description")
+    private String description;
+
+    @Column (name = "construction")
+    private String construction;
+
     public Building () {
 
     }
@@ -68,5 +74,21 @@ public class Building {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getConstruction() {
+        return construction;
+    }
+
+    public void setConstruction(String construction) {
+        this.construction = construction;
     }
 }

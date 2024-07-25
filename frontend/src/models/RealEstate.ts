@@ -7,4 +7,9 @@ export type RealEstate = {
     propertyType: PropertyType
     price: number,
     size: number,
+    floor: number,
+    heating: string,
+    description: string,
+    publishDate: Date,
+    status: string
 }

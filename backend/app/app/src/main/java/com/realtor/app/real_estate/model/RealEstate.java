@@ -5,6 +5,8 @@ import com.realtor.app.property_type.model.PropertyType;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Date;
+
 @Entity
 @Data
 @Table(name = "real_estates")
@@ -27,6 +29,22 @@ public class RealEstate {
 
     @Column (name = "size")
     private float size;
+
+    @Column (name = "floor")
+    private int floor;
+
+    @Column (name = "heating")
+    private String heating;
+
+    @Column (name = "description")
+    private String description;
+
+    @Column (name = "publish_date")
+    private Date publishDate;
+
+    @Column (name = "status")
+    private String status;
+
     public RealEstate() {
     }
 
@@ -68,5 +86,45 @@ public class RealEstate {
 
     public void setSize(float size) {
         this.size = size;
+    }
+
+    public int getFloor() {
+        return floor;
+    }
+
+    public void setFloor(int floor) {
+        this.floor = floor;
+    }
+
+    public String getHeating() {
+        return heating;
+    }
+
+    public void setHeating(String heating) {
+        this.heating = heating;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

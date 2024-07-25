@@ -5,5 +5,7 @@ export type Building = {
     district: District,
     name: string,
     floors: number,
-    year: number
+    year: number,
+    construction: string,
+    description: string
 }
