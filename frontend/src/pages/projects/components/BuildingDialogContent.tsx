@@ -22,8 +22,7 @@ const BuildindDialogContent = ({
       <DialogHeader>
         <DialogTitle>{building.name}</DialogTitle>
         <DialogDescription>
-          This action cannot be undone. This will permanently delete your
-          account and remove your data from our servers. shouldLoadImages:{" "}
+          {building.description}s. shouldLoadImages:{" "}
           {String(shouldLoadImages)}
         </DialogDescription>
       </DialogHeader>

@@ -27,7 +27,7 @@ const PropertyCard = ({ property, onPreview }: { property: RealEstate, onPreview
   return (
     <Card className="flex flex-col cursor-pointer hover:bg-slate-200" onClick={onPreview}>
       <CardHeader>
-        <CardTitle>{property.propertyType.description}</CardTitle>
+        <CardTitle>{property.description}</CardTitle>
         <CardDescription>{`From ${property.building.year}`}</CardDescription>
       </CardHeader>
       <CardContent className="flex-auto">

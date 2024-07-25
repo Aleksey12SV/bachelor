@@ -56,7 +56,7 @@ const PaginationComponent = ({
             {firstPage + 1}
           </PaginationLink>
         </PaginationItem>
-        {currentPage - firstPage >= MAX_ITEMS_TO_SHOW && (
+        {currentPage - firstPage > MAX_ITEMS_TO_SHOW && (
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
@@ -70,7 +70,7 @@ const PaginationComponent = ({
             </PaginationLink>
           </PaginationItem>
         ))}
-        {lastPage - currentPage >= MAX_ITEMS_TO_SHOW && (
+        {lastPage - currentPage > MAX_ITEMS_TO_SHOW && (
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>

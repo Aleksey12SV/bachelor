@@ -4,22 +4,27 @@ import { RealEstate } from "@/models/RealEstate";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import PropertyCard from "./components/PropertyCard";
+import { useSearchParams } from "react-router-dom";
+import { FormType } from "../home-page/HomePage";
 
-const getProperties = (
-  page: number,
-  size: number
+const getFilteredProperties = (
+  filters: Partial<FormType & { page: number; size: number }>
 ): Promise<PaginatedData<RealEstate>> =>
-  axiosInstance
-    .get(`real-estate/getAll/paginated?page=${page}&size=${size}`)
-    .then(({ data }) => data);
+  axiosInstance.post(`real-estate/filtered`, filters).then(({ data }) => data);
 
 const PropertyList = () => {
   const [height, setHeight] = useState<number>();
   const [selectedProperty, setSelectedProperty] = useState<RealEstate>();
+  const [searchParams] = useSearchParams();
   const { data, isFetching, fetchNextPage } = useInfiniteQuery({
     queryKey: ["real-estates"],
     initialPageParam: 0,
-    queryFn: async ({ pageParam }) => await getProperties(pageParam, 5),
+    queryFn: async ({ pageParam }) =>
+      await getFilteredProperties({
+        ...Object.fromEntries(searchParams),
+        page: pageParam,
+        size: 5,
+      }),
     getNextPageParam: (response) => {
       const nextPage = response.pageable.pageNumber + 1;
       if (nextPage >= response.totalPages) return;
@@ -67,13 +72,15 @@ const PropertyList = () => {
         style={{ height }}
       >
         {realEstates.map((property) => (
-          <PropertyCard key={property.id} property={property} onPreview={() => setSelectedProperty(property)} />
+          <PropertyCard
+            key={property.id}
+            property={property}
+            onPreview={() => setSelectedProperty(property)}
+          />
         ))}
         {isFetching && <p>Loading...</p>}
       </div>
-      <div className="w-full h-full">
-        {selectedProperty?.building.year}
-      </div>
+      <div className="w-full h-full">{selectedProperty?.building.year}</div>
     </div>
   );
 };

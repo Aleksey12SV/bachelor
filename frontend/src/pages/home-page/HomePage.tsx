@@ -32,6 +32,14 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/axios";
 import { useTranslation } from "react-i18next";
 import QuickFormContent from "./components/quick-form/QuickFormContent";
+import { useNavigate } from "react-router-dom";
+
+export const SortingEnum = [
+  "PRICE_ASC",
+  "PRICE_DESC",
+  "NEWEST",
+  "OLDEST",
+] as const;
 
 const formSchema = z.object({
   location: z.string({ required_error: "Please select a location" }),
@@ -46,6 +54,7 @@ const formSchema = z.object({
     .refine((v) => v.some((i) => i))
     .optional(),
   showRealEstatesWithoutImages: z.boolean(),
+  sorting: z.enum(SortingEnum).default("NEWEST"),
 });
 
 export type FormType = z.infer<typeof formSchema>;
@@ -57,6 +66,7 @@ const getImages = (): Promise<
 export const HomePage = () => {
   const [showMoreFilters, setShowMoreFilters] = useState(false);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const plugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
   const form = useForm<FormType>({
@@ -74,11 +84,14 @@ export const HomePage = () => {
     initialData: [],
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  function onSubmit(data: FormType) {
     console.log({
       title: "You submitted the following values:",
       data,
     });
+    const cleanData = JSON.parse(JSON.stringify(data));
+    const queryString = new URLSearchParams(cleanData).toString();
+    navigate(`/property-list?${queryString}`);
   }
 
   return (
@@ -131,41 +144,12 @@ export const HomePage = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="rounded border solid border-[#acc0f4] p-4 grid grid-cols-3 flex-auto gap-10"
+            className="rounded border solid border-[#acc0f4] p-4 grid grid-cols-3 flex-auto gap-x-10"
           >
-            <QuickFormContent form={form} />
-            <div className="flex flex-col gap-4">
-              <Button type="submit">Submit</Button>
-              <FormField
-                control={form.control}
-                name="showRealEstatesWithoutImages"
-                render={({ field }) => {
-                  return (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={!field.value}
-                          onCheckedChange={(checked) =>
-                            field.onChange(!checked)
-                          }
-                        />
-                      </FormControl>
-                      <FormLabel className="font-normal">
-                        Show properties with images only
-                      </FormLabel>
-                    </FormItem>
-                  );
-                }}
-              />
-              <button
-                onClick={(e) => {
-                  setShowMoreFilters(true);
-                  e.preventDefault();
-                }}
-              >
-                Show filter
-              </button>
-            </div>
+            <QuickFormContent
+              form={form}
+              onShowAdditionalFilters={() => setShowMoreFilters(true)}
+            />
             {showMoreFilters && (
               <div className="flex flex-col gap-4">
                 <Button type="submit">Submit</Button>

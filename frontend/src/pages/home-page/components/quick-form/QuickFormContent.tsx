@@ -5,7 +5,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { FormType } from "../../HomePage";
+import { FormType, SortingEnum } from "../../HomePage";
 import { UseFormReturn } from "react-hook-form";
 import {
   Select,
@@ -20,6 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PropertyType } from "@/models/PropertyType";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const getCities = (): Promise<City[]> =>
   axiosInstance.get("city/getAll").then(({ data }) => data);
@@ -27,7 +28,13 @@ const getCities = (): Promise<City[]> =>
 const getPropertyTypes = (): Promise<PropertyType[]> =>
   axiosInstance.get("property-type/getAll").then(({ data }) => data);
 
-const QuickFormContent = ({ form }: { form: UseFormReturn<FormType> }) => {
+const QuickFormContent = ({
+  form,
+  onShowAdditionalFilters,
+}: {
+  form: UseFormReturn<FormType>;
+  onShowAdditionalFilters: () => void;
+}) => {
   const { data: cities } = useQuery({
     queryKey: ["cities"],
     queryFn: getCities,
@@ -49,7 +56,7 @@ const QuickFormContent = ({ form }: { form: UseFormReturn<FormType> }) => {
               <FormLabel>Location</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="w-[200px] border solid h-[30px]">
+                  <SelectTrigger className="border solid h-[30px]">
                     <SelectValue />
                   </SelectTrigger>
                 </FormControl>
@@ -107,7 +114,13 @@ const QuickFormContent = ({ form }: { form: UseFormReturn<FormType> }) => {
               <FormItem>
                 <FormLabel>Min Price</FormLabel>
                 <FormControl>
-                  <Input {...field} inputMode="numeric" pattern="\d*" min={0} measurementUnit="€"/>
+                  <Input
+                    {...field}
+                    inputMode="numeric"
+                    pattern="\d*"
+                    min={0}
+                    measurementUnit="€"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -141,7 +154,13 @@ const QuickFormContent = ({ form }: { form: UseFormReturn<FormType> }) => {
               <FormItem>
                 <FormLabel>Min Size</FormLabel>
                 <FormControl>
-                  <Input {...field} inputMode="numeric" pattern="\d*" min={0} measurementUnit="m²" />
+                  <Input
+                    {...field}
+                    inputMode="numeric"
+                    pattern="\d*"
+                    min={0}
+                    measurementUnit="m²"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -168,58 +187,113 @@ const QuickFormContent = ({ form }: { form: UseFormReturn<FormType> }) => {
           />
         </div>
         <FormLabel>Floors</FormLabel>
-              <div className="grid grid-cols-2 gap-2">
-                <FormField
-                  control={form.control}
-                  name="minFloor"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Min</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="border solid h-[30px]">
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="1">1</SelectItem>
-                          <SelectItem value="2">2</SelectItem>
-                          <SelectItem value="3">3</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="maxFloor"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Max</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="border solid h-[30px]">
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="1">1</SelectItem>
-                          <SelectItem value="2">2</SelectItem>
-                          <SelectItem value="3">3</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+        <div className="grid grid-cols-2 gap-2">
+          <FormField
+            control={form.control}
+            name="minFloor"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Min</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="border solid h-[30px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Array.from({ length: 30 }, (_, i) => i).map((value) => (
+                      <SelectItem value={value.toString()}>{value}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="maxFloor"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Max</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="border solid h-[30px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                  {Array.from({ length: 30 }, (_, i) => i).map((value) => (
+                      <SelectItem value={value.toString()}>{value}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </div>
+      <div className="flex flex-col gap-4">
+        <Button type="submit">Submit</Button>
+        <FormField
+          control={form.control}
+          name="showRealEstatesWithoutImages"
+          render={({ field }) => {
+            return (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={!field.value}
+                    onCheckedChange={(checked) => field.onChange(!checked)}
+                  />
+                </FormControl>
+                <FormLabel className="font-normal">
+                  Show properties with images only
+                </FormLabel>
+              </FormItem>
+            );
+          }}
+        />
+        <FormField
+          control={form.control}
+          name="sorting"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Sort</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {SortingEnum.map((sort) => (
+                    <SelectItem key={sort} value={sort}>
+                      {sort}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          className="mt-auto bg-[#acc0f4] text-black self-end"
+          onClick={(e) => {
+            e.preventDefault();
+            onShowAdditionalFilters();
+          }}
+        >
+          Show additional filters
+        </Button>
       </div>
     </>
   );
