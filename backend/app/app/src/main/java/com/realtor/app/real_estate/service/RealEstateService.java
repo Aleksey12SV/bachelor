@@ -1,7 +1,7 @@
 package com.realtor.app.real_estate.service;
 
-import com.realtor.app.building.model.Building;
 import com.realtor.app.real_estate.model.RealEstate;
+import com.realtor.app.real_estate.model.RealEstateFilters;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,4 +13,5 @@ public interface RealEstateService {
     public List<RealEstate> getAllProperties();
 
     public Page<RealEstate> getAllPaginatedRealEstates(Pageable pageable);
+    public Page<RealEstate> getAllFilteredRealEstatesPaginated(RealEstateFilters filters);
 }
