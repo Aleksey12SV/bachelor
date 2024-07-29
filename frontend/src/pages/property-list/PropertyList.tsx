@@ -2,10 +2,11 @@ import { axiosInstance } from "@/lib/axios";
 import { PaginatedData } from "@/models/PaginatedData";
 import { RealEstate } from "@/models/RealEstate";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import PropertyCard from "./components/PropertyCard";
 import { useSearchParams } from "react-router-dom";
 import { FormType } from "../home-page/HomePage";
+import PropertyOverview from "./components/PropertyOverview";
 
 const getFilteredProperties = (
   filters: Partial<FormType & { page: number; size: number }>
@@ -62,13 +63,20 @@ const PropertyList = () => {
       scrollableRef.current?.removeEventListener("scroll", handleScroll);
     };
   }, [fetchNextPage]);
-  const realEstates = data?.pages.flatMap((p) => p.content) ?? [];
+  const realEstates = useMemo(
+    () => data?.pages.flatMap((p) => p.content) ?? [],
+    [data?.pages]
+  );
+
+  useEffect(() => {
+    if (!selectedProperty) setSelectedProperty(realEstates[0]);
+  }, [realEstates, selectedProperty]);
 
   return (
     <div className="h-full w-full grid grid-cols-[2fr_3fr]">
       <div
         ref={scrollableRef}
-        className="flex flex-col overflow-auto p-2 gap-2"
+        className="flex flex-col overflow-auto p-2 gap-2 scrollable"
         style={{ height }}
       >
         {realEstates.map((property) => (
@@ -80,7 +88,11 @@ const PropertyList = () => {
         ))}
         {isFetching && <p>Loading...</p>}
       </div>
-      <div className="w-full h-full">{selectedProperty?.building.year}</div>
+      <div className="p-2">
+      {selectedProperty && (
+        <PropertyOverview selectedProperty={selectedProperty} />
+      )}
+      </div>
     </div>
   );
 };
