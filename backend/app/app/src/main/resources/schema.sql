@@ -1,5 +1,5 @@
 -- Drop tables if they exist
-DROP TABLE IF EXISTS sellers_sales;
+DROP TABLE IF EXISTS real_estates_sellers;
 DROP TABLE IF EXISTS sales;
 DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS real_estates;
@@ -43,7 +43,7 @@ CREATE TABLE real_estates (
   id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   building_id integer,
   price float,
-  size float,
+  property_size float,
   property_type_id integer,
   floor integer,
   heating varchar(255),
@@ -67,15 +67,6 @@ CREATE TABLE images (
   CHECK (NOT (building_id IS NOT NULL AND property_id IS NOT NULL))
 );
 
-CREATE TABLE sales (
-  id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  real_estate_id integer,
-  sale_date date,
-  status enum('ACTIVE','COMPLETED','PENDING'),
-  sale_price float,
-  FOREIGN KEY (real_estate_id) REFERENCES real_estates (id)
-);
-
 CREATE TABLE sellers (
   id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
   first_name varchar(255),
@@ -83,11 +74,11 @@ CREATE TABLE sellers (
   phone_number varchar(255)
 );
 
-CREATE TABLE sellers_sales (
-    sales_id integer NOT NULL,
+CREATE TABLE real_estates_sellers (
+    real_estate_id integer NOT NULL,
     seller_id integer NOT NULL,
-    PRIMARY KEY (sales_id, seller_id),
-    FOREIGN KEY (sales_id) REFERENCES sales(id),
+    PRIMARY KEY (real_estate_id, seller_id),
+    FOREIGN KEY (real_estate_id) REFERENCES real_estates(id),
     FOREIGN KEY (seller_id) REFERENCES sellers(id)
 );
 

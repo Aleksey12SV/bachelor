@@ -25,7 +25,7 @@ INSERT INTO property_type (id, name, description) VALUES (1, 'Apartment', 'Resid
 INSERT INTO property_type (id, name, description) VALUES (2, 'Office', 'Commercial office space');
 
 -- Insert initial data into real_estates table
-INSERT INTO real_estates (id, building_id, price, size, property_type_id, floor, heating, description, status, publish_date) VALUES
+INSERT INTO real_estates (id, building_id, price, property_size, property_type_id, floor, heating, description, status, publish_date) VALUES
 (1, 1, 250000.00, 85.0, 1, 5, 'Central', 'A spacious apartment with modern amenities.', 'Ready to Use', '2023-01-01'),
 (2, 2, 180000.00, 45.0, 2, 3, 'Electric', 'A cozy apartment with a great view.', 'In Building Process', '2023-02-15'),
 (3, 1, 500000.00, 150.0, 2, 10, 'Gas', 'A luxury penthouse with panoramic views.', 'Ready to Use', '2023-03-20'),
@@ -47,15 +47,10 @@ INSERT INTO real_estates (id, building_id, price, size, property_type_id, floor,
 (19, 1, 250000.00, 85.0, 2, 7, 'Gas', 'A stylish apartment in a vibrant neighborhood.', 'Ready to Use', '2024-07-20'),
 (20, 2, 160000.00, 50.0, 1, 1, 'Central', 'A budget-friendly apartment in a great location.', 'In Building Process', '2024-08-25');
 
-
--- Insert initial data into sales table
-INSERT INTO sales (id, real_estate_id, sale_date, status, sale_price) VALUES (1, 1, '2023-01-01', 'completed', 240000.00);
-INSERT INTO sales (id, real_estate_id, sale_date, status, sale_price) VALUES (2, 2, '2023-02-01', 'pending', 490000.00);
-
 -- Insert initial data into sellers table
 INSERT INTO sellers (id, first_name, last_name, phone_number) VALUES (1, 'John', 'Doe', '123-456-7890');
 INSERT INTO sellers (id, first_name, last_name, phone_number) VALUES (2, 'Jane', 'Smith', '098-765-4321');
 
 -- Insert initial data into join table
-INSERT INTO sellers_sales (sales_id, seller_id) VALUES (1, 1);
-INSERT INTO sellers_sales (sales_id, seller_id) VALUES (2, 2);
+INSERT INTO real_estates_sellers (real_estate_id, seller_id) VALUES (1, 1);
+INSERT INTO real_estates_sellers (real_estate_id, seller_id) VALUES (2, 2);
