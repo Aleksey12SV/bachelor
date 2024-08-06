@@ -12,7 +12,7 @@ import { Building } from "@/models/Building";
 import { useQuery } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { useState } from "react";
-import BuildindDialogContent from "./components/BuildingDialogContent";
+import BuildingDialogContent from "./components/BuildingDialogContent";
 
 const getImagesForBuilding = (
   id: number
@@ -49,7 +49,7 @@ const ProjectCard = ({ building }: { building: Building }) => {
           </CardFooter>
         </Card>
       </DialogTrigger>
-      <BuildindDialogContent building={building} shouldLoadImages={isDialogOpened} onClose={() => setIsDialogOpened(false)} />
+      <BuildingDialogContent building={building} shouldLoadImages={isDialogOpened} onClose={() => setIsDialogOpened(false)} />
     </Dialog>
   );
 };

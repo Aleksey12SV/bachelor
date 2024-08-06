@@ -8,7 +8,7 @@ import {
 import { Building } from "@/models/Building";
 import { X } from "lucide-react";
 
-const BuildindDialogContent = ({
+const BuildingDialogContent = ({
   building,
   shouldLoadImages,
   onClose
@@ -37,4 +37,4 @@ const BuildindDialogContent = ({
   );
 };
 
-export default BuildindDialogContent;
+export default BuildingDialogContent;
