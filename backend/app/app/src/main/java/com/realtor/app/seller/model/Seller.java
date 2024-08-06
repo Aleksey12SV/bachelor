@@ -1,10 +1,7 @@
 package com.realtor.app.seller.model;
 
-import com.realtor.app.sale.model.Sale;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.Set;
 

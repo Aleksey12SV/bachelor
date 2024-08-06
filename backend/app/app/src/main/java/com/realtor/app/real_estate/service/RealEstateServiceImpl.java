@@ -1,9 +1,12 @@
 package com.realtor.app.real_estate.service;
 
 import com.realtor.app.building.model.Building;
+import com.realtor.app.image.repository.ImageRepo;
 import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.real_estate.model.RealEstateFilters;
+import com.realtor.app.real_estate.model.RealEstateRequest;
 import com.realtor.app.real_estate.repository.RealEstateRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +22,10 @@ import java.util.stream.Collectors;
 public class RealEstateServiceImpl implements RealEstateService {
     @Autowired
     private RealEstateRepo realEstateRepo;
+
+    @Autowired
+    private ImageRepo imageRepo;
+
     @Override
     public RealEstate saveRealEstate(RealEstate realEstate){
         return realEstateRepo.save(realEstate);
@@ -63,6 +70,20 @@ public class RealEstateServiceImpl implements RealEstateService {
 
     }
 
+    @Override
+    public RealEstate createRealEstate(RealEstateRequest realEstateRequest){
+        RealEstate newRealEstate = new RealEstate();
+        updateRealEstateFromRequest(newRealEstate, realEstateRequest);
+        return realEstateRepo.save(newRealEstate);
+    }
+
+    @Transactional
+    @Override
+    public void deleteRealEstate(Integer realEstateId){
+        imageRepo.deleteByRealEstateId(realEstateId);
+        realEstateRepo.deleteById(realEstateId);
+    }
+
     private List<RealEstate> sortRealEstates(List<RealEstate> realEstates, String sorting) {
         switch (sorting) {
             case "PRICE_ASC":
@@ -76,5 +97,17 @@ public class RealEstateServiceImpl implements RealEstateService {
             default:
                 return realEstates;
         }
+    }
+
+    private void updateRealEstateFromRequest(RealEstate realEstate, RealEstateRequest realEstateDTO) {
+        realEstate.setBuilding(realEstateDTO.getBuilding());
+        realEstate.setPropertyType(realEstateDTO.getPropertyType());
+        realEstate.setPrice(realEstateDTO.getPrice());
+        realEstate.setSize(realEstateDTO.getSize());
+        realEstate.setFloor(realEstateDTO.getFloor());
+        realEstate.setHeating(realEstateDTO.getHeating());
+        realEstate.setDescription(realEstateDTO.getDescription());
+        realEstate.setStatus(realEstateDTO.getStatus());
+//        realEstate.setSellers(realEstateDTO.getSellers());
     }
 }

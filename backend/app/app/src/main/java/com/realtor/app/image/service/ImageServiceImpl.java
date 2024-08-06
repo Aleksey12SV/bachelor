@@ -28,6 +28,11 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public List<Image> getAllImagesByRealEstateId(Long propertyId) {
+        return imageRepo.getAllImagesByRealEstateId(propertyId);
+    }
+
+    @Override
     public Optional<Image> getMainImageByBuildingId(Long buildingId){
         return imageRepo.findByBuildingIdAndMainImageTrue(buildingId);
     }
@@ -35,5 +40,14 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Optional<Image> getMainImageByPropertyId(Long buildingId){
         return imageRepo.findByRealEstateIdAndMainImageTrue(buildingId);
+    }
+
+    @Override
+    public boolean deleteImage(Integer imageId){
+        if(imageRepo.existsById(imageId)) {
+            imageRepo.deleteById(imageId);
+            return true;
+        }
+        return false;
     }
 }

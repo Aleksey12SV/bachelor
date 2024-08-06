@@ -3,10 +3,12 @@ package com.realtor.app.real_estate.controller;
 import com.realtor.app.building.model.Building;
 import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.real_estate.model.RealEstateFilters;
+import com.realtor.app.real_estate.model.RealEstateRequest;
 import com.realtor.app.real_estate.service.RealEstateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,5 +30,18 @@ public class RealEstateController {
     @PostMapping("/filtered")
     public Page<RealEstate> getFilteredRealEstates(@RequestBody RealEstateFilters filters){
         return realEstateService.getAllFilteredRealEstatesPaginated(filters);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173/")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRealEstate(@PathVariable Integer id) {
+        realEstateService.deleteRealEstate(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<RealEstate> createRealEstate(@RequestBody RealEstateRequest realEstateRequest) {
+        RealEstate createdRealEstate = realEstateService.createRealEstate(realEstateRequest);
+        return ResponseEntity.ok(createdRealEstate);
     }
 }

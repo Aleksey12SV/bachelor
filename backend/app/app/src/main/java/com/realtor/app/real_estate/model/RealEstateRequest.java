@@ -1,66 +1,27 @@
 package com.realtor.app.real_estate.model;
 
 import com.realtor.app.building.model.Building;
-import com.realtor.app.property_type.model.PropertyType;
 import com.realtor.app.seller.model.Seller;
-import jakarta.persistence.*;
-import lombok.Data;
+import com.realtor.app.property_type.model.PropertyType;
 
-import java.util.Date;
 import java.util.Set;
 
-@Entity
-@Data
-@Table(name = "real_estates")
-public class RealEstate {
-    @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
-    @Column (name = "id")
-    private int id;
-
-    @OneToOne
-    @JoinColumn
+public class RealEstateRequest {
     private Building building;
-
-    @ManyToOne
-    @JoinColumn (name = "property_type_id")
     private PropertyType propertyType;
-
-    @Column (name = "price")
     private float price;
-
-    @Column (name = "property_size")
     private float size;
-
-    @Column (name = "floor")
     private int floor;
-
-    @Column (name = "heating")
     private String heating;
-
-    @Column (name = "description")
     private String description;
-
-    @Column (name = "publish_date")
-    private Date publishDate;
-
-    @Column (name = "status")
     private String status;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "real_estates_sellers", joinColumns = @JoinColumn(name = "real_estate_id"),
-            inverseJoinColumns = @JoinColumn(name = "seller_id"))
-    private Set<Seller> sellers;
-
-    public RealEstate() {
+    public Set<Seller> getSellers() {
+        return sellers;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setSellers(Set<Seller> sellers) {
+        this.sellers = sellers;
     }
 
     public Building getBuilding() {
@@ -119,14 +80,6 @@ public class RealEstate {
         this.description = description;
     }
 
-    public Date getPublishDate() {
-        return publishDate;
-    }
-
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -134,4 +87,6 @@ public class RealEstate {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    private Set<Seller> sellers;
 }

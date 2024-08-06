@@ -9,6 +9,8 @@ public interface ImageService {
     public Image saveImage(Image city);
     public List<Image> getAllImages();
     public List<Image> getAllImagesByBuildingId(Long buildingId);
+    public List<Image> getAllImagesByRealEstateId(Long realEstateId);
     public Optional<Image> getMainImageByBuildingId(Long buildingId);
     public Optional<Image> getMainImageByPropertyId(Long propertyId);
+    public boolean deleteImage(Integer imageId);
 }

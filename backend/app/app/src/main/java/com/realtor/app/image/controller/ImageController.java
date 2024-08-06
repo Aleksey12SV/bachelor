@@ -76,7 +76,7 @@ public class ImageController {
     private BuildingService buildingService;
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public String add(@RequestBody ImageRequest imageRequest){
         byte[] imageBlob = Base64.getDecoder().decode((imageRequest.getImage64()));
         RealEstate property = realEstateService.getAllProperties().stream().filter(p -> p.getId() == imageRequest.getPropertyId()).findFirst().orElse(null);
@@ -100,6 +100,11 @@ public class ImageController {
     @GetMapping("/getAll/building/{buildingId}")
     public List<Image> getAllImagesByBuildingId(@PathVariable Long buildingId) {
         return imageService.getAllImagesByBuildingId(buildingId);
+    }
+
+    @GetMapping("/getAll/property/{propertyId}")
+    public List<Image> getAllImagesByPropertyId(@PathVariable Long propertyId) {
+        return imageService.getAllImagesByRealEstateId(propertyId);
     }
 
     @GetMapping("main/building/{buildingId}")
