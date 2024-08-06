@@ -8,12 +8,19 @@ import React, {
   ReactNode,
   useCallback,
 } from "react";
+import { Roles } from "./Roles";
 
 const KeycloakContext = createContext<{
   keycloakInstance: Keycloak | null;
   authenticated: boolean;
   initKeycloak: () => void;
-}>({ keycloakInstance: null, authenticated: false, initKeycloak: () => {} });
+  hasRole: (roles: Roles[]) => boolean;
+}>({
+  keycloakInstance: null,
+  authenticated: false,
+  initKeycloak: () => {},
+  hasRole: () => false,
+});
 
 export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
   const [keycloakInstance, setKeycloakInstance] = useState<Keycloak | null>(
@@ -23,7 +30,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 
   const initKeycloak = useCallback(() => {
     keycloak
-      .init({onLoad: 'login-required'})
+      .init({ onLoad: "login-required" })
       .then((auth) => {
         setKeycloakInstance(keycloak);
         setAuthenticated(auth);
@@ -38,9 +45,19 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
       });
   }, []);
 
+  const hasRole = useCallback(
+    (roles: Roles[]) => {
+      if (authenticated) {
+        return roles.some((r) => keycloak.hasResourceRole(r));
+      }
+      return false;
+    },
+    [authenticated]
+  );
+
   return (
     <KeycloakContext.Provider
-      value={{ keycloakInstance, authenticated, initKeycloak }}
+      value={{ keycloakInstance, authenticated, initKeycloak, hasRole }}
     >
       {children}
     </KeycloakContext.Provider>
