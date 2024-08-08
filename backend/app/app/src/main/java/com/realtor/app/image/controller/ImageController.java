@@ -78,7 +78,7 @@ public class ImageController {
     @PostMapping("/add")
 //    @PreAuthorize("hasRole('ADMIN')")
     public String add(@RequestBody ImageRequest imageRequest){
-        byte[] imageBlob = Base64.getDecoder().decode((imageRequest.getImage64()));
+        byte[] imageBlob = Base64.getDecoder().decode((extractBase64String(imageRequest.getImage64())));
         RealEstate property = realEstateService.getAllProperties().stream().filter(p -> p.getId() == imageRequest.getPropertyId()).findFirst().orElse(null);
         Building building = buildingService.getAllBuildings().stream().filter(p -> p.getId() == imageRequest.getBuildingId()).findFirst().orElse(null);
         if(property == null && building == null) { throw new Error("Both property and building null"); }
@@ -115,5 +115,12 @@ public class ImageController {
     @GetMapping("main/real-estate/{propertyId}")
     public Optional<Image> getMainImageByPropertyId(@PathVariable Long propertyId) {
         return imageService.getMainImageByPropertyId(propertyId);
+    }
+
+    private String extractBase64String(String base64Image) {
+        if (base64Image.contains(",")) {
+            return base64Image.split(",")[1];
+        }
+        return base64Image;
     }
 }
