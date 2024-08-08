@@ -205,7 +205,7 @@ const QuickFormContent = ({
                   </FormControl>
                   <SelectContent>
                     {Array.from({ length: 30 }, (_, i) => i).map((value) => (
-                      <SelectItem value={value.toString()}>{value}</SelectItem>
+                      <SelectItem key={value} value={value.toString()}>{value}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -230,7 +230,7 @@ const QuickFormContent = ({
                   </FormControl>
                   <SelectContent>
                   {Array.from({ length: 30 }, (_, i) => i).map((value) => (
-                      <SelectItem value={value.toString()}>{value}</SelectItem>
+                      <SelectItem key={value} value={value.toString()}>{value}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
