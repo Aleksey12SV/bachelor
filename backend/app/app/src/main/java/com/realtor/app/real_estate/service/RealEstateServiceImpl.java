@@ -1,6 +1,5 @@
 package com.realtor.app.real_estate.service;
 
-import com.realtor.app.building.model.Building;
 import com.realtor.app.image.repository.ImageRepo;
 import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.real_estate.model.RealEstateFilters;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,22 +38,27 @@ public class RealEstateServiceImpl implements RealEstateService {
 
 
     @Override
+    public List<RealEstate> getAllPropertiesWithImages(){
+        return realEstateRepo.findAllWithImages();
+    }
+
+
+    @Override
     public Page<RealEstate> getAllPaginatedRealEstates(Pageable pageable){
         return realEstateRepo.findAll(pageable);
     }
 
     @Override
     public Page<RealEstate> getAllFilteredRealEstatesPaginated(RealEstateFilters filters){
-        List<RealEstate> filteredRealEstates = getAllProperties().stream()
-//                .filter(estate -> filters.getLocation() == null || estate.getLocation().equalsIgnoreCase(criteria.getLocation()))
+        List<RealEstate> filteredRealEstates = (filters.getShowRealEstatesWithoutImages() == null || filters.getShowRealEstatesWithoutImages() == true ? getAllProperties() : getAllPropertiesWithImages()).stream()
+                .filter(estate -> filters.getLocation() == null || estate.getBuilding().getDistrict().getCity().getName().equalsIgnoreCase(filters.getLocation()))
                 .filter(estate -> filters.getPriceFrom() == null || estate.getPrice() >= filters.getPriceFrom())
                 .filter(estate -> filters.getPriceTo() == null || estate.getPrice() <= filters.getPriceTo())
                 .filter(estate -> filters.getMinSize() == null || estate.getSize() >= filters.getMinSize())
                 .filter(estate -> filters.getMaxSize() == null || estate.getSize() <= filters.getMaxSize())
                .filter(estate -> filters.getMinFloor() == null || estate.getFloor() >= filters.getMinFloor())
                .filter(estate -> filters.getMaxFloor() == null || estate.getFloor() <= filters.getMaxFloor())
-//                .filter(estate -> criteria.getPropertyTypes() == null || criteria.getPropertyTypes().isEmpty() || criteria.getPropertyTypes().contains(estate.getType().toLowerCase()))
-//                .filter(estate -> criteria.getShowRealEstatesWithoutImages() == null || criteria.getShowRealEstatesWithoutImages() || estate.getHasImages())
+                .filter(estate -> filters.getPropertyTypes() == null || filters.getPropertyTypes().contains(estate.getPropertyType().getName()))
                 .collect(Collectors.toList());
 
         if (filters.getSorting() != null) {
@@ -90,10 +95,10 @@ public class RealEstateServiceImpl implements RealEstateService {
                 return realEstates.stream().sorted((a, b) -> Double.compare(a.getPrice(), b.getPrice())).collect(Collectors.toList());
             case "PRICE_DESC":
                 return realEstates.stream().sorted((a, b) -> Double.compare(b.getPrice(), a.getPrice())).collect(Collectors.toList());
-//            case "sizeAsc":
-//                return realEstates.stream().sorted((a, b) -> Double.compare(a.getSize(), b.getSize())).collect(Collectors.toList());
-//            case "sizeDesc":
-//                return realEstates.stream().sorted((a, b) -> Double.compare(b.getSize(), a.getSize())).collect(Collectors.toList());
+            case "NEWEST":
+                return realEstates.stream().sorted((a, b) -> b.getPublishDate().compareTo(a.getPublishDate())).collect(Collectors.toList());
+            case "OLDEST":
+                return realEstates.stream().sorted((a, b) -> a.getPublishDate().compareTo(b.getPublishDate())).collect(Collectors.toList());
             default:
                 return realEstates;
         }
@@ -109,5 +114,28 @@ public class RealEstateServiceImpl implements RealEstateService {
         realEstate.setDescription(realEstateDTO.getDescription());
         realEstate.setStatus(realEstateDTO.getStatus());
 //        realEstate.setSellers(realEstateDTO.getSellers());
+    }
+
+    @Override
+    public RealEstate updateRealEstate(int id, RealEstate realEstateDetails) {
+        Optional<RealEstate> optionalRealEstate = realEstateRepo.findById(id);
+
+        if (optionalRealEstate.isPresent()) {
+            RealEstate existingRealEstate = optionalRealEstate.get();
+            existingRealEstate.setBuilding(realEstateDetails.getBuilding());
+            existingRealEstate.setPropertyType(realEstateDetails.getPropertyType());
+            existingRealEstate.setPrice(realEstateDetails.getPrice());
+            existingRealEstate.setSize(realEstateDetails.getSize());
+            existingRealEstate.setFloor(realEstateDetails.getFloor());
+            existingRealEstate.setHeating(realEstateDetails.getHeating());
+            existingRealEstate.setDescription(realEstateDetails.getDescription());
+            existingRealEstate.setPublishDate(realEstateDetails.getPublishDate());
+            existingRealEstate.setStatus(realEstateDetails.getStatus());
+            existingRealEstate.setSellers(realEstateDetails.getSellers());
+
+            return realEstateRepo.save(existingRealEstate);
+        } else {
+            throw new RuntimeException("Real estate not found with id " + id);
+        }
     }
 }

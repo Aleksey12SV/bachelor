@@ -12,6 +12,7 @@ public interface RealEstateService {
     public RealEstate saveRealEstate(RealEstate realEstate);
 
     public List<RealEstate> getAllProperties();
+    public List<RealEstate> getAllPropertiesWithImages();
 
     public Page<RealEstate> getAllPaginatedRealEstates(Pageable pageable);
     public Page<RealEstate> getAllFilteredRealEstatesPaginated(RealEstateFilters filters);

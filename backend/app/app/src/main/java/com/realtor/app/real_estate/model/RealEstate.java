@@ -13,6 +13,14 @@ import java.util.Set;
 @Data
 @Table(name = "real_estates")
 public class RealEstate {
+    public Set<Seller> getSellers() {
+        return sellers;
+    }
+
+    public void setSellers(Set<Seller> sellers) {
+        this.sellers = sellers;
+    }
+
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
     @Column (name = "id")
