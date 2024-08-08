@@ -1,6 +1,5 @@
 package com.realtor.app.real_estate.controller;
 
-import com.realtor.app.building.model.Building;
 import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.real_estate.model.RealEstateFilters;
 import com.realtor.app.real_estate.model.RealEstateRequest;
@@ -43,5 +42,11 @@ public class RealEstateController {
     public ResponseEntity<RealEstate> createRealEstate(@RequestBody RealEstateRequest realEstateRequest) {
         RealEstate createdRealEstate = realEstateService.createRealEstate(realEstateRequest);
         return ResponseEntity.ok(createdRealEstate);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RealEstate> updateRealEstate(@PathVariable int id, @RequestBody RealEstate realEstateDetails) {
+        RealEstate updatedRealEstate = realEstateService.updateRealEstate(id, realEstateDetails);
+        return ResponseEntity.ok(updatedRealEstate);
     }
 }

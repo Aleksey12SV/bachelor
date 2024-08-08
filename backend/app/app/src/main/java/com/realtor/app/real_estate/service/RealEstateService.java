@@ -17,4 +17,5 @@ public interface RealEstateService {
     public Page<RealEstate> getAllFilteredRealEstatesPaginated(RealEstateFilters filters);
     public void deleteRealEstate(Integer realEstateId);
     public RealEstate createRealEstate(RealEstateRequest realEstateRequest);
+    public RealEstate updateRealEstate(int id, RealEstate realEstate);
 }
