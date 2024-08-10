@@ -1,0 +1,13 @@
+import { axiosInstance } from "@/lib/axios";
+import { RealEstate } from "@/models/RealEstate";
+import { AxiosResponse } from "axios";
+
+export const createRealEstate = (
+  propertyInformation: Partial<RealEstate>
+): Promise<AxiosResponse<Partial<RealEstate>>> =>
+  axiosInstance.post("real-estate", propertyInformation);
+
+export const updateRealEstate = (
+  propertyInformation: Partial<RealEstate>
+): Promise<AxiosResponse<Partial<RealEstate>>> =>
+  axiosInstance.post("real-estate", propertyInformation);
