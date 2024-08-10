@@ -47,6 +47,8 @@ CREATE TABLE real_estates (
   property_type_id integer,
   floor integer,
   heating varchar(255),
+  title varchar(255),
+  rooms varchar(255),
   description varchar(65535),
   publish_date date,
   status varchar(255),
