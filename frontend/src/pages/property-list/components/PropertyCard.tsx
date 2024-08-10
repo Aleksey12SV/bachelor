@@ -7,16 +7,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Loader from "@/components/ui/loader/Loaders";
-import { axiosInstance } from "@/lib/axios";
 import { RealEstate } from "@/models/RealEstate";
 import { useQuery } from "@tanstack/react-query";
 
 import ImagePlaceholder from '../../../assets/image-placeholder.svg?react';
-
-const getMainImageForProperty = (
-  id: number
-): Promise<{ id: number; desription: string; image: string }> =>
-  axiosInstance.get(`image/main/real-estate/${id}`).then(({ data }) => data);
+import { getMainImageForProperty } from "@/api/images";
 
 const PropertyCard = ({ property, onPreview }: { property: RealEstate, onPreview: () => void; }) => {
   const { data: image, isPending } = useQuery({
@@ -27,7 +22,7 @@ const PropertyCard = ({ property, onPreview }: { property: RealEstate, onPreview
   return (
     <Card className="flex flex-col cursor-pointer hover:bg-slate-200" onClick={onPreview}>
       <CardHeader>
-        <CardTitle>{property.description}</CardTitle>
+        <CardTitle>{property.title}</CardTitle>
         <CardDescription>{`From ${property.building.year}, published ${property.publishDate}`}</CardDescription>
       </CardHeader>
       <CardContent className="flex-auto">

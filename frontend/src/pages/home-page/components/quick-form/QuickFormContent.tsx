@@ -5,7 +5,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { FormType, SortingEnum } from "../../HomePage";
 import { UseFormReturn } from "react-hook-form";
 import {
   Select,
@@ -14,19 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { City } from "@/models/City";
-import { axiosInstance } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
-import { PropertyType } from "@/models/PropertyType";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-const getCities = (): Promise<City[]> =>
-  axiosInstance.get("city/getAll").then(({ data }) => data);
-
-const getPropertyTypes = (): Promise<PropertyType[]> =>
-  axiosInstance.get("property-type/getAll").then(({ data }) => data);
+import { getCities } from "@/api/cities";
+import { getPropertyTypes } from "@/api/property-types";
+import { FormType, SortingEnum } from "@/models/RealEstateForm";
 
 const QuickFormContent = ({
   form,

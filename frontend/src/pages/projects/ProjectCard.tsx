@@ -7,23 +7,18 @@ import {
   Card,
 } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { axiosInstance } from "@/lib/axios";
 import { Building } from "@/models/Building";
 import { useQuery } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { useState } from "react";
 import BuildingDialogContent from "./components/BuildingDialogContent";
-
-const getImagesForBuilding = (
-  id: number
-): Promise<{ id: number; desription: string; image: string }[]> =>
-  axiosInstance.get(`image/getAll/${id}`).then(({ data }) => data);
+import { getImagesForId } from "@/api/images";
 
 const ProjectCard = ({ building }: { building: Building }) => {
   const [isDialogOpened, setIsDialogOpened] = useState(false);
   const { data: images, isPending } = useQuery({
     queryKey: ["images", building.id],
-    queryFn: async () => await getImagesForBuilding(building.id),
+    queryFn: async () => await getImagesForId(building.id),
     initialData: [],
   });
   return (

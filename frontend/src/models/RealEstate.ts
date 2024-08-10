@@ -10,6 +10,8 @@ export type RealEstate = {
   size: number;
   floor: number;
   heating: string;
+  title: string;
+  rooms: string;
   description: string;
   publishDate: Date;
   status: string;

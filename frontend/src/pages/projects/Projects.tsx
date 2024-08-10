@@ -1,19 +1,9 @@
-import { axiosInstance } from "@/lib/axios";
-import { Building } from "@/models/Building";
-import { PaginatedData } from "@/models/PaginatedData";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard";
 import usePagination from "@/hooks/usePagination";
 import PaginationComponent from "@/components/common/PaginationComponent";
-
-const getBuildings = (
-  page: number,
-  size: number
-): Promise<PaginatedData<Building>> =>
-  axiosInstance
-    .get(`building/getAll/paginated?page=${page}&size=${size}`)
-    .then(({ data }) => data);
+import { getPaginatedBuildings } from "@/api/buildings";
 
 const Projects = () => {
   const [totalPages, setTotalPages] = useState(0);
@@ -21,7 +11,7 @@ const Projects = () => {
     usePagination(totalPages);
   const { data } = useQuery({
     queryKey: ["buildings", page],
-    queryFn: async () => await getBuildings(page, 3),
+    queryFn: async () => await getPaginatedBuildings(page, 3),
     placeholderData: keepPreviousData,
   });
 

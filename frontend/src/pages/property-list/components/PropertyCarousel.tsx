@@ -1,3 +1,4 @@
+import { getPropertyImages } from "@/api/images";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -7,16 +8,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { axiosInstance } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-
-const getPropertyImages = (
-  propertyId: string
-): Promise<{ id: number; desription: string; image: string }[]> =>
-  axiosInstance
-    .get(`image/getAll/property/${propertyId}`)
-    .then(({ data }) => data);
 
 const PropertyCarousel = ({ propertyId }: { propertyId: string }) => {
   const [api, setApi] = useState<CarouselApi>();
@@ -60,15 +53,15 @@ const PropertyCarousel = ({ propertyId }: { propertyId: string }) => {
       ) : (
         "No images found"
       )}
-      <div className="flex flex-row gap-5 p-5">
-      {propertyImages.map((image, index) => (
-        <img
-          src={`data:image/jpeg;base64,${image?.image}`}
-          alt="realtor-logo"
-          className="h-20 aspect-video"
-          onClick={() => api?.scrollTo(index)}
-        />
-      ))}
+      <div className="flex flex-row gap-5 p-5 max-h-[400px] overflow-auto flex-wrap">
+        {propertyImages.map((image, index) => (
+          <img
+            src={`data:image/jpeg;base64,${image?.image}`}
+            alt="realtor-logo"
+            className="h-20 aspect-video"
+            onClick={() => api?.scrollTo(index)}
+          />
+        ))}
       </div>
     </div>
   );
