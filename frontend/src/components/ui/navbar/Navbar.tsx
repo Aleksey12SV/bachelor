@@ -7,7 +7,7 @@ import {
   navigationMenuTriggerStyle,
 } from "./navigation-menu";
 import RealtorBGLogo from "../../../assets/realtorBG.svg?react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
@@ -19,7 +19,8 @@ export const Navbar = () => {
     i18n: { changeLanguage, language },
   } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
-  const { keycloakInstance } = useKeycloak();
+  const { search } = useLocation();
+  const { keycloakInstance, authenticated, logout } = useKeycloak();
   const handleChangeLanguage = () => {
     const newLanguage = currentLanguage === "en" ? "bg" : "en";
     setCurrentLanguage(newLanguage);
@@ -49,10 +50,7 @@ export const Navbar = () => {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <RealtorBGLogo
-        className="w-24"
-        onClick={() => navigate("/")}
-      />
+      <RealtorBGLogo className="w-24" onClick={() => navigate("/")} />
       <NavigationMenu>
         <NavigationMenuList className="gap-10">
           <NavigationMenuItem id="gallery" className="w-[120px]">
@@ -73,8 +71,13 @@ https://www.worldometers.info//img/flags/small/tn_${
           />
           <AvatarFallback>BG</AvatarFallback>
         </Avatar>
-        {keycloakInstance && (
-          <Avatar className="h-6 w-6">
+        {(search.includes("login") || authenticated) && (
+          <Avatar
+            className="h-6 w-6"
+            onClick={() =>
+              authenticated ? logout() : keycloakInstance?.login()
+            }
+          >
             <AvatarImage />
             <AvatarFallback>A</AvatarFallback>
           </Avatar>

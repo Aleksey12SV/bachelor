@@ -1,5 +1,4 @@
-import keycloak from "@/lib/Keycloak";
-import { interceptRequestAuthToken } from "@/lib/axios";
+import { axiosInstance, interceptRequestAuthToken } from "@/lib/axios";
 import Keycloak from "keycloak-js";
 import React, {
   createContext,
@@ -7,6 +6,7 @@ import React, {
   useContext,
   ReactNode,
   useCallback,
+  useMemo,
 } from "react";
 import { Roles } from "./Roles";
 
@@ -15,24 +15,28 @@ const KeycloakContext = createContext<{
   authenticated: boolean;
   initKeycloak: () => void;
   hasRole: (roles: Roles[]) => boolean;
+  logout: () => void;
 }>({
   keycloakInstance: null,
   authenticated: false,
   initKeycloak: () => {},
   hasRole: () => false,
+  logout: () => null,
 });
 
-export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
-  const [keycloakInstance, setKeycloakInstance] = useState<Keycloak | null>(
-    null
-  );
+export const KeycloakProvider = ({
+  children,
+  keycloak,
+}: {
+  children: ReactNode;
+  keycloak: Keycloak;
+}) => {
   const [authenticated, setAuthenticated] = useState(false);
 
   const initKeycloak = useCallback(() => {
     keycloak
-      .init({ onLoad: "login-required" })
+      .init({ onLoad: "check-sso" })
       .then((auth) => {
-        setKeycloakInstance(keycloak);
         setAuthenticated(auth);
         if (auth) {
           localStorage.setItem("token", keycloak.token ?? "");
@@ -43,7 +47,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
       .catch((err) => {
         console.error("Failed to initialize Keycloak", err);
       });
-  }, []);
+  }, [keycloak]);
 
   const hasRole = useCallback(
     (roles: Roles[]) => {
@@ -52,13 +56,34 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
       }
       return false;
     },
-    [authenticated]
+    [authenticated, keycloak]
+  );
+
+  const logout = useCallback(async () => {
+    if (authenticated) {
+      axiosInstance.defaults.headers.common["Authorization"] = "";
+      setAuthenticated(false);
+      await keycloak.logout({
+        redirectUri: `${window.location.origin}`,
+      });
+    }
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+  }, [authenticated, keycloak]);
+
+  const value = useMemo(
+    () => ({
+      keycloakInstance: keycloak,
+      authenticated,
+      initKeycloak,
+      hasRole,
+      logout,
+    }),
+    [authenticated, hasRole, initKeycloak, keycloak, logout]
   );
 
   return (
-    <KeycloakContext.Provider
-      value={{ keycloakInstance, authenticated, initKeycloak, hasRole }}
-    >
+    <KeycloakContext.Provider value={value}>
       {children}
     </KeycloakContext.Provider>
   );

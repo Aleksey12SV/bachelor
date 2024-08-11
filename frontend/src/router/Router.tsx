@@ -1,6 +1,5 @@
 import { MainContainer } from "@/components/common/MainContainer";
 import { HomePage } from "@/pages/home-page/HomePage";
-import LoginPage from "@/pages/login-page/LoginPage";
 import Projects from "@/pages/projects/Projects";
 import PropertyList from "@/pages/property-list/PropertyList";
 import {
@@ -13,7 +12,6 @@ import {
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<MainContainer />}>
         <Route path="/" element={<Navigate replace to={`/home`} />} />
         <Route path="home" element={<HomePage />} />
