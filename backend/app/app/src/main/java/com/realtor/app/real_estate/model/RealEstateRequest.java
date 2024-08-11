@@ -9,6 +9,16 @@ import java.util.Set;
 public class RealEstateRequest {
     private Building building;
     private PropertyType propertyType;
+    private String rooms;
+
+    public String getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(String rooms) {
+        this.rooms = rooms;
+    }
+
     private float price;
     private float size;
     private int floor;

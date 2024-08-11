@@ -43,6 +43,28 @@ public class RealEstate {
     @Column (name = "floor")
     private int floor;
 
+    @Column (name = "title")
+    private String title;
+
+    public String getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(String rooms) {
+        this.rooms = rooms;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Column (name = "rooms")
+    private String rooms;
+
     @Column (name = "heating")
     private String heating;
 
