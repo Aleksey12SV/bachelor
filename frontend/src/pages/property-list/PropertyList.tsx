@@ -1,12 +1,23 @@
 import { axiosInstance } from "@/lib/axios";
 import { PaginatedData } from "@/models/PaginatedData";
 import { RealEstate } from "@/models/RealEstate";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import PropertyCard from "./components/PropertyCard";
 import { useSearchParams } from "react-router-dom";
-import { FormType } from "../home-page/HomePage";
 import PropertyOverview from "./components/PropertyOverview";
+import PropertyControls from "./components/PropertyControls";
+import { useKeycloak } from "@/components/auth/KeycloakProvider";
+import { Roles } from "@/components/auth/Roles";
+import PropertyUpdateOverview from "./components/PropertyUpdateOverview";
+import { FormType } from "@/models/RealEstateForm";
+
+const deleteProperty = (id: number): Promise<void> =>
+  axiosInstance.delete(`/real-estate/${id}`).then(({ data }) => data);
 
 const getFilteredProperties = (
   filters: Partial<FormType & { page: number; size: number }>
@@ -16,7 +27,11 @@ const getFilteredProperties = (
 const PropertyList = () => {
   const [height, setHeight] = useState<number>();
   const [selectedProperty, setSelectedProperty] = useState<RealEstate>();
+  const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
+  const { hasRole } = useKeycloak();
   const { data, isFetching, fetchNextPage } = useInfiniteQuery({
     queryKey: ["real-estates"],
     initialPageParam: 0,
@@ -30,6 +45,14 @@ const PropertyList = () => {
       const nextPage = response.pageable.pageNumber + 1;
       if (nextPage >= response.totalPages) return;
       return response.pageable.pageNumber + 1;
+    },
+  });
+  const deletePropertyMutation = useMutation({
+    mutationFn: async () => {
+      if (selectedProperty?.id) {
+        await deleteProperty(selectedProperty.id);
+        await queryClient.invalidateQueries({ queryKey: ["real-estates"] });
+      }
     },
   });
   useEffect(() => {
@@ -69,8 +92,9 @@ const PropertyList = () => {
   );
 
   useEffect(() => {
+    if (isAdding) return;
     if (!selectedProperty) setSelectedProperty(realEstates[0]);
-  }, [realEstates, selectedProperty]);
+  }, [isAdding, realEstates, selectedProperty]);
 
   return (
     <div className="h-full w-full grid grid-cols-[2fr_3fr]">
@@ -79,19 +103,54 @@ const PropertyList = () => {
         className="flex flex-col overflow-auto p-2 gap-2 scrollable"
         style={{ height }}
       >
+        {hasRole([Roles.ADMIN]) && (
+          <PropertyControls
+            onDelete={() =>
+              deletePropertyMutation
+                .mutateAsync()
+                .then(() => setSelectedProperty(undefined))
+            }
+            hasSelectedProperty={!!selectedProperty}
+            onAdd={() => {
+              setIsEditing(false);
+              setIsAdding(true);
+              setSelectedProperty(undefined);
+            }}
+            onEdit={() => {
+              setIsEditing(true);
+              setIsAdding(false);
+            }}
+          />
+        )}
         {realEstates.map((property) => (
           <PropertyCard
             key={property.id}
             property={property}
-            onPreview={() => setSelectedProperty(property)}
+            onPreview={() => {
+              setSelectedProperty(property);
+              setIsAdding(false);
+              setIsEditing(false);
+            }}
           />
         ))}
         {isFetching && <p>Loading...</p>}
       </div>
       <div className="p-2">
-      {selectedProperty && (
-        <PropertyOverview selectedProperty={selectedProperty} />
-      )}
+        {selectedProperty && !isAdding && !isEditing && (
+          <PropertyOverview selectedProperty={selectedProperty} />
+        )}
+        {isAdding && (
+          <PropertyUpdateOverview
+            property={undefined}
+            onSubmit={() => setIsAdding(false)}
+          />
+        )}
+        {isEditing && (
+          <PropertyUpdateOverview
+            property={selectedProperty}
+            onSubmit={() => setIsEditing(false)}
+          />
+        )}
       </div>
     </div>
   );
