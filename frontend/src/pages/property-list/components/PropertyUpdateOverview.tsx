@@ -1,5 +1,5 @@
 import { getBuildings } from "@/api/buildings";
-import { createImage } from "@/api/images";
+import { createImage, getPropertyImages } from "@/api/images";
 import { createRealEstate } from "@/api/real-estates";
 import { getSellers } from "@/api/sellers";
 import { Button } from "@/components/ui/button";
@@ -19,16 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { axiosInstance } from "@/lib/axios";
 import { ImageRequest } from "@/models/Image";
-import { PropertyType } from "@/models/PropertyType";
 import { RealEstate } from "@/models/RealEstate";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-
-const getPropertyTypes = (): Promise<PropertyType[]> =>
-  axiosInstance.get(`property-type/getAll`).then(({ data }) => data);
+import ImageSection from "./ImageSection";
+import { getPropertyTypes } from "@/api/property-types";
 
 const PropertyUpdateOverview = ({
   property,
@@ -51,10 +48,24 @@ const PropertyUpdateOverview = ({
     queryKey: ["sellers"],
     queryFn: getSellers,
   });
+  const { data: propertyImages } = useQuery({
+    queryKey: ["propertyImages", property?.id],
+    queryFn: () => getPropertyImages(property?.id.toString() ?? ""),
+    initialData: [],
+    enabled: property?.id !== undefined,
+  });
   const form = useForm<Partial<RealEstate>>({
-    defaultValues: {
+    values: {
+      floor: property?.floor,
+      size: property?.size,
       heating: property?.heating,
+      status: property?.status,
       price: property?.price,
+      description: property?.description,
+      building: property?.building,
+      sellers: property?.sellers,
+      title: property?.title,
+      propertyType: property?.propertyType,
     },
   });
   const saveRealEstateMutation = useMutation({
@@ -70,8 +81,7 @@ const PropertyUpdateOverview = ({
       });
     },
   });
-
-  function handleSubmit(data: Partial<RealEstate>) {
+  const handleSubmit = (data: Partial<RealEstate>) => {
     console.log({
       title: "You submitted the following values:",
       data,
@@ -79,45 +89,10 @@ const PropertyUpdateOverview = ({
     saveRealEstateMutation.mutateAsync(data);
     onSubmit();
     form.reset();
-  }
-
-  const handleImageUpload = (
-    event: ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      fileToBase64(file)
-        .then((base64Image) => {
-          const newImageInputs = [...images];
-          newImageInputs[index].image64 = base64Image as string;
-          if (index === 0) {
-            newImageInputs[index].isMainImage = true;
-          }
-
-          if (index === images.length - 1) {
-            // Add a new empty input field
-            newImageInputs.push({ image64: "" });
-          }
-
-          setImages(newImageInputs);
-        })
-        .catch((error) => {
-          console.error("Error converting file to base64", error);
-        });
-    }
   };
-  console.log(images);
-  const fileToBase64 = (file: File) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  };
+  console.log(form);
   return (
-    <div className="overflow-auto">
+    <div className="overflow-auto w-full h-full">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -166,10 +141,7 @@ const PropertyUpdateOverview = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue />
@@ -191,19 +163,16 @@ const PropertyUpdateOverview = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Heating</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
+                    <SelectItem value="Central">Central</SelectItem>
+                    <SelectItem value="Electric">Electric</SelectItem>
                     <SelectItem value="Gas">Gas</SelectItem>
-                    <SelectItem value="TEC">Tec</SelectItem>
-                    <SelectItem value="Lokalno">Lokalno</SelectItem>
                   </SelectContent>
                 </Select>
               </FormItem>
@@ -224,31 +193,35 @@ const PropertyUpdateOverview = ({
           <FormField
             control={form.control}
             name="propertyType"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Property Type</FormLabel>
-                <Select
-                  onValueChange={(value) =>
-                    field.onChange(
-                      propertyTypes?.find((p) => p.id.toString() === value)
-                    )
-                  }
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {propertyTypes?.map((type) => (
-                      <SelectItem value={type.id.toString()}>
-                        {type.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
+            render={({ field }) => {
+              console.log(field);
+              return (
+                <FormItem>
+                  <FormLabel>Property Type</FormLabel>
+                  <Select
+                    onValueChange={(value) =>
+                      field.onChange(
+                        propertyTypes?.find((p) => p.id.toString() === value)
+                      )
+                    }
+                    value={field.value?.name}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue>{field.value?.name}</SelectValue>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {propertyTypes?.map((type) => (
+                        <SelectItem value={type.id.toString()}>
+                          {type.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              );
+            }}
           />
           <FormField
             control={form.control}
@@ -262,10 +235,13 @@ const PropertyUpdateOverview = ({
                       buildings?.find((b) => b.id.toString() === value)
                     )
                   }
+                  value={field.value?.name}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue>
+                        {field.value?.name + ", " + field.value?.district.city}
+                      </SelectValue>
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -310,31 +286,13 @@ const PropertyUpdateOverview = ({
           />
         </form>
       </Form>
-      {images.map((input, index) => (
-        <div key={index} className="image-upload-field">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(event) => handleImageUpload(event, index)}
-          />
-          {input.image64 && (
-            <button
-              onClick={() => setImages(images.filter((_, i) => i !== index))}
-            >
-              Delete image {index}
-            </button>
-          )}
-          {input.image64 && (
-            <div className="image-preview">
-              <img
-                src={input.image64}
-                alt={`Preview ${index}`}
-                className="max-h-24 max-w-24"
-              />
-            </div>
-          )}
-        </div>
-      ))}
+      <ImageSection
+        images={propertyImages}
+        onDelete={(imageIndex) =>
+          setImages(images.filter((_, i) => i !== imageIndex))
+        }
+        onUpdate={(updatedImages) => setImages(updatedImages)}
+      />
     </div>
   );
 };

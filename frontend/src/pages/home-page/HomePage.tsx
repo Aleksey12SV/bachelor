@@ -8,56 +8,16 @@ import {
 } from "@/components/ui/carousel";
 import { useRef, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
-import { SelectTrigger } from "@radix-ui/react-select";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/axios";
 import { useTranslation } from "react-i18next";
 import QuickFormContent from "./components/quick-form/QuickFormContent";
 import { useNavigate } from "react-router-dom";
-
-export const SortingEnum = [
-  "PRICE_ASC",
-  "PRICE_DESC",
-  "NEWEST",
-  "OLDEST",
-] as const;
-
-const formSchema = z.object({
-  location: z.string({ required_error: "Please select a location" }),
-  priceFrom: z.string().optional(),
-  priceTo: z.string().optional(),
-  minSize: z.string().optional(),
-  maxSize: z.string().optional(),
-  minFloor: z.string().optional(),
-  maxFloor: z.string().optional(),
-  propertyTypes: z
-    .array(z.string())
-    .refine((v) => v.some((i) => i))
-    .optional(),
-  showRealEstatesWithoutImages: z.boolean(),
-  sorting: z.enum(SortingEnum).default("NEWEST"),
-});
-
-export type FormType = z.infer<typeof formSchema>;
+import { formSchema, FormType } from "@/models/RealEstateForm";
+import AdditionalFilters from "./components/additional-filters/AdditionalFilters";
 
 const getImages = (): Promise<
   { id: number; desription: string; image: string }[]
@@ -78,7 +38,7 @@ export const HomePage = () => {
     },
   });
 
-  const { data } = useQuery({
+  const { data: images } = useQuery({
     queryKey: ["images"],
     queryFn: getImages,
     initialData: [],
@@ -95,7 +55,7 @@ export const HomePage = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       {!showMoreFilters && (
         <div className="w-full h-[25rem] flex justify-center pt-2 px-6">
           <div className="w-[40rem] flex flex-col">
@@ -104,7 +64,7 @@ export const HomePage = () => {
               plugins={[plugin.current]}
               className="flex-auto"
               onMouseEnter={plugin.current.stop}
-              onMouseLeave={plugin.current.reset}
+              onMouseLeave={plugin.current.play}
             >
               <CarouselContent>
                 {Array.from({ length: 5 }).map((_, index) => (
@@ -113,9 +73,9 @@ export const HomePage = () => {
                       <Card>
                         <CardContent className="flex items-center justify-center p-6 flex-auto w-full min-h-[22rem]">
                           <span className="text-4xl font-semibold w-full flex justify-center">
-                            {data?.[index]?.image ? (
+                            {images?.[index]?.image ? (
                               <img
-                                src={`data:image/jpeg;base64,${data?.[index]?.image}`}
+                                src={`data:image/jpeg;base64,${images?.[index]?.image}`}
                                 alt="realtor-logo"
                                 className="max-w-full max-h-[22rem]"
                               />
@@ -151,91 +111,10 @@ export const HomePage = () => {
               onShowAdditionalFilters={() => setShowMoreFilters(true)}
             />
             {showMoreFilters && (
-              <div className="flex flex-col gap-4">
-                <Button type="submit">Submit</Button>
-                <span className="flex items-center">Floors</span>
-                <div className="flex flex-row gap-2">
-                  <FormField
-                    control={form.control}
-                    name="minFloor"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Min</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-[200px] border solid h-[30px]">
-                              <SelectValue />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="1">1</SelectItem>
-                            <SelectItem value="2">2</SelectItem>
-                            <SelectItem value="3">3</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="maxFloor"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Max</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-[200px] border solid h-[30px]">
-                              <SelectValue />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="1">1</SelectItem>
-                            <SelectItem value="2">2</SelectItem>
-                            <SelectItem value="3">3</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <FormField
-                  control={form.control}
-                  name="showRealEstatesWithoutImages"
-                  render={({ field }) => {
-                    return (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={!field.value}
-                            onCheckedChange={(checked) =>
-                              field.onChange(!checked)
-                            }
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Show properties with images only
-                        </FormLabel>
-                      </FormItem>
-                    );
-                  }}
-                />
-                <button
-                  onClick={(e) => {
-                    setShowMoreFilters(false);
-                    e.preventDefault();
-                  }}
-                >
-                  HIde filter
-                </button>
-              </div>
+              <AdditionalFilters
+                form={form}
+                onHideAdditionalFilters={() => setShowMoreFilters(false)}
+              />
             )}
           </form>
         </Form>

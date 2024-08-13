@@ -97,7 +97,7 @@ const PropertyList = () => {
   }, [isAdding, realEstates, selectedProperty]);
 
   return (
-    <div className="h-full w-full grid grid-cols-[2fr_3fr]">
+    <div className="h-full w-full flex flex-row">
       <div
         ref={scrollableRef}
         className="flex flex-col overflow-auto p-2 gap-2 scrollable"
@@ -135,7 +135,7 @@ const PropertyList = () => {
         ))}
         {isFetching && <p>Loading...</p>}
       </div>
-      <div className="p-2">
+      <div className="flex p-4 flex-auto w-full overflow-hidden">
         {selectedProperty && !isAdding && !isEditing && (
           <PropertyOverview selectedProperty={selectedProperty} />
         )}

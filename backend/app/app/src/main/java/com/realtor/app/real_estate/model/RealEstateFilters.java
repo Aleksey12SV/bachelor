@@ -1,7 +1,5 @@
 package com.realtor.app.real_estate.model;
 
-import com.realtor.app.seller.model.Seller;
-
 import java.util.List;
 
 public class RealEstateFilters {

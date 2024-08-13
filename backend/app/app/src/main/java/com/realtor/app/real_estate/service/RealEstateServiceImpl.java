@@ -42,6 +42,11 @@ public class RealEstateServiceImpl implements RealEstateService {
         return realEstateRepo.findAllWithImages();
     }
 
+    @Override
+    public List<RealEstate> getPropertiesBySeller (Integer sellerId) {
+        return realEstateRepo.findBySellerId(sellerId);
+    }
+
 
     @Override
     public Page<RealEstate> getAllPaginatedRealEstates(Pageable pageable){
@@ -52,13 +57,18 @@ public class RealEstateServiceImpl implements RealEstateService {
     public Page<RealEstate> getAllFilteredRealEstatesPaginated(RealEstateFilters filters){
         List<RealEstate> filteredRealEstates = (filters.getShowRealEstatesWithoutImages() == null || filters.getShowRealEstatesWithoutImages() == true ? getAllProperties() : getAllPropertiesWithImages()).stream()
                 .filter(estate -> filters.getLocation() == null || estate.getBuilding().getDistrict().getCity().getName().equalsIgnoreCase(filters.getLocation()))
+                .filter(estate -> filters.getHeating() == null || estate.getHeating().equalsIgnoreCase(filters.getHeating()))
+                .filter(estate -> filters.getStatus() == null || estate.getStatus().equalsIgnoreCase(filters.getStatus()))
                 .filter(estate -> filters.getPriceFrom() == null || estate.getPrice() >= filters.getPriceFrom())
                 .filter(estate -> filters.getPriceTo() == null || estate.getPrice() <= filters.getPriceTo())
+                .filter(estate -> filters.getPriceFromSqM() == null || estate.getPrice()/estate.getSize() >= filters.getPriceFromSqM())
+                .filter(estate -> filters.getPriceToSqM() == null || estate.getPrice()/estate.getSize() <= filters.getPriceTo())
                 .filter(estate -> filters.getMinSize() == null || estate.getSize() >= filters.getMinSize())
                 .filter(estate -> filters.getMaxSize() == null || estate.getSize() <= filters.getMaxSize())
                .filter(estate -> filters.getMinFloor() == null || estate.getFloor() >= filters.getMinFloor())
                .filter(estate -> filters.getMaxFloor() == null || estate.getFloor() <= filters.getMaxFloor())
                 .filter(estate -> filters.getPropertyTypes() == null || filters.getPropertyTypes().contains(estate.getPropertyType().getName()))
+                .filter(estate -> filters.getSeller() == null || estate.getSellers().stream().anyMatch(seller -> filters.getSeller().equals(String.valueOf(seller.getId()))))
                 .collect(Collectors.toList());
 
         if (filters.getSorting() != null) {

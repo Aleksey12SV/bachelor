@@ -13,6 +13,7 @@ public interface RealEstateService {
 
     public List<RealEstate> getAllProperties();
     public List<RealEstate> getAllPropertiesWithImages();
+    public List<RealEstate> getPropertiesBySeller (Integer sellerId);
 
     public Page<RealEstate> getAllPaginatedRealEstates(Pageable pageable);
     public Page<RealEstate> getAllFilteredRealEstatesPaginated(RealEstateFilters filters);

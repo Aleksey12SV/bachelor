@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SellerServiceImpl implements SellerService {
@@ -17,9 +15,9 @@ public class SellerServiceImpl implements SellerService {
     private SellerRepo sellerRepo;
 
     @Override
-    public List<SellerSalesDTO> getAll() {
-        List<Object[]> results = sellerRepo.getAll();
-        return results.stream().map(this::mapToSellerSalesDTO).collect(Collectors.toList());
+    public List<Seller> getAll() {
+        List<Seller> results = sellerRepo.findAll();
+        return results;
     }
 
     private SellerSalesDTO mapToSellerSalesDTO(Object[] result) {

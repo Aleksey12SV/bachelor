@@ -13,14 +13,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 class ImageRequest {
+    private UUID id;
     private String image64;
     private String description;
     private Boolean isMainImage;
 
     private int propertyId;
     private int buildingId;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public int getBuildingId() {
         return buildingId;
@@ -87,7 +97,7 @@ public class ImageController {
                 throw new Error("Main image was already saved");
             };
         }
-        Image imageToSave = new Image(imageRequest.getDescription(), imageBlob, property, building, imageRequest.getIsMainImage());
+        Image imageToSave = new Image(imageRequest.getId(), imageRequest.getDescription(), imageBlob, property, building, imageRequest.getIsMainImage());
         imageService.saveImage(imageToSave);
         return "New Image is saved";
     }

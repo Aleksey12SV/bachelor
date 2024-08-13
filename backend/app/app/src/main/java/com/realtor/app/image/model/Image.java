@@ -5,14 +5,15 @@ import com.realtor.app.real_estate.model.RealEstate;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @Table(name = "images")
 public class Image {
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
-    @Column (name = "id")
-    private int id;
+    @Column (nullable = false, updatable = false, unique = true, name = "id")
+    private UUID id;
 
     @Column (name = "description")
     private String description;
@@ -35,7 +36,8 @@ public class Image {
     public Image() {
     }
 
-    public Image(String description, byte[] imageBlob, RealEstate realEstate, Building building, boolean mainImage) {
+    public Image(UUID id, String description, byte[] imageBlob, RealEstate realEstate, Building building, boolean mainImage) {
+        this.id = id;
         this.description = description;
         this.image = imageBlob;
         this.realEstate = realEstate;
@@ -43,11 +45,11 @@ public class Image {
         this.mainImage = mainImage;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
