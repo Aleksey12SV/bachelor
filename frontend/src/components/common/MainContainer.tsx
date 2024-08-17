@@ -16,10 +16,10 @@ export const MainContainer = () => {
 
   return (
     <div className="min-h-screen max-h-screen flex flex-col">
-      <div className="w-full flex py-4 px-8">
+      <div className="w-full flex py-4 px-8 shrink-0">
         <Navbar />
       </div>
-      <div id="main-container" className="w-full h-full flex flex-auto">
+      <div id="main-container" className="w-full flex flex-auto overflow-hidden">
         {outlet}
       </div>
     </div>

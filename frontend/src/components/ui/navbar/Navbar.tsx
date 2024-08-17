@@ -27,7 +27,7 @@ export const Navbar = () => {
     changeLanguage(newLanguage);
   };
   return (
-    <div className="w-full flex flex-row justify-around gap-10 relative ">
+    <div className="w-full flex flex-row justify-around gap-10 relative shrink-0">
       <NavigationMenu onValueChange={(value) => navigate(value)}>
         <NavigationMenuList className="gap-10">
           <NavigationMenuItem

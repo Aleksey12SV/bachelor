@@ -25,7 +25,6 @@ const getFilteredProperties = (
   axiosInstance.post(`real-estate/filtered`, filters).then(({ data }) => data);
 
 const PropertyList = () => {
-  const [height, setHeight] = useState<number>();
   const [selectedProperty, setSelectedProperty] = useState<RealEstate>();
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -55,20 +54,6 @@ const PropertyList = () => {
       }
     },
   });
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      const entry = entries[0];
-      setHeight(entry.target.clientHeight);
-    });
-    const mainContainer = document.querySelector("#main-container");
-    if (mainContainer) {
-      resizeObserver.observe(mainContainer);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
 
   const scrollableRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -97,11 +82,10 @@ const PropertyList = () => {
   }, [isAdding, realEstates, selectedProperty]);
 
   return (
-    <div className="h-full w-full flex flex-row">
+    <div className="w-full flex flex-row">
       <div
         ref={scrollableRef}
         className="flex flex-col overflow-auto p-2 gap-2 scrollable"
-        style={{ height }}
       >
         {hasRole([Roles.ADMIN]) && (
           <PropertyControls
