@@ -8,6 +8,9 @@ export const createRealEstate = (
   axiosInstance.post("real-estate", propertyInformation);
 
 export const updateRealEstate = (
-  propertyInformation: Partial<RealEstate>
+  propertyInformation: Partial<RealEstate> & { id: number }
 ): Promise<AxiosResponse<Partial<RealEstate>>> =>
-  axiosInstance.post("real-estate", propertyInformation);
+  axiosInstance.put(
+    `real-estate/${propertyInformation.id}`,
+    propertyInformation
+  );

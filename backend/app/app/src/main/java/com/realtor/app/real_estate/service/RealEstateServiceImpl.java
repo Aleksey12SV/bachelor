@@ -123,7 +123,7 @@ public class RealEstateServiceImpl implements RealEstateService {
         realEstate.setHeating(realEstateDTO.getHeating());
         realEstate.setDescription(realEstateDTO.getDescription());
         realEstate.setStatus(realEstateDTO.getStatus());
-//        realEstate.setSellers(realEstateDTO.getSellers());
+        realEstate.setSellers(realEstateDTO.getSellers());
     }
 
     @Override

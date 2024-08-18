@@ -1,19 +1,19 @@
 import { Building } from "./Building";
 import { RealEstate } from "./RealEstate";
 
-export type ImageRequest = {
+export type Image = {
+  id: string;
   description?: string;
-  propertyId?: number;
-  buildingId?: number;
-  image64: string;
-  isMainImage?: boolean;
+  mainImage?: boolean;
+  image: string;
 };
 
-export type ImageResponse = {
-  id: number;
-  description: string;
-  mainImage: boolean;
-  image: string;
+export type ImageRequest = Image & {
+  propertyId?: number;
+  buildingId?: number;
+};
+
+export type ImageResponse = Image & {
   realEstate?: RealEstate;
   building?: Building;
 };

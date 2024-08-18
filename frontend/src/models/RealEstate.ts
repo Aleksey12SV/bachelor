@@ -11,7 +11,7 @@ export type RealEstate = {
   floor: number;
   heating: string;
   title: string;
-  rooms: string;
+  rooms: number;
   description: string;
   publishDate: Date;
   status: string;

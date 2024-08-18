@@ -44,6 +44,7 @@ public class RealEstateController {
         return ResponseEntity.ok(createdRealEstate);
     }
 
+    @CrossOrigin(origins = "http://localhost:5173/")
     @PutMapping("/{id}")
     public ResponseEntity<RealEstate> updateRealEstate(@PathVariable int id, @RequestBody RealEstate realEstateDetails) {
         RealEstate updatedRealEstate = realEstateService.updateRealEstate(id, realEstateDetails);

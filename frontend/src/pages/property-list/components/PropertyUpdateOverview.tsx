@@ -1,6 +1,6 @@
 import { getBuildings } from "@/api/buildings";
-import { createImage, getPropertyImages } from "@/api/images";
-import { createRealEstate } from "@/api/real-estates";
+import { createImage } from "@/api/images";
+import { createRealEstate, updateRealEstate } from "@/api/real-estates";
 import { getSellers } from "@/api/sellers";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,22 +19,38 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { ImageRequest } from "@/models/Image";
 import { RealEstate } from "@/models/RealEstate";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import {
+  InfiniteData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import ImageSection from "./ImageSection";
 import { getPropertyTypes } from "@/api/property-types";
+import {
+  MultiSelector,
+  MultiSelectorContent,
+  MultiSelectorInput,
+  MultiSelectorItem,
+  MultiSelectorList,
+  MultiSelectorTrigger,
+} from "@/components/ui/multiselect";
+import { PaginatedData } from "@/models/PaginatedData";
+import useImages from "../hooks/useImages";
 
 const PropertyUpdateOverview = ({
   property,
   onSubmit,
+  isEditing,
 }: {
   property: RealEstate | undefined;
   onSubmit: () => void;
+  isEditing?: boolean;
 }) => {
-  const [images, setImages] = useState<ImageRequest[]>([{ image64: "" }]);
+  const queryClient = useQueryClient();
+
   const { data: propertyTypes } = useQuery({
     queryKey: ["property-types"],
     queryFn: getPropertyTypes,
@@ -48,16 +64,12 @@ const PropertyUpdateOverview = ({
     queryKey: ["sellers"],
     queryFn: getSellers,
   });
-  const { data: propertyImages } = useQuery({
-    queryKey: ["propertyImages", property?.id],
-    queryFn: () => getPropertyImages(property?.id.toString() ?? ""),
-    initialData: [],
-    enabled: property?.id !== undefined,
-  });
+  const { images, onImageAdd, onImageDelete, onImageUpdate } = useImages(property?.id);
   const form = useForm<Partial<RealEstate>>({
     values: {
       floor: property?.floor,
       size: property?.size,
+      rooms: property?.rooms,
       heating: property?.heating,
       status: property?.status,
       price: property?.price,
@@ -68,31 +80,87 @@ const PropertyUpdateOverview = ({
       propertyType: property?.propertyType,
     },
   });
+
   const saveRealEstateMutation = useMutation({
     mutationFn: async (data: Partial<RealEstate>) => {
-      await createRealEstate(data).then(({ data }) => {
+      await createRealEstate(data).then(async ({ data }) => {
         Promise.all(
           images
-            .filter((i) => i.image64)
+            .filter((i) => i.image)
             .map((image) =>
-              createImage({ ...image, propertyId: data.id, description: "" })
+              createImage({
+                ...image,
+                propertyId: data.id,
+              })
             )
         );
       });
     },
+    onMutate: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["real-estates"] });
+    },
+  });
+  const updateRealEstateMutation = useMutation({
+    mutationFn: async (data: Partial<RealEstate> & { id: number }) => {
+      if (data.id === undefined) return;
+      await updateRealEstate(data);
+    },
+    onMutate: async (data) => {
+      await queryClient.cancelQueries({
+        queryKey: ["real-estates"],
+      });
+      const previousFetchedRealEstates:
+        | InfiniteData<PaginatedData<RealEstate>>
+        | undefined = queryClient.getQueryData(["real-estates"]);
+      queryClient.setQueryData<InfiniteData<PaginatedData<RealEstate>>>(
+        ["real-estates"],
+        (oldPropertiesInformation) => {
+          if (oldPropertiesInformation === undefined)
+            return oldPropertiesInformation;
+          const newPropertiesPages = oldPropertiesInformation?.pages.map(
+            (page) => ({
+              ...page,
+              content: page.content.map((realEstate) => {
+                if (realEstate.id === data.id) {
+                  return {
+                    ...realEstate,
+                    ...data,
+                  };
+                }
+                return realEstate;
+              }),
+            })
+          );
+          return {
+            ...oldPropertiesInformation,
+            pages: newPropertiesPages,
+          };
+        }
+      );
+      return { previousFetchedRealEstates };
+    },
+    onError: (_err, _variables, context) => {
+      queryClient.setQueryData(
+        ["real-estates"],
+        context?.previousFetchedRealEstates
+      );
+    },
   });
   const handleSubmit = (data: Partial<RealEstate>) => {
-    console.log({
-      title: "You submitted the following values:",
-      data,
-    });
-    saveRealEstateMutation.mutateAsync(data);
+    if (isEditing) {
+      property !== undefined &&
+        updateRealEstateMutation.mutateAsync({ ...data, id: property.id });
+    } else {
+      saveRealEstateMutation.mutateAsync(data);
+    }
+
     onSubmit();
     form.reset();
   };
-  console.log(form);
+
   return (
-    <div className="overflow-auto w-full h-full">
+    <div className="overflow-auto w-full h-full scrollable">
+      <h2>{isEditing ? "Edit property" : "Add property"}</h2>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -113,10 +181,34 @@ const PropertyUpdateOverview = ({
           />
           <FormField
             control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="floor"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Floor</FormLabel>
+                <FormControl>
+                  <Input type="number" min={0} step={1} {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="rooms"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Rooms</FormLabel>
                 <FormControl>
                   <Input type="number" min={0} step={1} {...field} />
                 </FormControl>
@@ -148,10 +240,10 @@ const PropertyUpdateOverview = ({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="GRUB_STROEJ">Grub stroej</SelectItem>
-                    <SelectItem value="AKT_14">AKT 14</SelectItem>
-                    <SelectItem value="AKT_15">AKT 15</SelectItem>
-                    <SelectItem value="AKT_16">AKT 16</SelectItem>
+                    <SelectItem value="Ready to Use">Ready to use</SelectItem>
+                    <SelectItem value="In Building Process">
+                      In Building Process
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </FormItem>
@@ -204,16 +296,15 @@ const PropertyUpdateOverview = ({
                         propertyTypes?.find((p) => p.id.toString() === value)
                       )
                     }
-                    value={field.value?.name}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue>{field.value?.name}</SelectValue>
+                        <div>{field.value?.name ?? ""}</div>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {propertyTypes?.map((type) => (
-                        <SelectItem value={type.id.toString()}>
+                        <SelectItem key={type.id} value={type.id.toString()}>
                           {type.name}
                         </SelectItem>
                       ))}
@@ -235,18 +326,24 @@ const PropertyUpdateOverview = ({
                       buildings?.find((b) => b.id.toString() === value)
                     )
                   }
-                  value={field.value?.name}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue>
-                        {field.value?.name + ", " + field.value?.district.city}
-                      </SelectValue>
+                      <div>
+                        {field.value
+                          ? field.value?.name +
+                            ", " +
+                            field.value?.district.city.name
+                          : ""}
+                      </div>
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     {buildings?.map((building) => (
-                      <SelectItem value={building.id.toString()}>
+                      <SelectItem
+                        key={building.id}
+                        value={building.id.toString()}
+                      >
                         {building.name}, {building.district.city.name}
                       </SelectItem>
                     ))}
@@ -259,39 +356,52 @@ const PropertyUpdateOverview = ({
             control={form.control}
             name="sellers"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full">
                 <FormLabel>Sellers</FormLabel>
-                <Select
-                  onValueChange={(value) =>
+                <MultiSelector
+                  onValuesChange={(values) => {
                     field.onChange(
-                      sellers?.find((s) => s.id.toString() === value)
-                    )
-                  }
+                      sellers?.filter((seller) =>
+                        values.includes(
+                          seller.firstName + " " + seller.lastName
+                        )
+                      )
+                    );
+                  }}
+                  values={(field.value ?? [])?.map(
+                    (s) => s.firstName + " " + s.lastName
+                  )}
                 >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {sellers?.map((s) => (
-                      <SelectItem value={s.id.toString()}>
-                        {s.firstName}, {s.lastName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  <MultiSelectorTrigger>
+                    <MultiSelectorInput />
+                  </MultiSelectorTrigger>
+                  <MultiSelectorContent>
+                    <MultiSelectorList>
+                      {sellers?.map((seller) => (
+                        <MultiSelectorItem
+                          key={seller.id}
+                          value={seller.firstName + " " + seller.lastName}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <span>
+                              {seller.firstName + " " + seller.lastName}
+                            </span>
+                          </div>
+                        </MultiSelectorItem>
+                      ))}
+                    </MultiSelectorList>
+                  </MultiSelectorContent>
+                </MultiSelector>
               </FormItem>
             )}
           />
         </form>
       </Form>
       <ImageSection
-        images={propertyImages}
-        onDelete={(imageIndex) =>
-          setImages(images.filter((_, i) => i !== imageIndex))
-        }
-        onUpdate={(updatedImages) => setImages(updatedImages)}
+        images={images}
+        onDelete={onImageDelete}
+        onAdd={onImageAdd}
+        onUpdate={onImageUpdate}
       />
     </div>
   );

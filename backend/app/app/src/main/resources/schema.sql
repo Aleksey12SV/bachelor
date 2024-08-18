@@ -57,7 +57,7 @@ CREATE TABLE real_estates (
 );
 
 CREATE TABLE images (
-  id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  id BINARY(16) PRIMARY KEY NOT NULL,
   property_id integer,
   building_id INTEGER,
   description varchar(255),

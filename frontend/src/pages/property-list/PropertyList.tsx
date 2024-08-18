@@ -73,12 +73,17 @@ const PropertyList = () => {
   }, [fetchNextPage]);
   const realEstates = useMemo(
     () => data?.pages.flatMap((p) => p.content) ?? [],
-    [data?.pages]
+    [data]
   );
 
   useEffect(() => {
     if (isAdding) return;
-    if (!selectedProperty) setSelectedProperty(realEstates[0]);
+    if (
+      !selectedProperty ||
+      (selectedProperty.id === realEstates[0].id &&
+        selectedProperty !== realEstates[0])
+    )
+      setSelectedProperty(realEstates[0]);
   }, [isAdding, realEstates, selectedProperty]);
 
   return (
@@ -133,6 +138,7 @@ const PropertyList = () => {
           <PropertyUpdateOverview
             property={selectedProperty}
             onSubmit={() => setIsEditing(false)}
+            isEditing
           />
         )}
       </div>
