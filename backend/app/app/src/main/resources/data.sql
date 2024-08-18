@@ -1,10 +1,79 @@
 -- Insert initial data into cities table
-INSERT INTO cities (id, name) VALUES (1, 'City One');
-INSERT INTO cities (id, name) VALUES (2, 'City Two');
+INSERT INTO cities (id, name) VALUES (1, 'Blagoevgrad');
+INSERT INTO cities (id, name) VALUES (2, 'Burgas');
+INSERT INTO cities (id, name) VALUES (3, 'Dobrich');
+INSERT INTO cities (id, name) VALUES (4, 'Gabrovo');
+INSERT INTO cities (id, name) VALUES (5, 'Haskovo');
+INSERT INTO cities (id, name) VALUES (6, 'Kardzhali');
+INSERT INTO cities (id, name) VALUES (7, 'Kyustendil');
+INSERT INTO cities (id, name) VALUES (8, 'Lovech');
+INSERT INTO cities (id, name) VALUES (9, 'Montana');
+INSERT INTO cities (id, name) VALUES (10, 'Pazardzhik');
+INSERT INTO cities (id, name) VALUES (11, 'Pernik');
+INSERT INTO cities (id, name) VALUES (12, 'Pleven');
+INSERT INTO cities (id, name) VALUES (13, 'Plovdiv');
+INSERT INTO cities (id, name) VALUES (14, 'Razgrad');
+INSERT INTO cities (id, name) VALUES (15, 'Ruse');
+INSERT INTO cities (id, name) VALUES (16, 'Shumen');
+INSERT INTO cities (id, name) VALUES (17, 'Silistra');
+INSERT INTO cities (id, name) VALUES (18, 'Sliven');
+INSERT INTO cities (id, name) VALUES (19, 'Smolyan');
+INSERT INTO cities (id, name) VALUES (20, 'Sofia');
+INSERT INTO cities (id, name) VALUES (21, 'Stara Zagora');
+INSERT INTO cities (id, name) VALUES (22, 'Targovishte');
+INSERT INTO cities (id, name) VALUES (23, 'Varna');
+INSERT INTO cities (id, name) VALUES (24, 'Veliko Tarnovo');
+INSERT INTO cities (id, name) VALUES (25, 'Vidin');
+INSERT INTO cities (id, name) VALUES (26, 'Vratsa');
+INSERT INTO cities (id, name) VALUES (27, 'Yambol');
 
--- Insert initial data into districts table
-INSERT INTO districts (id, name, city_id) VALUES (1, 'District One', 1);
-INSERT INTO districts (id, name, city_id) VALUES (2, 'District Two', 2);
+-- Districts in Varna (city_id = 23)
+INSERT INTO districts (id, name, city_id) VALUES (1, 'Asparuhovo', 23);
+INSERT INTO districts (id, name, city_id) VALUES (2, 'Briz', 23);
+INSERT INTO districts (id, name, city_id) VALUES (3, 'Chayka', 23);
+INSERT INTO districts (id, name, city_id) VALUES (4, 'Galata', 23);
+INSERT INTO districts (id, name, city_id) VALUES (5, 'Levski', 23);
+INSERT INTO districts (id, name, city_id) VALUES (6, 'Mladost', 23);
+INSERT INTO districts (id, name, city_id) VALUES (7, 'Odessos', 23);
+INSERT INTO districts (id, name, city_id) VALUES (8, 'Primorski', 23);
+INSERT INTO districts (id, name, city_id) VALUES (9, 'Vladislav Varnenchik', 23);
+
+-- Districts in Sofia (city_id = 20)
+INSERT INTO districts (id, name, city_id) VALUES (10, 'Vitosha', 20);
+INSERT INTO districts (id, name, city_id) VALUES (11, 'Krasno Selo', 20);
+INSERT INTO districts (id, name, city_id) VALUES (12, 'Lozenets', 20);
+INSERT INTO districts (id, name, city_id) VALUES (13, 'Lulin', 20);
+INSERT INTO districts (id, name, city_id) VALUES (14, 'Mladost', 20);
+INSERT INTO districts (id, name, city_id) VALUES (15, 'Nadezhda', 20);
+INSERT INTO districts (id, name, city_id) VALUES (16, 'Oborishte', 20);
+INSERT INTO districts (id, name, city_id) VALUES (17, 'Ovcha Kupel', 20);
+INSERT INTO districts (id, name, city_id) VALUES (18, 'Pancharevo', 20);
+INSERT INTO districts (id, name, city_id) VALUES (19, 'Serdika', 20);
+INSERT INTO districts (id, name, city_id) VALUES (20, 'Sredets', 20);
+INSERT INTO districts (id, name, city_id) VALUES (21, 'Studentski', 20);
+INSERT INTO districts (id, name, city_id) VALUES (22, 'Triaditsa', 20);
+INSERT INTO districts (id, name, city_id) VALUES (23, 'Vrabnitsa', 20);
+
+-- Districts in Plovdiv (city_id = 13)
+INSERT INTO districts (id, name, city_id) VALUES (24, 'Central', 13);
+INSERT INTO districts (id, name, city_id) VALUES (25, 'Trakia', 13);
+INSERT INTO districts (id, name, city_id) VALUES (26, 'Izgrev', 13);
+INSERT INTO districts (id, name, city_id) VALUES (27, 'Severen', 13);
+INSERT INTO districts (id, name, city_id) VALUES (28, 'Zapaden', 13);
+INSERT INTO districts (id, name, city_id) VALUES (29, 'Yuzhen', 13);
+INSERT INTO districts (id, name, city_id) VALUES (30, 'Kamenitsa', 13);
+INSERT INTO districts (id, name, city_id) VALUES (31, 'Smirnenski', 13);
+
+-- Districts in Burgas (city_id = 2)
+INSERT INTO districts (id, name, city_id) VALUES (32, 'Bratya Miladinovi', 2);
+INSERT INTO districts (id, name, city_id) VALUES (33, 'Izgrev', 2);
+INSERT INTO districts (id, name, city_id) VALUES (34, 'Lazur', 2);
+INSERT INTO districts (id, name, city_id) VALUES (35, 'Meden Rudnik', 2);
+INSERT INTO districts (id, name, city_id) VALUES (36, 'Slaveykov', 2);
+INSERT INTO districts (id, name, city_id) VALUES (37, 'Zornitsa', 2);
+INSERT INTO districts (id, name, city_id) VALUES (38, 'Sarafovo', 2);
+INSERT INTO districts (id, name, city_id) VALUES (39, 'Vazrazhdane', 2);
+
 
 -- Insert initial data into buildings table
 INSERT INTO buildings (id, name, district_id, floors, year, construction, description) VALUES
