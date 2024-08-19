@@ -26,6 +26,9 @@ export const formSchema = z.object({
   maxSize: z.string().optional(),
   minFloor: z.string().optional(),
   maxFloor: z.string().optional(),
+  minYear: z.string().optional(),
+  maxYear: z.string().optional(),
+  construction: z.string().optional(),
   propertyTypes: z
     .array(z.string())
     .refine((v) => v.some((i) => i))

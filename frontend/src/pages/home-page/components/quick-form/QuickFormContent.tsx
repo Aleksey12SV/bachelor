@@ -23,9 +23,11 @@ import { FormType, SortingEnum } from "@/models/RealEstateForm";
 
 const QuickFormContent = ({
   form,
+  showAdditionalFilters,
   onShowAdditionalFilters,
 }: {
   form: UseFormReturn<FormType>;
+  showAdditionalFilters: boolean;
   onShowAdditionalFilters: () => void;
 }) => {
   const { data: cities } = useQuery({
@@ -49,7 +51,7 @@ const QuickFormContent = ({
               <FormLabel>Location</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="border solid h-[30px]">
+                  <SelectTrigger className="border solid">
                     <SelectValue />
                   </SelectTrigger>
                 </FormControl>
@@ -197,7 +199,7 @@ const QuickFormContent = ({
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="border solid h-[30px]">
+                    <SelectTrigger className="border solid">
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
@@ -224,7 +226,7 @@ const QuickFormContent = ({
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="border solid h-[30px]">
+                    <SelectTrigger className="border solid">
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
@@ -243,26 +245,7 @@ const QuickFormContent = ({
         </div>
       </div>
       <div className="flex flex-col gap-4">
-        <Button type="submit">Submit</Button>
-        <FormField
-          control={form.control}
-          name="showRealEstatesWithoutImages"
-          render={({ field }) => {
-            return (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <FormControl>
-                  <Checkbox
-                    checked={!field.value}
-                    onCheckedChange={(checked) => field.onChange(!checked)}
-                  />
-                </FormControl>
-                <FormLabel className="font-normal">
-                  Show properties with images only
-                </FormLabel>
-              </FormItem>
-            );
-          }}
-        />
+        <Button className="mt-8" type="submit">Submit</Button>
         <FormField
           control={form.control}
           name="sorting"
@@ -287,15 +270,36 @@ const QuickFormContent = ({
             </FormItem>
           )}
         />
-        <Button
-          className="mt-auto bg-[#acc0f4] text-black self-end"
-          onClick={(e) => {
-            e.preventDefault();
-            onShowAdditionalFilters();
+                <FormField
+          control={form.control}
+          name="showRealEstatesWithoutImages"
+          render={({ field }) => {
+            return (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={!field.value}
+                    onCheckedChange={(checked) => field.onChange(!checked)}
+                  />
+                </FormControl>
+                <FormLabel className="font-normal">
+                  Show properties with images only
+                </FormLabel>
+              </FormItem>
+            );
           }}
-        >
-          Show additional filters
-        </Button>
+        />
+        {!showAdditionalFilters && (
+          <Button
+            className="mt-auto self-end"
+            onClick={(e) => {
+              e.preventDefault();
+              onShowAdditionalFilters();
+            }}
+          >
+            Show additional filters
+          </Button>
+        )}
       </div>
     </>
   );

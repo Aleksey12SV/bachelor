@@ -6,6 +6,7 @@ public class RealEstateFilters {
     private String location;
     private String heating;
     private String status;
+    private String construction;
     private Double priceFrom;
     private Double priceTo;
     private Double priceFromSqM;
@@ -14,6 +15,8 @@ public class RealEstateFilters {
     private Double maxSize;
     private Integer minFloor;
     private Integer maxFloor;
+    private Integer minYear;
+    private Integer maxYear;
     private List<String> propertyTypes;
     private Boolean showRealEstatesWithoutImages = true;
     private String sorting;
@@ -36,6 +39,30 @@ public class RealEstateFilters {
 
     public void setPage(Integer page) {
         this.page = page;
+    }
+
+    public String getConstruction() {
+        return construction;
+    }
+
+    public void setConstruction(String construction) {
+        this.construction = construction;
+    }
+
+    public Integer getMaxYear() {
+        return maxYear;
+    }
+
+    public void setMaxYear(Integer maxYear) {
+        this.maxYear = maxYear;
+    }
+
+    public Integer getMinYear() {
+        return minYear;
+    }
+
+    public void setMinYear(Integer minYear) {
+        this.minYear = minYear;
     }
 
     public Integer getSize() {

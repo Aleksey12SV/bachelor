@@ -80,7 +80,7 @@ const PropertyList = () => {
     if (isAdding) return;
     if (
       !selectedProperty ||
-      (selectedProperty.id === realEstates[0].id &&
+      (selectedProperty.id === realEstates[0]?.id &&
         selectedProperty !== realEstates[0])
     )
       setSelectedProperty(realEstates[0]);
@@ -90,7 +90,7 @@ const PropertyList = () => {
     <div className="w-full flex flex-row">
       <div
         ref={scrollableRef}
-        className="flex flex-col overflow-auto p-2 gap-2 scrollable"
+        className="flex flex-col overflow-auto p-2 gap-2 scrollable min-w-[250px]"
       >
         {hasRole([Roles.ADMIN]) && (
           <PropertyControls
@@ -111,7 +111,7 @@ const PropertyList = () => {
             }}
           />
         )}
-        {realEstates.map((property) => (
+        {realEstates.length ? realEstates.map((property) => (
           <PropertyCard
             key={property.id}
             property={property}
@@ -121,7 +121,7 @@ const PropertyList = () => {
               setIsEditing(false);
             }}
           />
-        ))}
+        )) : <div>No properties matching the criteria were found.</div>}
         {isFetching && <p>Loading...</p>}
       </div>
       <div className="flex p-4 flex-auto w-full overflow-hidden">

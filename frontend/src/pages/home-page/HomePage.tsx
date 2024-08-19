@@ -108,6 +108,7 @@ export const HomePage = () => {
           >
             <QuickFormContent
               form={form}
+              showAdditionalFilters={showMoreFilters}
               onShowAdditionalFilters={() => setShowMoreFilters(true)}
             />
             {showMoreFilters && (

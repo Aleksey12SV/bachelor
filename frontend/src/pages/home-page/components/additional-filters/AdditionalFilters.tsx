@@ -1,4 +1,5 @@
 import { getSellers } from "@/api/sellers";
+import { Button } from "@/components/ui/button";
 import {
   FormControl,
   FormField,
@@ -40,7 +41,7 @@ const AdditionalFilters = ({
               <FormLabel>Rooms</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="border solid h-[30px]">
+                  <SelectTrigger className="border solid">
                     <SelectValue />
                   </SelectTrigger>
                 </FormControl>
@@ -116,7 +117,6 @@ const AdditionalFilters = ({
             )}
           />
         </div>
-        <button onClick={onHideAdditionalFilters}>Hide filter</button>
       </div>
       <div className="flex flex-col gap-4">
         <FormField
@@ -162,6 +162,59 @@ const AdditionalFilters = ({
             </FormItem>
           )}
         />
+        <div className="grid grid-cols-2 gap-2">
+          <FormField
+            control={form.control}
+            name="minYear"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Min Year</FormLabel>
+                <FormControl>
+                  <Input {...field} type="number" pattern="\d*" min={0} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="maxYear"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Max Year</FormLabel>
+                <FormControl>
+                  <Input {...field} type="number" pattern="\d*" min={0} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+      </div>
+      <div className="flex flex-col gap-4">
+        <FormField
+          control={form.control}
+          name="construction"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Construction</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="Panel">Panel</SelectItem>
+                  <SelectItem value="Brick">Brick</SelectItem>
+                  <SelectItem value="EPK">EPK</SelectItem>
+                  <SelectItem value="Temporary construction">
+                    Temporary construction
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </FormItem>
+          )}
+        />
+        <Button className="mt-8" onClick={onHideAdditionalFilters}>Hide filter</Button>
       </div>
     </>
   );
