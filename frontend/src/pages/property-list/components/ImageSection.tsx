@@ -33,7 +33,10 @@ const ImageSection = ({
     if (file) {
       fileToBase64(file)
         .then((base64Image) => {
-          onUpdate({ id: imageId, image: (base64Image as string).split(',')[1] });
+          onUpdate({
+            id: imageId,
+            image: (base64Image as string).split(",")[1],
+          });
         })
         .catch((error) => {
           console.error("Error converting file to base64", error);
@@ -73,6 +76,17 @@ const ImageSection = ({
                     onChange={(e) =>
                       onUpdate({ ...image, description: e.currentTarget.value })
                     }
+                  />
+                  <input
+                    type="checkbox"
+                    disabled={!image.mainImage && images.some(i => i.mainImage)}
+                    onChange={(e) => {
+                      onUpdate({
+                        ...image,
+                        mainImage: e.target.checked,
+                      });
+                    }}
+                    checked={!!image.mainImage}
                   />
                   <button
                     onClick={() => onDelete(image)}

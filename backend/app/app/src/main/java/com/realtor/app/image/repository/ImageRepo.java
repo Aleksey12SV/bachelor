@@ -7,9 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface ImageRepo extends JpaRepository<Image, Integer> {
+public interface ImageRepo extends JpaRepository<Image, UUID> {
+    Optional<Image> findById(UUID imageId);
     List<Image> getAllImagesByBuildingId(Long buildingId);
     List<Image> getAllImagesByRealEstateId(Long realEstateId);
     Optional<Image> findByBuildingIdAndMainImageTrue(Long buildingId);

@@ -3,10 +3,12 @@ package com.realtor.app.image.service;
 import com.realtor.app.image.model.Image;
 import com.realtor.app.image.repository.ImageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -15,6 +17,18 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Image saveImage(Image image){
         return imageRepo.save(image);
+    }
+
+    @Override
+    public Image updateImage (Image image){
+        Optional<Image> existingImageOpt = imageRepo.findById(image.getId());
+        if (existingImageOpt.isPresent()) {
+            Image existingImage = existingImageOpt.get();
+            existingImage.setDescription(image.getDescription());
+            existingImage.setMainImage(image.getMainImage());
+            return imageRepo.save(existingImage);
+        }
+        throw new Error("Image not found");
     }
 
     @Override
@@ -38,16 +52,16 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> getMainImageByPropertyId(Long buildingId){
-        return imageRepo.findByRealEstateIdAndMainImageTrue(buildingId);
+    public Optional<Image> getMainImageByPropertyId(Long propertyId){
+        return imageRepo.findByRealEstateIdAndMainImageTrue(propertyId);
     }
 
     @Override
-    public boolean deleteImage(Integer imageId){
+    public ResponseEntity<Void> deleteImage(UUID imageId){
         if(imageRepo.existsById(imageId)) {
             imageRepo.deleteById(imageId);
-            return true;
+            return ResponseEntity.noContent().build();
         }
-        return false;
+        return (ResponseEntity<Void>) ResponseEntity.notFound();
     }
 }

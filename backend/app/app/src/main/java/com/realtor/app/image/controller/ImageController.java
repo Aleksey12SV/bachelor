@@ -7,6 +7,7 @@ import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.image.service.ImageService;
 import com.realtor.app.real_estate.service.RealEstateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +18,9 @@ import java.util.UUID;
 
 class ImageRequest {
     private UUID id;
-    private String image64;
+    private String image;
     private String description;
-    private Boolean isMainImage;
+    private Boolean mainImage;
 
     private int propertyId;
     private int buildingId;
@@ -32,20 +33,12 @@ class ImageRequest {
         this.id = id;
     }
 
-    public int getBuildingId() {
-        return buildingId;
+    public String getImage() {
+        return image;
     }
 
-    public void setBuildingId(int buildingId) {
-        this.buildingId = buildingId;
-    }
-
-    public String getImage64() {
-        return image64;
-    }
-
-    public void setImage64(String image64) {
-        this.image64 = image64;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getDescription() {
@@ -56,6 +49,14 @@ class ImageRequest {
         this.description = description;
     }
 
+    public Boolean getMainImage() {
+        return Boolean.TRUE.equals(mainImage);
+    }
+
+    public void setMainImage(Boolean mainImage) {
+        this.mainImage = mainImage;
+    }
+
     public int getPropertyId() {
         return propertyId;
     }
@@ -64,12 +65,12 @@ class ImageRequest {
         this.propertyId = propertyId;
     }
 
-    public Boolean getIsMainImage() {
-        return Boolean.TRUE.equals(isMainImage);
+    public int getBuildingId() {
+        return buildingId;
     }
 
-    public void setIsMainImage(Boolean isMainImage) {
-        this.isMainImage = isMainImage;
+    public void setBuildingId(int buildingId) {
+        this.buildingId = buildingId;
     }
 }
 
@@ -88,16 +89,16 @@ public class ImageController {
     @PostMapping("/add")
 //    @PreAuthorize("hasRole('ADMIN')")
     public String add(@RequestBody ImageRequest imageRequest){
-        byte[] imageBlob = Base64.getDecoder().decode((extractBase64String(imageRequest.getImage64())));
+        byte[] imageBlob = Base64.getDecoder().decode((extractBase64String(imageRequest.getImage())));
         RealEstate property = realEstateService.getAllProperties().stream().filter(p -> p.getId() == imageRequest.getPropertyId()).findFirst().orElse(null);
         Building building = buildingService.getAllBuildings().stream().filter(p -> p.getId() == imageRequest.getBuildingId()).findFirst().orElse(null);
         if(property == null && building == null) { throw new Error("Both property and building null"); }
-        if(imageRequest.getIsMainImage() && building != null){
+        if(imageRequest.getMainImage() && building != null){
             if(imageService.getMainImageByBuildingId((long) building.getId()).isPresent()){
                 throw new Error("Main image was already saved");
             };
         }
-        Image imageToSave = new Image(imageRequest.getId(), imageRequest.getDescription(), imageBlob, property, building, imageRequest.getIsMainImage());
+        Image imageToSave = new Image(imageRequest.getId(), imageRequest.getDescription(), imageBlob, property, building, imageRequest.getMainImage());
         imageService.saveImage(imageToSave);
         return "New Image is saved";
     }
@@ -125,6 +126,19 @@ public class ImageController {
     @GetMapping("main/real-estate/{propertyId}")
     public Optional<Image> getMainImageByPropertyId(@PathVariable Long propertyId) {
         return imageService.getMainImageByPropertyId(propertyId);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173/")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteImage(@PathVariable UUID id) {
+        return imageService.deleteImage(id);
+    }
+    
+    @CrossOrigin(origins = "http://localhost:5173/")
+    @PutMapping()
+    public ResponseEntity<Image> updateImage(@RequestBody Image image) {
+        Image updatedImage = imageService.updateImage(image);
+        return ResponseEntity.ok(updatedImage);
     }
 
     private String extractBase64String(String base64Image) {

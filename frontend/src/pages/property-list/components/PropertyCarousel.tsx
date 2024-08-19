@@ -56,6 +56,7 @@ const PropertyCarousel = ({ propertyId }: { propertyId: string }) => {
       <div className="flex flex-row gap-5 p-5 max-h-[400px] overflow-auto flex-wrap">
         {propertyImages.map((image, index) => (
           <img
+            key={image.id}
             src={`data:image/jpeg;base64,${image?.image}`}
             alt="realtor-logo"
             className="h-20 aspect-video"

@@ -15,7 +15,7 @@ import { getMainImageForProperty } from "@/api/images";
 
 const PropertyCard = ({ property, onPreview }: { property: RealEstate, onPreview: () => void; }) => {
   const { data: image, isPending } = useQuery({
-    queryKey: ["images", property.id],
+    queryKey: ["mainImage", property.id],
     queryFn: async () => await getMainImageForProperty(property.id),
   });
 
