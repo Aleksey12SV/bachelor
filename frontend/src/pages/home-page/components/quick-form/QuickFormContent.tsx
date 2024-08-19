@@ -65,38 +65,43 @@ const QuickFormContent = ({
             </FormItem>
           )}
         />
-        <FormLabel className="">Property Type</FormLabel>
-        {propertyTypes.map((item) => (
-          <FormField
-            key={item.id}
-            control={form.control}
-            name="propertyTypes"
-            render={({ field }) => {
-              return (
-                <FormItem
-                  key={item.id}
-                  className="flex flex-row items-start space-x-3 space-y-0"
-                >
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value?.includes(item.name)}
-                      onCheckedChange={(checked) => {
-                        return checked
-                          ? field.onChange([...(field.value ?? []), item.name])
-                          : field.onChange(
-                              field.value?.filter(
-                                (value) => value !== item.name
-                              )
-                            );
-                      }}
-                    />
-                  </FormControl>
-                  <FormLabel className="font-normal">{item.name}</FormLabel>
-                </FormItem>
-              );
-            }}
-          />
-        ))}
+        <FormLabel>Property Type</FormLabel>
+        <div className="grid grid-cols-2 gap-2">
+          {propertyTypes.map((item) => (
+            <FormField
+              key={item.id}
+              control={form.control}
+              name="propertyTypes"
+              render={({ field }) => {
+                return (
+                  <FormItem
+                    key={item.id}
+                    className="flex flex-row items-start space-x-3 space-y-0"
+                  >
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value?.includes(item.name)}
+                        onCheckedChange={(checked) => {
+                          return checked
+                            ? field.onChange([
+                                ...(field.value ?? []),
+                                item.name,
+                              ])
+                            : field.onChange(
+                                field.value?.filter(
+                                  (value) => value !== item.name
+                                )
+                              );
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel className="font-normal">{item.name}</FormLabel>
+                  </FormItem>
+                );
+              }}
+            />
+          ))}
+        </div>
       </div>
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-2">
@@ -198,7 +203,9 @@ const QuickFormContent = ({
                   </FormControl>
                   <SelectContent>
                     {Array.from({ length: 30 }, (_, i) => i).map((value) => (
-                      <SelectItem key={value} value={value.toString()}>{value}</SelectItem>
+                      <SelectItem key={value} value={value.toString()}>
+                        {value}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -222,8 +229,10 @@ const QuickFormContent = ({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                  {Array.from({ length: 30 }, (_, i) => i).map((value) => (
-                      <SelectItem key={value} value={value.toString()}>{value}</SelectItem>
+                    {Array.from({ length: 30 }, (_, i) => i).map((value) => (
+                      <SelectItem key={value} value={value.toString()}>
+                        {value}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>

@@ -133,7 +133,7 @@ public class ImageController {
     public ResponseEntity<Void> deleteImage(@PathVariable UUID id) {
         return imageService.deleteImage(id);
     }
-    
+
     @CrossOrigin(origins = "http://localhost:5173/")
     @PutMapping()
     public ResponseEntity<Image> updateImage(@RequestBody Image image) {

@@ -88,10 +88,17 @@ INSERT INTO buildings (id, name, district_id, floors, year, construction, descri
 (9, 'Building Nine', 1, 22, 2011, 'Brick', 'A high-rise building known for its unique architecture.'),
 (10, 'Building Ten', 2, 30, 2022, 'Panel', 'The tallest building in the district with luxury apartments.');
 
-
 -- Insert initial data into property_type table
 INSERT INTO property_type (id, name, description) VALUES (1, 'Apartment', 'Residential apartment');
-INSERT INTO property_type (id, name, description) VALUES (2, 'Office', 'Commercial office space');
+INSERT INTO property_type (id, name, description) VALUES (2, 'Studio', 'Compact, self-contained living space');
+INSERT INTO property_type (id, name, description) VALUES (3, 'Hotel', 'Commercial property providing lodging services');
+INSERT INTO property_type (id, name, description) VALUES (4, 'Warehouse', 'Storage or distribution facility');
+INSERT INTO property_type (id, name, description) VALUES (5, 'House', 'Standalone residential property');
+INSERT INTO property_type (id, name, description) VALUES (6, 'Office', 'Commercial space for business operations');
+INSERT INTO property_type (id, name, description) VALUES (7, 'Garage', 'Enclosed space for vehicle storage');
+INSERT INTO property_type (id, name, description) VALUES (8, 'Villa', 'Luxurious, often spacious residential property');
+INSERT INTO property_type (id, name, description) VALUES (9, 'Plot', 'Parcel of land for development or investment');
+INSERT INTO property_type (id, name, description) VALUES (10, 'Farmland', 'Agricultural land for farming or livestock');
 
 -- Insert initial data into real_estates table
 INSERT INTO real_estates (id, building_id, price, property_size, property_type_id, floor, heating, description, status, publish_date, rooms, title) VALUES
