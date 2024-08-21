@@ -18,4 +18,6 @@ public interface ImageRepo extends JpaRepository<Image, UUID> {
     Optional<Image> findByRealEstateIdAndMainImageTrue(Long propertyId);
     @Transactional
     void deleteByRealEstateId(Integer realEstateId);
+    @Transactional
+    void deleteByBuildingId(Integer buildingId);
 }

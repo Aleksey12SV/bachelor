@@ -12,3 +12,7 @@ export const getPaginatedBuildings = (
   axiosInstance
     .get(`building/getAll/paginated?page=${page}&size=${size}`)
     .then(({ data }) => data);
+
+    
+export const deleteBuilding = (id: number): Promise<void> =>
+  axiosInstance.delete(`/building/${id}`).then(({ data }) => data);

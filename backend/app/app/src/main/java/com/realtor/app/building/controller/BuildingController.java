@@ -5,6 +5,7 @@ import com.realtor.app.building.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -90,5 +91,12 @@ public class BuildingController {
         }
         return buildingService.getAllFilteredBuildings(buildingRequest.getCity_id(),PageRequest.of(buildingRequest.getPage(),buildingRequest.getSize()));
 //        return buildingService.getAllFilteredBuildings(buildingRequest.getStartYear(), buildingRequest.getEndYear(), buildingRequest.getCity_id(), PageRequest.of(buildingRequest.getPage(),buildingRequest.getSize()));
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173/")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBuilding(@PathVariable Integer id) {
+        buildingService.deleteBuilding(id);
+        return ResponseEntity.noContent().build();
     }
 }

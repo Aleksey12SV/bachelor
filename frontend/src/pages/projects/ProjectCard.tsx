@@ -13,8 +13,15 @@ import { Loader } from "lucide-react";
 import { useState } from "react";
 import BuildingDialogContent from "./components/BuildingDialogContent";
 import { getImagesForId } from "@/api/images";
+import { Button } from "@/components/ui/button";
 
-const ProjectCard = ({ building }: { building: Building }) => {
+const ProjectCard = ({
+  building,
+  onSelect,
+}: {
+  building: Building;
+  onSelect: (building: Building) => void;
+}) => {
   const [isDialogOpened, setIsDialogOpened] = useState(false);
   const { data: images, isPending } = useQuery({
     queryKey: ["images", building.id],
@@ -24,12 +31,23 @@ const ProjectCard = ({ building }: { building: Building }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Card onClick={() => setIsDialogOpened(true)} className="flex flex-col cursor-pointer hover:bg-slate-200">
+        <Card
+          onClick={() => setIsDialogOpened(true)}
+          className="flex flex-col cursor-pointer hover:bg-slate-200"
+        >
           <CardHeader>
             <CardTitle>{building.name}</CardTitle>
             <CardDescription>{`From ${building.year}`}</CardDescription>
           </CardHeader>
           <CardContent className="flex-auto">
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(building);
+              }}
+            >
+              Select
+            </Button>
             {isPending ? (
               <Loader />
             ) : (
@@ -44,7 +62,11 @@ const ProjectCard = ({ building }: { building: Building }) => {
           </CardFooter>
         </Card>
       </DialogTrigger>
-      <BuildingDialogContent building={building} shouldLoadImages={isDialogOpened} onClose={() => setIsDialogOpened(false)} />
+      <BuildingDialogContent
+        building={building}
+        shouldLoadImages={isDialogOpened}
+        onClose={() => setIsDialogOpened(false)}
+      />
     </Dialog>
   );
 };

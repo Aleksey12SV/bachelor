@@ -15,9 +15,7 @@ import { useKeycloak } from "@/components/auth/KeycloakProvider";
 import { Roles } from "@/components/auth/Roles";
 import PropertyUpdateOverview from "./components/PropertyUpdateOverview";
 import { FormType } from "@/models/RealEstateForm";
-
-const deleteProperty = (id: number): Promise<void> =>
-  axiosInstance.delete(`/real-estate/${id}`).then(({ data }) => data);
+import { deleteRealEstate } from "@/api/real-estates";
 
 const getFilteredProperties = (
   filters: Partial<FormType & { page: number; size: number }>
@@ -49,7 +47,7 @@ const PropertyList = () => {
   const deletePropertyMutation = useMutation({
     mutationFn: async () => {
       if (selectedProperty?.id) {
-        await deleteProperty(selectedProperty.id);
+        await deleteRealEstate(selectedProperty.id);
         await queryClient.invalidateQueries({ queryKey: ["real-estates"] });
       }
     },

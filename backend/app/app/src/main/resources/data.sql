@@ -97,8 +97,6 @@ INSERT INTO property_type (id, name, description) VALUES (5, 'House', 'Standalon
 INSERT INTO property_type (id, name, description) VALUES (6, 'Office', 'Commercial space for business operations');
 INSERT INTO property_type (id, name, description) VALUES (7, 'Garage', 'Enclosed space for vehicle storage');
 INSERT INTO property_type (id, name, description) VALUES (8, 'Villa', 'Luxurious, often spacious residential property');
-INSERT INTO property_type (id, name, description) VALUES (9, 'Plot', 'Parcel of land for development or investment');
-INSERT INTO property_type (id, name, description) VALUES (10, 'Farmland', 'Agricultural land for farming or livestock');
 
 -- Insert initial data into real_estates table
 INSERT INTO real_estates (id, building_id, price, property_size, property_type_id, floor, heating, description, status, publish_date, rooms, title) VALUES

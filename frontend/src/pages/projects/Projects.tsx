@@ -1,40 +1,53 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import ProjectCard from "./ProjectCard";
-import usePagination from "@/hooks/usePagination";
-import PaginationComponent from "@/components/common/PaginationComponent";
-import { getPaginatedBuildings } from "@/api/buildings";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { deleteBuilding } from "@/api/buildings";
+import { useKeycloak } from "@/components/auth/KeycloakProvider";
+import { Roles } from "@/components/auth/Roles";
+import PropertyControls from "../property-list/components/PropertyControls";
+import { Building } from "@/models/Building";
+import PaginatedBuildings from "./components/PaginatedBuildings";
+import BuildingUpdateOverview from "./components/BuildingUpdateOverview";
 
 const Projects = () => {
-  const [totalPages, setTotalPages] = useState(0);
-  const { page, setPage, decrementPage, incrementPage } =
-    usePagination(totalPages);
-  const { data } = useQuery({
-    queryKey: ["buildings", page],
-    queryFn: async () => await getPaginatedBuildings(page, 3),
-    placeholderData: keepPreviousData,
-  });
+  const queryClient = useQueryClient();
+  const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedBuilding, setSelectedBuilding] = useState<Building>();
+  const { hasRole } = useKeycloak();
 
-  useEffect(() => {
-    if (data?.totalPages) {
-      setTotalPages(data?.totalPages);
-    }
-  }, [data?.totalPages]);
+  const deletePropertyMutation = useMutation({
+    mutationFn: async () => {
+      if (selectedBuilding?.id) {
+        await deleteBuilding(selectedBuilding.id);
+        await queryClient.invalidateQueries({ queryKey: ["buildings"] });
+      }
+    },
+  });
 
   return (
     <div className="w-full flex flex-col">
-      <div className="w-full flex flex-auto grid grid-cols-3 gap-12 p-9">
-        {data?.content.map((building) => (
-          <ProjectCard key={building.id} building={building} />
-        ))}
-      </div>
-      <PaginationComponent
-        onNext={incrementPage}
-        onPrevious={decrementPage}
-        currentPage={page}
-        totalPages={totalPages}
-        onSelectedPage={(page: number) => setPage(page)}
-      />
+      {hasRole([Roles.ADMIN]) && (
+        <PropertyControls
+          onDelete={() => deletePropertyMutation.mutateAsync()}
+          hasSelectedProperty={!!selectedBuilding}
+          onAdd={() => {
+            setIsEditing(false);
+            setIsAdding(true);
+            setSelectedBuilding(undefined);
+          }}
+          onEdit={() => {
+            setIsEditing(true);
+            setIsAdding(false);
+          }}
+        />
+      )}
+      {!isEditing && !isAdding && (
+        <PaginatedBuildings
+          onBuildingSelect={(building) => setSelectedBuilding(building)}
+        />
+      )}
+      {isEditing ||
+        (isAdding && <BuildingUpdateOverview building={undefined} />)}
     </div>
   );
 };

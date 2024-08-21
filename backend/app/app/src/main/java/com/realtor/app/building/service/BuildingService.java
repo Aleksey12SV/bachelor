@@ -1,6 +1,8 @@
 package com.realtor.app.building.service;
 
 import com.realtor.app.building.model.Building;
+import com.realtor.app.real_estate.model.RealEstate;
+import com.realtor.app.real_estate.model.RealEstateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,4 +15,6 @@ public interface BuildingService {
 
     public Page<Building> getAllFilteredBuildings(int startYear, int endYear, int city_id, Pageable pageable);
     public Page<Building> getAllFilteredBuildings(int cityId, Pageable pageable);
+    public void deleteBuilding(Integer buildingId);
+    public Building updateBuilding(Integer buildingId, Building building);
 }

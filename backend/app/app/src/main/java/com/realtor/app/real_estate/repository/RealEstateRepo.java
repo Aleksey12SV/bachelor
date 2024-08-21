@@ -15,4 +15,7 @@ public interface RealEstateRepo extends JpaRepository<RealEstate, Integer> {
 
     @Query("SELECT r FROM RealEstate r JOIN r.sellers s WHERE s.id = :sellerId")
     List<RealEstate> findBySellerId(@Param("sellerId") int sellerId);
+
+    @Query("SELECT r FROM RealEstate r JOIN r.building s WHERE s.id = :buildingId")
+    List<RealEstate> findByBuildingId(@Param("buildingId") int buildingId);
 }

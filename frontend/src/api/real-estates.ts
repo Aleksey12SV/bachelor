@@ -14,3 +14,6 @@ export const updateRealEstate = (
     `real-estate/${propertyInformation.id}`,
     propertyInformation
   );
+
+export const deleteRealEstate = (id: number): Promise<void> =>
+  axiosInstance.delete(`/real-estate/${id}`).then(({ data }) => data);
