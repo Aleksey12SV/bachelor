@@ -12,7 +12,9 @@ export type RealEstate = {
   heating: string;
   title: string;
   rooms: number;
-  description: string;
+  descriptionBG: string;
+  descriptionEN: string;
+  topProperty: boolean;
   publishDate: Date;
   status: string;
   sellers: Seller[];

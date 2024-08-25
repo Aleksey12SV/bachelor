@@ -99,27 +99,28 @@ INSERT INTO property_type (id, name, description) VALUES (7, 'Garage', 'Enclosed
 INSERT INTO property_type (id, name, description) VALUES (8, 'Villa', 'Luxurious, often spacious residential property');
 
 -- Insert initial data into real_estates table
-INSERT INTO real_estates (id, building_id, price, property_size, property_type_id, floor, heating, description, status, publish_date, rooms, title) VALUES
-(1, 1, 250000.00, 85.0, 1, 5, 'Central', 'A spacious apartment with modern amenities.', 'Ready to Use', '2023-01-01', 3, 'Spacious Modern Apartment'),
-(2, 2, 180000.00, 45.0, 2, 3, 'Electric', 'A cozy apartment with a great view.', 'In Building Process', '2023-02-15', 1, 'Cozy Apartment with View'),
-(3, 1, 500000.00, 150.0, 2, 10, 'Gas', 'A luxury penthouse with panoramic views.', 'Ready to Use', '2023-03-20', 4, 'Luxury Penthouse'),
-(4, 2, 200000.00, 65.0, 1, 2, 'Central', 'A modern apartment with convenient access.', 'Ready to Use', '2023-04-25', 2, 'Modern Apartment'),
-(5, 1, 220000.00, 55.0, 1, 6, 'Electric', 'A well-maintained apartment in a prime location.', 'In Building Process', '2023-05-30', 2, 'Well-Maintained Prime Location Apartment'),
-(6, 2, 240000.00, 70.0, 2, 4, 'Gas', 'An apartment with contemporary design.', 'Ready to Use', '2023-06-10', 2, 'Contemporary Design Apartment'),
-(7, 1, 600000.00, 180.0, 2, 12, 'Central', 'A spacious penthouse with luxury finishes.', 'Ready to Use', '2023-07-15', 4, 'Luxury Finished Penthouse'),
-(8, 2, 280000.00, 90.0, 1, 7, 'Electric', 'A bright and airy apartment with modern features.', 'Ready to Use', '2023-08-20', 3, 'Bright and Airy Modern Apartment'),
-(9, 1, 150000.00, 40.0, 1, 1, 'Central', 'A compact apartment ideal for singles or couples.', 'In Building Process', '2023-09-25', 1, 'Compact Apartment for Singles/Couples'),
-(10, 2, 230000.00, 75.0, 2, 8, 'Gas', 'An elegant apartment with a great layout.', 'Ready to Use', '2023-10-30', 3, 'Elegant Apartment with Great Layout'),
-(11, 1, 200000.00, 50.0, 2, 2, 'Central', 'A stylish apartment in a well-connected area.', 'In Building Process', '2023-11-10', 2, 'Stylish Well-Connected Apartment'),
-(12, 2, 190000.00, 60.0, 1, 5, 'Electric', 'A charming apartment with updated appliances.', 'Ready to Use', '2023-12-05', 2, 'Charming Apartment with Updated Appliances'),
-(13, 1, 270000.00, 95.0, 1, 9, 'Gas', 'A beautifully designed apartment with great amenities.', 'Ready to Use', '2024-01-15', 3, 'Beautifully Designed Apartment with Amenities'),
-(14, 2, 210000.00, 55.0, 2, 3, 'Central', 'A comfortable apartment with modern decor.', 'In Building Process', '2024-02-20', 2, 'Comfortable Apartment with Modern Decor'),
-(15, 1, 400000.00, 130.0, 2, 11, 'Electric', 'A luxury apartment with high-end finishes.', 'Ready to Use', '2024-03-25', 4, 'Luxury Apartment with High-End Finishes'),
-(16, 2, 260000.00, 80.0, 1, 4, 'Gas', 'A bright apartment with a spacious living area.', 'Ready to Use', '2024-04-30', 3, 'Bright Apartment with Spacious Living Area'),
-(17, 1, 220000.00, 60.0, 1, 6, 'Central', 'A well-located apartment with modern features.', 'In Building Process', '2024-05-10', 2, 'Well-Located Apartment with Modern Features'),
-(18, 2, 350000.00, 100.0, 2, 10, 'Electric', 'A large apartment with premium amenities.', 'Ready to Use', '2024-06-15', 4, 'Large Apartment with Premium Amenities'),
-(19, 1, 250000.00, 85.0, 2, 7, 'Gas', 'A stylish apartment in a vibrant neighborhood.', 'Ready to Use', '2024-07-20', 3, 'Stylish Apartment in Vibrant Neighborhood'),
-(20, 2, 160000.00, 50.0, 1, 1, 'Central', 'A budget-friendly apartment in a great location.', 'In Building Process', '2024-08-25', 1, 'Budget-Friendly Apartment');
+INSERT INTO real_estates (id, building_id, price, property_size, property_type_id, floor, heating, descriptionBG, descriptionEN, top_property, status, publish_date, rooms, title) VALUES
+(1, 1, 250000.00, 85.0, 1, 5, 'Central', 'Просторен апартамент с модерни удобства.', 'A spacious apartment with modern amenities.', FALSE, 'Ready to Use', '2023-01-01', 3, 'Spacious Modern Apartment'),
+(2, 2, 180000.00, 45.0, 2, 3, 'Electric', 'Уютен апартамент с отлична гледка.', 'A cozy apartment with a great view.', FALSE, 'In Building Process', '2023-02-15', 1, 'Cozy Apartment with View'),
+(3, 1, 500000.00, 150.0, 2, 10, 'Gas', 'Луксозен пентхаус с панорамна гледка.', 'A luxury penthouse with panoramic views.', TRUE, 'Ready to Use', '2023-03-20', 4, 'Luxury Penthouse'),
+(4, 2, 200000.00, 65.0, 1, 2, 'Central', 'Модерен апартамент с удобен достъп.', 'A modern apartment with convenient access.', FALSE, 'Ready to Use', '2023-04-25', 2, 'Modern Apartment'),
+(5, 1, 220000.00, 55.0, 1, 6, 'Electric', 'Добре поддържан апартамент в отлична локация.', 'A well-maintained apartment in a prime location.', FALSE, 'In Building Process', '2023-05-30', 2, 'Well-Maintained Prime Location Apartment'),
+(6, 2, 240000.00, 70.0, 2, 4, 'Gas', 'Апартамент със съвременен дизайн.', 'An apartment with contemporary design.', FALSE, 'Ready to Use', '2023-06-10', 2, 'Contemporary Design Apartment'),
+(7, 1, 600000.00, 180.0, 2, 12, 'Central', 'Просторен пентхаус с луксозни довършителни работи.', 'A spacious penthouse with luxury finishes.', TRUE, 'Ready to Use', '2023-07-15', 4, 'Luxury Finished Penthouse'),
+(8, 2, 280000.00, 90.0, 1, 7, 'Electric', 'Светъл и просторен апартамент с модерни характеристики.', 'A bright and airy apartment with modern features.', FALSE, 'Ready to Use', '2023-08-20', 3, 'Bright and Airy Modern Apartment'),
+(9, 1, 150000.00, 40.0, 1, 1, 'Central', 'Компактен апартамент, идеален за самостоятелно живеене или двойки.', 'A compact apartment ideal for singles or couples.', FALSE, 'In Building Process', '2023-09-25', 1, 'Compact Apartment for Singles/Couples'),
+(10, 2, 230000.00, 75.0, 2, 8, 'Gas', 'Елегантен апартамент с отлична планировка.', 'An elegant apartment with a great layout.', FALSE, 'Ready to Use', '2023-10-30', 3, 'Elegant Apartment with Great Layout'),
+(11, 1, 200000.00, 50.0, 2, 2, 'Central', 'Стилен апартамент в добре свързан район.', 'A stylish apartment in a well-connected area.', FALSE, 'In Building Process', '2023-11-10', 2, 'Stylish Well-Connected Apartment'),
+(12, 2, 190000.00, 60.0, 1, 5, 'Electric', 'Очарователен апартамент с обновени уреди.', 'A charming apartment with updated appliances.', FALSE, 'Ready to Use', '2023-12-05', 2, 'Charming Apartment with Updated Appliances'),
+(13, 1, 270000.00, 95.0, 1, 9, 'Gas', 'Красиво проектиран апартамент с отлични удобства.', 'A beautifully designed apartment with great amenities.', FALSE, 'Ready to Use', '2024-01-15', 3, 'Beautifully Designed Apartment with Amenities'),
+(14, 2, 210000.00, 55.0, 2, 3, 'Central', 'Удобен апартамент с модерен декор.', 'A comfortable apartment with modern decor.', FALSE, 'In Building Process', '2024-02-20', 2, 'Comfortable Apartment with Modern Decor'),
+(15, 1, 400000.00, 130.0, 2, 11, 'Electric', 'Луксозен апартамент с висококачествени довършителни работи.', 'A luxury apartment with high-end finishes.', TRUE, 'Ready to Use', '2024-03-25', 4, 'Luxury Apartment with High-End Finishes'),
+(16, 2, 260000.00, 80.0, 1, 4, 'Gas', 'Светъл апартамент с просторна дневна зона.', 'A bright apartment with a spacious living area.', FALSE, 'Ready to Use', '2024-04-30', 3, 'Bright Apartment with Spacious Living Area'),
+(17, 1, 220000.00, 60.0, 1, 6, 'Central', 'Добре разположен апартамент с модерни характеристики.', 'A well-located apartment with modern features.', FALSE, 'In Building Process', '2024-05-10', 2, 'Well-Located Apartment with Modern Features'),
+(18, 2, 350000.00, 100.0, 2, 10, 'Electric', 'Голям апартамент с премиум удобства.', 'A large apartment with premium amenities.', TRUE, 'Ready to Use', '2024-06-15', 4, 'Large Apartment with Premium Amenities'),
+(19, 1, 250000.00, 85.0, 2, 7, 'Gas', 'Стилен апартамент в оживен квартал.', 'A stylish apartment in a vibrant neighborhood.', FALSE, 'Ready to Use', '2024-07-20', 3, 'Stylish Apartment in Vibrant Neighborhood'),
+(20, 2, 160000.00, 50.0, 1, 1, 'Central', 'Бюджетен апартамент в отлична локация.', 'A budget-friendly apartment in a great location.', FALSE, 'In Building Process', '2024-08-25', 1, 'Budget-Friendly Apartment');
+
 
 -- Insert initial data into sellers table
 INSERT INTO sellers (id, first_name, last_name, phone_number) VALUES (1, 'John', 'Doe', '123-456-7890');

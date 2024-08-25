@@ -65,7 +65,7 @@ const PropertyUpdateOverview = ({
     queryFn: getSellers,
   });
   const { images, oldImages, onImageAdd, onImageDelete, onImageUpdate } =
-    useImages(property?.id);
+    useImages(property?.id, "propertyImages");
   const form = useForm<Partial<RealEstate>>({
     values: {
       floor: property?.floor,
@@ -74,7 +74,7 @@ const PropertyUpdateOverview = ({
       heating: property?.heating,
       status: property?.status,
       price: property?.price,
-      description: property?.description,
+      descriptionBG: property?.descriptionBG,
       building: property?.building,
       sellers: property?.sellers,
       title: property?.title,
@@ -309,16 +309,48 @@ const PropertyUpdateOverview = ({
           />
           <FormField
             control={form.control}
-            name="description"
+            name="descriptionBG"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Real Estate Description" {...field} />
+                  <Textarea
+                    placeholder="Real Estate Description BG"
+                    {...field}
+                  />
                 </FormControl>
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="descriptionEN"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Real Estate Description EN"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="topProperty"
+            render={({ field }) => (
+              <input
+                type="checkbox"
+                onChange={(e) => {
+                  field.onChange(e.target.checked);
+                }}
+                checked={field.value}
+              />
+            )}
+          />
+
           <FormField
             control={form.control}
             name="propertyType"

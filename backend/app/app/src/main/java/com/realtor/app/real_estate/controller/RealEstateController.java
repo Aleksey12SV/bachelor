@@ -15,11 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class RealEstateController {
     @Autowired
     private RealEstateService realEstateService;
-    @PostMapping("/add")
-    public String add(@RequestBody RealEstate realEstate){
-        realEstateService.saveRealEstate(realEstate);
-        return "New real estate is saved";
-    }
+
     @GetMapping(value = "/getAll/paginated")
     public Page<RealEstate> getAllPaginatedRealEstates(@RequestParam(defaultValue = "0") int page,
                                                    @RequestParam(defaultValue = "10") int size){

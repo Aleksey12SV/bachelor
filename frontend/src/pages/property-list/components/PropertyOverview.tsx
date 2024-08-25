@@ -13,7 +13,7 @@ const PropertyOverview = ({
         title={
           selectedProperty.propertyType.name +
           " - " +
-          selectedProperty.description
+          selectedProperty.descriptionEN
         }
         size={selectedProperty.size}
         price={selectedProperty.price}

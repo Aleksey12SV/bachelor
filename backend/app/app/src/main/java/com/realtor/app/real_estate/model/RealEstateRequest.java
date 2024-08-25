@@ -21,9 +21,11 @@ public class RealEstateRequest {
 
     private float price;
     private float size;
+    private boolean topProperty;
     private int floor;
     private String heating;
-    private String description;
+    private String descriptionBG;
+    private String descriptionEN;
     private String status;
 
     public Set<Seller> getSellers() {
@@ -82,12 +84,28 @@ public class RealEstateRequest {
         this.heating = heating;
     }
 
-    public String getDescription() {
-        return description;
+    public boolean isTopProperty() {
+        return topProperty;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTopProperty(boolean topProperty) {
+        this.topProperty = topProperty;
+    }
+
+    public String getDescriptionBG() {
+        return descriptionBG;
+    }
+
+    public void setDescriptionBG(String descriptionBG) {
+        this.descriptionBG = descriptionBG;
+    }
+
+    public String getDescriptionEN() {
+        return descriptionEN;
+    }
+
+    public void setDescriptionEN(String descriptionEN) {
+        this.descriptionEN = descriptionEN;
     }
 
     public String getStatus() {

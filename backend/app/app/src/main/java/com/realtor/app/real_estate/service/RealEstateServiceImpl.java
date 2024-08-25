@@ -5,6 +5,9 @@ import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.real_estate.model.RealEstateFilters;
 import com.realtor.app.real_estate.model.RealEstateRequest;
 import com.realtor.app.real_estate.repository.RealEstateRepo;
+import com.realtor.app.seller.model.Seller;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,14 +15,17 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class RealEstateServiceImpl implements RealEstateService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
     @Autowired
     private RealEstateRepo realEstateRepo;
 
@@ -89,6 +95,7 @@ public class RealEstateServiceImpl implements RealEstateService {
     }
 
     @Override
+    @Transactional
     public RealEstate createRealEstate(RealEstateRequest realEstateRequest){
         RealEstate newRealEstate = new RealEstate();
         updateRealEstateFromRequest(newRealEstate, realEstateRequest);
@@ -124,9 +131,15 @@ public class RealEstateServiceImpl implements RealEstateService {
         realEstate.setSize(realEstateDTO.getSize());
         realEstate.setFloor(realEstateDTO.getFloor());
         realEstate.setHeating(realEstateDTO.getHeating());
-        realEstate.setDescription(realEstateDTO.getDescription());
+        realEstate.setDescriptionBG(realEstateDTO.getDescriptionBG());
+        realEstate.setDescriptionEN(realEstateDTO.getDescriptionEN());
+        realEstate.setTopProperty(realEstateDTO.isTopProperty());
         realEstate.setStatus(realEstateDTO.getStatus());
-        realEstate.setSellers(realEstateDTO.getSellers());
+        Set<Seller> mergedSellers = realEstateDTO.getSellers().stream()
+                .map(seller -> entityManager.merge(seller))
+                .collect(Collectors.toSet());
+
+        realEstate.setSellers(mergedSellers);
     }
 
     @Override
@@ -141,7 +154,9 @@ public class RealEstateServiceImpl implements RealEstateService {
             existingRealEstate.setSize(realEstateDetails.getSize());
             existingRealEstate.setFloor(realEstateDetails.getFloor());
             existingRealEstate.setHeating(realEstateDetails.getHeating());
-            existingRealEstate.setDescription(realEstateDetails.getDescription());
+            existingRealEstate.setDescriptionBG(realEstateDetails.getDescriptionBG());
+            existingRealEstate.setDescriptionEN(realEstateDetails.getDescriptionEN());
+            existingRealEstate.setTopProperty(realEstateDetails.isTopProperty());
             existingRealEstate.setPublishDate(realEstateDetails.getPublishDate());
             existingRealEstate.setStatus(realEstateDetails.getStatus());
             existingRealEstate.setSellers(realEstateDetails.getSellers());

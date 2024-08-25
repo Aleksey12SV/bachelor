@@ -43,6 +43,9 @@ public class RealEstate {
     @Column (name = "floor")
     private int floor;
 
+    @Column (name = "top_property")
+    private boolean topProperty;
+
     @Column (name = "title")
     private String title;
 
@@ -68,8 +71,11 @@ public class RealEstate {
     @Column (name = "heating")
     private String heating;
 
-    @Column (name = "description")
-    private String description;
+    @Column (name = "descriptionBG")
+    private String descriptionBG;
+
+    @Column (name = "descriptionEN")
+    private String descriptionEN;
 
     @Column (name = "publish_date")
     private Date publishDate;
@@ -77,7 +83,7 @@ public class RealEstate {
     @Column (name = "status")
     private String status;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "real_estates_sellers", joinColumns = @JoinColumn(name = "real_estate_id"),
             inverseJoinColumns = @JoinColumn(name = "seller_id"))
     private Set<Seller> sellers;
@@ -141,12 +147,28 @@ public class RealEstate {
         this.heating = heating;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionBG() {
+        return descriptionBG;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionBG(String descriptionBG) {
+        this.descriptionBG = descriptionBG;
+    }
+
+    public String getDescriptionEN() {
+        return descriptionEN;
+    }
+
+    public void setDescriptionEN(String descriptionEN) {
+        this.descriptionEN = descriptionEN;
+    }
+
+    public boolean isTopProperty() {
+        return topProperty;
+    }
+
+    public void setTopProperty(boolean topProperty) {
+        this.topProperty = topProperty;
     }
 
     public Date getPublishDate() {
