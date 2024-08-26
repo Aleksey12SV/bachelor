@@ -1,5 +1,9 @@
 import { axiosInstance } from "@/lib/axios";
 import { ImageRequest, ImageResponse } from "@/models/Image";
+import { PaginatedData } from "@/models/PaginatedData";
+
+export const getImages = (): Promise<ImageResponse[]> =>
+  axiosInstance.get("image/getAll").then(({ data }) => data);
 
 export const createImage = (imageInformation: Partial<ImageRequest>) =>
   (imageInformation.propertyId || imageInformation.buildingId) &&
@@ -15,8 +19,20 @@ export const getPropertyImages = (
     .get(`image/getAll/property/${propertyId}`)
     .then(({ data }) => data);
 
-export const getImagesForId = (id: number): Promise<ImageResponse[]> =>
-  axiosInstance.get(`image/getAll/${id}`).then(({ data }) => data);
+export const getBuildingImages = (
+  buildingId: string
+): Promise<ImageResponse[]> =>
+  axiosInstance
+    .get(`image/getAll/building/${buildingId}`)
+    .then(({ data }) => data);
+
+export const getPaginatedImages = (
+  page: number,
+  size: number
+): Promise<PaginatedData<ImageResponse>> =>
+  axiosInstance
+    .get(`image/getAll/paginated?page=${page}&size=${size}`)
+    .then(({ data }) => data);
 
 export const getMainImageForProperty = (id: number): Promise<ImageResponse> =>
   axiosInstance.get(`image/main/real-estate/${id}`).then(({ data }) => data);

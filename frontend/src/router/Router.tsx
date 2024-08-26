@@ -1,4 +1,5 @@
 import { MainContainer } from "@/components/common/MainContainer";
+import Gallery from "@/pages/gallery/Gallery";
 import { HomePage } from "@/pages/home-page/HomePage";
 import Projects from "@/pages/projects/Projects";
 import PropertyList from "@/pages/property-list/PropertyList";
@@ -17,16 +18,7 @@ export const router = createBrowserRouter(
         <Route path="home" element={<HomePage />} />
         <Route path="projects" element={<Projects />} />
         <Route path="property-list" element={<PropertyList />} />
-
-        {/* <Route
-          path="dashboard"
-          element={<Dashboard />}
-          loader={({ request }) =>
-            fetch("/api/dashboard.json", {
-              signal: request.signal,
-            })
-          }
-        /> */}
+        <Route path="gallery" element={<Gallery />} />
         {/* <Route element={<AuthLayout />}>
           <Route path="login" element={<Login />} loader={redirectIfUser} />
           <Route path="logout" action={logoutUser} />

@@ -1,8 +1,11 @@
 package com.realtor.app.image.service;
 
+import com.realtor.app.building.model.Building;
 import com.realtor.app.image.model.Image;
 import com.realtor.app.image.repository.ImageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,11 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public List<Image> getAllImages() {
         return imageRepo.findAll();
+    }
+
+    @Override
+    public Page<Image> getImagesPaginated(Pageable pageable){
+        return imageRepo.findAll(pageable);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.realtor.app.image.service;
 
 import com.realtor.app.image.model.Image;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.UUID;
 public interface ImageService {
     public Image saveImage(Image image);
     public Image updateImage(Image image);
+    public Page<Image> getImagesPaginated(Pageable pageable);
     public List<Image> getAllImages();
     public List<Image> getAllImagesByBuildingId(Long buildingId);
     public List<Image> getAllImagesByRealEstateId(Long realEstateId);

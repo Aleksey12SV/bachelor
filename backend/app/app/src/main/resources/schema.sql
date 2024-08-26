@@ -63,6 +63,8 @@ CREATE TABLE images (
   property_id integer,
   building_id INTEGER,
   description varchar(255),
+  height integer,
+  width integer,
   image longblob,
   is_main_image BOOLEAN,
   FOREIGN KEY (property_id) REFERENCES real_estates (id),

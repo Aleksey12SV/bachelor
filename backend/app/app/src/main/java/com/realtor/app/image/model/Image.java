@@ -18,6 +18,12 @@ public class Image {
     @Column (name = "description")
     private String description;
 
+    @Column (name = "height")
+    private int height;
+
+    @Column (name = "width")
+    private int width;
+
     @Column (name = "is_main_image")
     private boolean mainImage;
 
@@ -36,13 +42,15 @@ public class Image {
     public Image() {
     }
 
-    public Image(UUID id, String description, byte[] imageBlob, RealEstate realEstate, Building building, boolean mainImage) {
+    public Image(UUID id, String description, byte[] imageBlob, RealEstate realEstate, Building building, boolean mainImage, int height, int width) {
         this.id = id;
         this.description = description;
         this.image = imageBlob;
         this.realEstate = realEstate;
         this.building = building;
         this.mainImage = mainImage;
+        this.height = height;
+        this.width = width;
     }
 
     public UUID getId() {
@@ -91,5 +99,21 @@ public class Image {
 
     public void setMainImage(Boolean mainImage) {
         this.mainImage = mainImage;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 }

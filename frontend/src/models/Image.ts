@@ -6,6 +6,8 @@ export type Image = {
   description?: string;
   mainImage?: boolean;
   image: string;
+  height?: number;
+  width?: number;
 };
 
 export type ImageRequest = Image & {

@@ -7,6 +7,8 @@ import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.image.service.ImageService;
 import com.realtor.app.real_estate.service.RealEstateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,8 @@ class ImageRequest {
 
     private int propertyId;
     private int buildingId;
+    private int width;
+    private int height;
 
     public UUID getId() {
         return id;
@@ -72,6 +76,22 @@ class ImageRequest {
     public void setBuildingId(int buildingId) {
         this.buildingId = buildingId;
     }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
 }
 
 @RestController
@@ -98,7 +118,7 @@ public class ImageController {
                 throw new Error("Main image was already saved");
             };
         }
-        Image imageToSave = new Image(imageRequest.getId(), imageRequest.getDescription(), imageBlob, property, building, imageRequest.getMainImage());
+        Image imageToSave = new Image(imageRequest.getId(), imageRequest.getDescription(), imageBlob, property, building, imageRequest.getMainImage(), imageRequest.getHeight(), imageRequest.getWidth());
         imageService.saveImage(imageToSave);
         return "New Image is saved";
     }
@@ -106,6 +126,12 @@ public class ImageController {
     @GetMapping("/getAll")
     public List<Image> getAllImages(){
         return imageService.getAllImages();
+    }
+
+    @GetMapping(value = "/getAll/paginated")
+    public Page<Image> getAllImagesPaginated(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "10") int size){
+        return imageService.getImagesPaginated(PageRequest.of(page,size));
     }
 
     @GetMapping("/getAll/building/{buildingId}")
