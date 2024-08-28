@@ -28,7 +28,7 @@ const PaginatedBuildings = ({
 
   return (
     <>
-      <div className="w-full flex flex-auto grid grid-cols-3 gap-12 p-9">
+      <div className="w-full flex flex-auto justify-around gap-12 p-9">
         {data?.content.map((building) => (
           <ProjectCard
             key={building.id}

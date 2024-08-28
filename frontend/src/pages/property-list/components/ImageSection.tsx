@@ -1,4 +1,4 @@
-import { Image } from "@/models/Image";
+import { type Image } from "@/models/Image";
 import TrashBin from "../../../assets/trash-can.svg?react";
 import { ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
@@ -33,10 +33,16 @@ const ImageSection = ({
     if (file) {
       fileToBase64(file)
         .then((base64Image) => {
-          onUpdate({
-            id: imageId,
-            image: (base64Image as string).split(",")[1],
-          });
+          const img = new Image();
+          img.src = base64Image as string;
+          img.decode().then(() => {
+            onUpdate({
+              id: imageId,
+              image: (base64Image as string).split(",")[1],
+              width: img.width,
+              height: img.height
+            });
+          }) 
         })
         .catch((error) => {
           console.error("Error converting file to base64", error);

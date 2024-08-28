@@ -64,11 +64,16 @@ public class BuildingController {
     @Autowired
     private BuildingService buildingService;
     @PostMapping("/add")
-    public String add(@RequestBody Building building){
-        buildingService.saveBuilding(building);
-        return "New building is saved";
+    public ResponseEntity<Building> add(@RequestBody Building building){
+        Building newBuilding = buildingService.saveBuilding(building);
+        return ResponseEntity.ok(newBuilding);
     }
-
+    @CrossOrigin(origins = "http://localhost:5173/")
+    @PutMapping("/{id}")
+    public ResponseEntity<Building> updateBuilding(@PathVariable int id, @RequestBody Building building) {
+        Building updatedBuilding = buildingService.updateBuilding(id, building);
+        return ResponseEntity.ok(updatedBuilding);
+    }
     @GetMapping(value = "/getAll")
     public List<Building> getAllBuildings(@RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "10") int size){

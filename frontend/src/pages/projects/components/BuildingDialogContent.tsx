@@ -6,24 +6,39 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Building } from "@/models/Building";
+import { ImageResponse } from "@/models/Image";
 import { X } from "lucide-react";
 
 const BuildingDialogContent = ({
   building,
   shouldLoadImages,
-  onClose
+  onClose,
+  images,
 }: {
   building: Building;
   shouldLoadImages: boolean;
-  onClose: () => void
+  onClose: () => void;
+  images: ImageResponse[];
 }) => {
   return (
     <DialogContent>
       <DialogHeader>
         <DialogTitle>{building.name}</DialogTitle>
         <DialogDescription>
-          {building.description}s. shouldLoadImages:{" "}
-          {String(shouldLoadImages)}
+          <div className="h-[90vh] w-[80vw]">
+            {building.description}s. shouldLoadImages:{" "}
+            {String(shouldLoadImages)}
+            {images.map((image) => (
+              <span className="text-xl font-semibold w-full flex flex-col justify-center">
+                <img
+                  src={`data:image/jpeg;base64,${image?.image}`}
+                  alt="realtor-logo"
+                  className="max-w-[800px] max-h-[400px] aspect-video"
+                />
+
+              </span>
+            ))}
+          </div>
         </DialogDescription>
       </DialogHeader>
       <DialogClose

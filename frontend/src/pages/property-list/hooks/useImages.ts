@@ -1,13 +1,16 @@
-import { getPropertyImages } from "@/api/images";
+import { getBuildingImages, getPropertyImages } from "@/api/images";
 import { Image } from "@/models/Image";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 
-const useImages = (propertyId: number | undefined) => {
+const useImages = (propertyId: number | undefined, imageType: string) => {
   const [images, setImages] = useState<Image[]>([]);
   const { data: propertyImages } = useQuery({
-    queryKey: ["propertyImages", propertyId],
-    queryFn: () => getPropertyImages(propertyId?.toString() ?? ""),
+    queryKey: [imageType, propertyId],
+    queryFn: () =>
+      imageType === "propertyImages"
+        ? getPropertyImages(propertyId?.toString() ?? "")
+        : getBuildingImages(propertyId?.toString() ?? ""),
     initialData: [],
     enabled: propertyId !== undefined,
   });

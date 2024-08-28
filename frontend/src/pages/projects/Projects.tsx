@@ -46,8 +46,16 @@ const Projects = () => {
           onBuildingSelect={(building) => setSelectedBuilding(building)}
         />
       )}
-      {isEditing ||
-        (isAdding && <BuildingUpdateOverview building={undefined} />)}
+      {(isEditing || isAdding) && (
+        <BuildingUpdateOverview
+          building={selectedBuilding}
+          onSubmit={() => {
+            setIsAdding(false);
+            setIsEditing(false);
+          }}
+          isEditing={isEditing}
+        />
+      )}
     </div>
   );
 };
