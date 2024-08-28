@@ -2,18 +2,21 @@ import { getPaginatedImages } from "@/api/images";
 import Loader from "@/components/ui/loader/Loaders";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MasonryPhotoAlbum, Photo } from "react-photo-album";
+import { MasonryPhotoAlbum } from "react-photo-album";
 import Lightbox from "yet-another-react-lightbox";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import Captions from "yet-another-react-lightbox/plugins/captions";
+import "yet-another-react-lightbox/plugins/captions.css";
 import "react-photo-album/masonry.css";
-
-type SelectablePhoto = Photo & {
-  selected?: boolean;
-};
 
 const Gallery = () => {
   // lightbox photo
-  const [lightboxPhoto, setLightboxPhoto] = useState<SelectablePhoto>();
+  const [lightboxPhotoIndex, setLightboxPhotoIndex] = useState(-1);
   const { data, isPending, fetchNextPage, isLoading } = useInfiniteQuery({
     queryKey: ["real-estates"],
     initialPageParam: 0,
@@ -25,7 +28,11 @@ const Gallery = () => {
     },
   });
   const scrollableRef = useRef<HTMLDivElement>(null);
-  console.log(scrollableRef.current?.scrollTop, scrollableRef.current?.clientHeight, scrollableRef.current?.scrollHeight);
+  console.log(
+    scrollableRef.current?.scrollTop,
+    scrollableRef.current?.clientHeight,
+    scrollableRef.current?.scrollHeight
+  );
   useEffect(() => {
     const handleScroll = () => {
       if (scrollableRef.current) {
@@ -46,6 +53,22 @@ const Gallery = () => {
     () => data?.pages.flatMap((p) => p.content) ?? [],
     [data]
   );
+  const photos = images.map((i, index) => {
+    const height = i.height ?? 1;
+    const width = i.width ?? 1;
+    return {
+      src: "data:image/jpeg;base64," + i.image,
+      height: height,
+      width: width,
+      key: index.toString(),
+      title: i.description,
+      srcSet: breakpoints.map((breakpoint) => ({
+        src: "data:image/jpeg;base64," + i.image,
+        width: breakpoint,
+        height: Math.round((height / width) * breakpoint),
+      })),
+    };
+  });
   return !isPending ? (
     <>
       <MasonryPhotoAlbum
@@ -59,22 +82,8 @@ const Gallery = () => {
           },
         }}
         padding={5}
-        photos={images.map((i, index) => {
-          const height = i.height ?? 1;
-          const width = i.width ?? 1;
-          return {
-            src: "data:image/jpeg;base64," + i.image,
-            height: height,
-            width: width,
-            key: index.toString(),
-            srcSet: breakpoints.map((breakpoint) => ({
-              src: "data:image/jpeg;base64," + i.image,
-              width: breakpoint,
-              height: Math.round((height / width) * breakpoint),
-            })),
-          };
-        })}
-        onClick={({ event, photo }) => {
+        photos={photos}
+        onClick={({ event, index }) => {
           // let a link open in a new tab / new window / download
           if (event.shiftKey || event.altKey || event.metaKey) return;
 
@@ -82,21 +91,16 @@ const Gallery = () => {
           event.preventDefault();
 
           // open photo in a lightbox
-          setLightboxPhoto(photo);
+          setLightboxPhotoIndex(index);
         }}
       />
       <Lightbox
-        open={Boolean(lightboxPhoto)}
-        close={() => setLightboxPhoto(undefined)}
-        slides={lightboxPhoto ? [lightboxPhoto] : undefined}
-        carousel={{ finite: true }}
-        render={{ buttonPrev: () => null, buttonNext: () => null }}
+        open={lightboxPhotoIndex >= 0}
+        close={() => setLightboxPhotoIndex(-1)}
+        slides={photos}
+        index={lightboxPhotoIndex}
         styles={{ root: { "--yarl__color_backdrop": "rgba(0, 0, 0, .8)" } }}
-        controller={{
-          closeOnBackdropClick: true,
-          closeOnPullUp: true,
-          closeOnPullDown: true,
-        }}
+        plugins={[Fullscreen, Slideshow, Thumbnails, Zoom, Captions]}
       />
     </>
   ) : (
