@@ -12,16 +12,12 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { axiosInstance } from "@/lib/axios";
 import { useTranslation } from "react-i18next";
 import QuickFormContent from "./components/quick-form/QuickFormContent";
 import { useNavigate } from "react-router-dom";
 import { formSchema, FormType } from "@/models/RealEstateForm";
 import AdditionalFilters from "./components/additional-filters/AdditionalFilters";
-
-const getImages = (): Promise<
-  { id: number; desription: string; image: string }[]
-> => axiosInstance.get("image/getAll").then(({ data }) => data);
+import { getImages } from "@/api/images";
 
 export const HomePage = () => {
   const [showMoreFilters, setShowMoreFilters] = useState(false);
@@ -43,6 +39,8 @@ export const HomePage = () => {
     queryFn: getImages,
     initialData: [],
   });
+
+  const IMAGES_LENGTH = images.length > 5 ? 5 : images.length
 
   function onSubmit(data: FormType) {
     console.log({
@@ -67,7 +65,7 @@ export const HomePage = () => {
               onMouseLeave={plugin.current.play}
             >
               <CarouselContent>
-                {Array.from({ length: 5 }).map((_, index) => (
+                {Array.from({ length: IMAGES_LENGTH }).map((_, index) => (
                   <CarouselItem key={index}>
                     <div className="p-1">
                       <Card>
