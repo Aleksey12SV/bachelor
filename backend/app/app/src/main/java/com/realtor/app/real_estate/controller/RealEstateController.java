@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/real-estate")
 public class RealEstateController {
@@ -20,6 +22,17 @@ public class RealEstateController {
     public Page<RealEstate> getAllPaginatedRealEstates(@RequestParam(defaultValue = "0") int page,
                                                    @RequestParam(defaultValue = "10") int size){
         return realEstateService.getAllPaginatedRealEstates(PageRequest.of(page,size));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RealEstate> getRealEstateById(@PathVariable int id) {
+        Optional<RealEstate> realEstate = realEstateService.getRealEstateById(id);
+
+        if (realEstate.isPresent()) {
+            return ResponseEntity.ok(realEstate.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/filtered")

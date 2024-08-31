@@ -3,6 +3,7 @@ package com.realtor.app.real_estate.model;
 import java.util.List;
 
 public class RealEstateFilters {
+    private Integer buildingId;
     private String location;
     private String heating;
     private String status;
@@ -183,5 +184,13 @@ public class RealEstateFilters {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(Integer buildingId) {
+        this.buildingId = buildingId;
     }
 }

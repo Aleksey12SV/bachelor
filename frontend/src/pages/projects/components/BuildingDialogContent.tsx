@@ -8,6 +8,7 @@ import {
 import { Building } from "@/models/Building";
 import { ImageResponse } from "@/models/Image";
 import { X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const BuildingDialogContent = ({
   building,
@@ -20,11 +21,12 @@ const BuildingDialogContent = ({
   onClose: () => void;
   images: ImageResponse[];
 }) => {
+  const navigate = useNavigate();
   return (
     <DialogContent>
       <DialogHeader>
         <DialogTitle>{building.name}</DialogTitle>
-        <DialogDescription>
+        <DialogDescription asChild>
           <div className="h-[90vh] w-[80vw]">
             {building.description}s. shouldLoadImages:{" "}
             {String(shouldLoadImages)}
@@ -35,9 +37,15 @@ const BuildingDialogContent = ({
                   alt="realtor-logo"
                   className="max-w-[800px] max-h-[400px] aspect-video"
                 />
-
               </span>
             ))}
+            <button
+              onClick={() =>
+                navigate(`/property-list?buildingId=${building.id}`)
+              }
+            >
+              See all properties in this building
+            </button>
           </div>
         </DialogDescription>
       </DialogHeader>

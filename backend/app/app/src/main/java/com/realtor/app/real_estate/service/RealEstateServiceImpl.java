@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,52 +34,40 @@ public class RealEstateServiceImpl implements RealEstateService {
     private ImageRepo imageRepo;
 
     @Override
-    public RealEstate saveRealEstate(RealEstate realEstate){
+    public RealEstate saveRealEstate(RealEstate realEstate) {
         return realEstateRepo.save(realEstate);
     }
 
     @Override
-    public List<RealEstate> getAllProperties(){
+    public List<RealEstate> getAllProperties() {
         return realEstateRepo.findAll();
     }
 
 
     @Override
-    public List<RealEstate> getAllPropertiesWithImages(){
+    public List<RealEstate> getAllPropertiesWithImages() {
         return realEstateRepo.findAllWithImages();
     }
 
     @Override
-    public List<RealEstate> getPropertiesBySeller (Integer sellerId) {
+    public List<RealEstate> getPropertiesBySeller(Integer sellerId) {
         return realEstateRepo.findBySellerId(sellerId);
     }
 
 
     @Override
-    public Page<RealEstate> getAllPaginatedRealEstates(Pageable pageable){
+    public Page<RealEstate> getAllPaginatedRealEstates(Pageable pageable) {
         return realEstateRepo.findAll(pageable);
     }
 
     @Override
-    public Page<RealEstate> getAllFilteredRealEstatesPaginated(RealEstateFilters filters){
-        List<RealEstate> filteredRealEstates = (filters.getShowRealEstatesWithoutImages() == null || filters.getShowRealEstatesWithoutImages() == true ? getAllProperties() : getAllPropertiesWithImages()).stream()
-                .filter(estate -> filters.getLocation() == null || estate.getBuilding().getDistrict().getCity().getName().equalsIgnoreCase(filters.getLocation()))
-                .filter(estate -> filters.getHeating() == null || estate.getHeating().equalsIgnoreCase(filters.getHeating()))
-                .filter(estate -> filters.getStatus() == null || estate.getStatus().equalsIgnoreCase(filters.getStatus()))
-                .filter(estate -> filters.getConstruction() == null || estate.getBuilding().getConstruction().equalsIgnoreCase(filters.getConstruction()))
-                .filter(estate -> filters.getPriceFrom() == null || estate.getPrice() >= filters.getPriceFrom())
-                .filter(estate -> filters.getPriceTo() == null || estate.getPrice() <= filters.getPriceTo())
-                .filter(estate -> filters.getPriceFromSqM() == null || estate.getPrice()/estate.getSize() >= filters.getPriceFromSqM())
-                .filter(estate -> filters.getPriceToSqM() == null || estate.getPrice()/estate.getSize() <= filters.getPriceTo())
-                .filter(estate -> filters.getMinYear() == null || estate.getBuilding().getYear() >= filters.getMinYear())
-                .filter(estate -> filters.getMaxYear() == null || estate.getBuilding().getYear() <= filters.getMaxYear())
-                .filter(estate -> filters.getMinSize() == null || estate.getSize() >= filters.getMinSize())
-                .filter(estate -> filters.getMaxSize() == null || estate.getSize() <= filters.getMaxSize())
-               .filter(estate -> filters.getMinFloor() == null || estate.getFloor() >= filters.getMinFloor())
-               .filter(estate -> filters.getMaxFloor() == null || estate.getFloor() <= filters.getMaxFloor())
-                .filter(estate -> filters.getPropertyTypes() == null || filters.getPropertyTypes().contains(estate.getPropertyType().getName()))
-                .filter(estate -> filters.getSeller() == null || estate.getSellers().stream().anyMatch(seller -> filters.getSeller().equals(String.valueOf(seller.getId()))))
-                .collect(Collectors.toList());
+    public Page<RealEstate> getAllFilteredRealEstatesPaginated(RealEstateFilters filters) {
+        List<RealEstate> filteredRealEstates = new ArrayList<>();
+        if (filters.getBuildingId() != null) {
+            filteredRealEstates = realEstateRepo.findByBuildingId(filters.getBuildingId());
+        } else {
+            filteredRealEstates = (filters.getShowRealEstatesWithoutImages() == null || filters.getShowRealEstatesWithoutImages() == true ? getAllProperties() : getAllPropertiesWithImages()).stream().filter(estate -> filters.getLocation() == null || estate.getBuilding().getDistrict().getCity().getName().equalsIgnoreCase(filters.getLocation())).filter(estate -> filters.getHeating() == null || estate.getHeating().equalsIgnoreCase(filters.getHeating())).filter(estate -> filters.getStatus() == null || estate.getStatus().equalsIgnoreCase(filters.getStatus())).filter(estate -> filters.getConstruction() == null || estate.getBuilding().getConstruction().equalsIgnoreCase(filters.getConstruction())).filter(estate -> filters.getPriceFrom() == null || estate.getPrice() >= filters.getPriceFrom()).filter(estate -> filters.getPriceTo() == null || estate.getPrice() <= filters.getPriceTo()).filter(estate -> filters.getPriceFromSqM() == null || estate.getPrice() / estate.getSize() >= filters.getPriceFromSqM()).filter(estate -> filters.getPriceToSqM() == null || estate.getPrice() / estate.getSize() <= filters.getPriceTo()).filter(estate -> filters.getMinYear() == null || estate.getBuilding().getYear() >= filters.getMinYear()).filter(estate -> filters.getMaxYear() == null || estate.getBuilding().getYear() <= filters.getMaxYear()).filter(estate -> filters.getMinSize() == null || estate.getSize() >= filters.getMinSize()).filter(estate -> filters.getMaxSize() == null || estate.getSize() <= filters.getMaxSize()).filter(estate -> filters.getMinFloor() == null || estate.getFloor() >= filters.getMinFloor()).filter(estate -> filters.getMaxFloor() == null || estate.getFloor() <= filters.getMaxFloor()).filter(estate -> filters.getPropertyTypes() == null || filters.getPropertyTypes().contains(estate.getPropertyType().getName())).filter(estate -> filters.getSeller() == null || estate.getSellers().stream().anyMatch(seller -> filters.getSeller().equals(String.valueOf(seller.getId())))).collect(Collectors.toList());
+        }
 
         if (filters.getSorting() != null) {
             filteredRealEstates = sortRealEstates(filteredRealEstates, filters.getSorting());
@@ -96,7 +85,7 @@ public class RealEstateServiceImpl implements RealEstateService {
 
     @Override
     @Transactional
-    public RealEstate createRealEstate(RealEstateRequest realEstateRequest){
+    public RealEstate createRealEstate(RealEstateRequest realEstateRequest) {
         RealEstate newRealEstate = new RealEstate();
         updateRealEstateFromRequest(newRealEstate, realEstateRequest);
         return realEstateRepo.save(newRealEstate);
@@ -104,9 +93,14 @@ public class RealEstateServiceImpl implements RealEstateService {
 
     @Transactional
     @Override
-    public void deleteRealEstate(Integer realEstateId){
+    public void deleteRealEstate(Integer realEstateId) {
         imageRepo.deleteByRealEstateId(realEstateId);
         realEstateRepo.deleteById(realEstateId);
+    }
+
+    @Override
+    public Optional<RealEstate> getRealEstateById(int id) {
+        return realEstateRepo.findById(id);
     }
 
     private List<RealEstate> sortRealEstates(List<RealEstate> realEstates, String sorting) {
@@ -135,9 +129,7 @@ public class RealEstateServiceImpl implements RealEstateService {
         realEstate.setDescriptionEN(realEstateDTO.getDescriptionEN());
         realEstate.setTopProperty(realEstateDTO.isTopProperty());
         realEstate.setStatus(realEstateDTO.getStatus());
-        Set<Seller> mergedSellers = realEstateDTO.getSellers().stream()
-                .map(seller -> entityManager.merge(seller))
-                .collect(Collectors.toSet());
+        Set<Seller> mergedSellers = realEstateDTO.getSellers().stream().map(seller -> entityManager.merge(seller)).collect(Collectors.toSet());
 
         realEstate.setSellers(mergedSellers);
     }
