@@ -52,7 +52,7 @@ export const Navbar = () => {
       <RealtorBGLogo className="w-24" onClick={() => navigate("/")} />
       <NavigationMenu>
         <NavigationMenuList className="gap-10">
-        <NavigationMenuItem
+          <NavigationMenuItem
             value="gallery"
             id="gallerry"
             className="w-[120px]"
@@ -61,8 +61,10 @@ export const Navbar = () => {
               Galery
             </Link>
           </NavigationMenuItem>
-          <NavigationMenuItem id="Test" className="w-[120px]">
-            <NavigationMenuTrigger>Test</NavigationMenuTrigger>
+          <NavigationMenuItem id="Contacts" className="w-[120px]">
+            <Link className={navigationMenuTriggerStyle()} to="/contacts">
+              Contacts
+            </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
