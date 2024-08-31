@@ -1,6 +1,7 @@
 package com.realtor.app.seller.controller;
 
 import com.realtor.app.seller.model.Seller;
+import com.realtor.app.seller.model.SellerWithAssociatedProperties;
 import com.realtor.app.seller.service.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,5 +18,10 @@ public class SellerController {
     @GetMapping("/getAll")
     public List<Seller> getAllSellers() {
         return sellerService.getAll();
+    }
+
+    @GetMapping("/getAllWithProperties")
+    public List<SellerWithAssociatedProperties> getAllSellersWithProperties() {
+        return sellerService.getAllWithProperties();
     }
 }

@@ -1,7 +1,6 @@
 package com.realtor.app.seller.repository;
 
 import com.realtor.app.seller.model.Seller;
-import com.realtor.app.seller.model.SellerSalesDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

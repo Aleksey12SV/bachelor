@@ -4,6 +4,7 @@ import Gallery from "@/pages/gallery/Gallery";
 import { HomePage } from "@/pages/home-page/HomePage";
 import Projects from "@/pages/projects/Projects";
 import PropertyList from "@/pages/property-list/PropertyList";
+import Sellers from "@/pages/sellers/Sellers";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -22,6 +23,7 @@ export const router = createBrowserRouter(
         <Route path="property-list" element={<PropertyList />} />
         <Route path="gallery" element={<Gallery />} />
         <Route path="contacts" element={<Contacts />} />
+        <Route path="sellers" element={<Sellers />} />
         {/* <Route element={<AuthLayout />}>
           <Route path="login" element={<Login />} loader={redirectIfUser} />
           <Route path="logout" action={logoutUser} />

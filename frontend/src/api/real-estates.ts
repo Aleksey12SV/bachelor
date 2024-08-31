@@ -15,5 +15,8 @@ export const updateRealEstate = (
     propertyInformation
   );
 
+export const getRealEstateById = (realEstateId: string): Promise<RealEstate> =>
+  axiosInstance.get(`real-estate/${realEstateId}`).then(({ data }) => data);
+
 export const deleteRealEstate = (id: number): Promise<void> =>
   axiosInstance.delete(`/real-estate/${id}`).then(({ data }) => data);

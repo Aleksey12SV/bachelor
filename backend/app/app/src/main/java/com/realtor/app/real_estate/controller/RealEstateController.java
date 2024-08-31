@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -45,6 +46,11 @@ public class RealEstateController {
     public ResponseEntity<Void> deleteRealEstate(@PathVariable Integer id) {
         realEstateService.deleteRealEstate(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/seller/{sellerId}")
+    public List<RealEstate> getPropertiesBySeller(@PathVariable int sellerId) {
+        return realEstateService.getPropertiesBySeller(sellerId);
     }
 
     @PostMapping
