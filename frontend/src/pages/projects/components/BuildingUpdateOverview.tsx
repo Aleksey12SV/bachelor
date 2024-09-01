@@ -1,7 +1,7 @@
 import { createBuilding, updateBuilding } from "@/api/buildings";
 import { getCities } from "@/api/cities";
 import { getDistrictsByCityId } from "@/api/districts";
-import { createImage, deleteImage, updateImage } from "@/api/images";
+import { createImage } from "@/api/images";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { handleImageChanges } from "@/components/utils/images";
 import { Building } from "@/models/Building";
 import { City } from "@/models/City";
 import ImageSection from "@/pages/property-list/components/ImageSection";
@@ -94,43 +95,16 @@ const BuildingUpdateOverview = ({
     mutationFn: async (data: Partial<Building> & { id: number }) => {
       if (data.id === undefined) return;
       await updateBuilding(data).then(() => {
-        const imagesToDelete = oldImages.filter(
-          (oldImage) => !images.some((image) => image.id === oldImage.id)
+        handleImageChanges({ images, oldImages, buildingId: data.id }).then(
+          async () => {
+            await queryClient.invalidateQueries({
+              queryKey: ["buildingImages", String(data.id)],
+            });
+            await queryClient.invalidateQueries({
+              queryKey: ["buildings"],
+            });
+          }
         );
-        const imagesToAdd = images
-          .filter((i) => i.image)
-          .filter(
-            (image) => !oldImages.some((oldImage) => image.id === oldImage.id)
-          );
-        const imagesToUpdate = images.filter((image) => {
-          const oldImage = oldImages.find(
-            (oldImage) => oldImage.id === image.id
-          );
-          return (
-            oldImage &&
-            (oldImage.descriptionBG !== image.descriptionBG ||
-              oldImage.descriptionEN !== image.descriptionEN ||
-              oldImage.mainImage !== image.mainImage)
-          );
-        });
-
-        Promise.all([
-          ...imagesToAdd.map((image) =>
-            createImage({
-              ...image,
-              propertyId: data.id,
-            })
-          ),
-          ...imagesToDelete.map((image) => deleteImage(image.id)),
-          ...imagesToUpdate.map((image) => updateImage(image)),
-        ]).then(async () => {
-          await queryClient.invalidateQueries({
-            queryKey: ["buildingImages", String(data.id)],
-          });
-          await queryClient.invalidateQueries({
-            queryKey: ["buildings"],
-          });
-        });
       });
     },
   });

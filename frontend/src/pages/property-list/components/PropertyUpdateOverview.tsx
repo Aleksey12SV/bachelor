@@ -1,5 +1,5 @@
 import { getBuildings } from "@/api/buildings";
-import { createImage, deleteImage, updateImage } from "@/api/images";
+import { createImage } from "@/api/images";
 import { createRealEstate, updateRealEstate } from "@/api/real-estates";
 import { getSellers } from "@/api/sellers";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/multiselect";
 import { PaginatedData } from "@/models/PaginatedData";
 import useImages from "../hooks/useImages";
+import { handleImageChanges } from "@/components/utils/images";
 
 const PropertyUpdateOverview = ({
   property,
@@ -105,45 +106,18 @@ const PropertyUpdateOverview = ({
   const updateRealEstateMutation = useMutation({
     mutationFn: async (data: Partial<RealEstate> & { id: number }) => {
       if (data.id === undefined) return;
-      await updateRealEstate(data).then(() => {
-        const imagesToDelete = oldImages.filter(
-          (oldImage) => !images.some((image) => image.id === oldImage.id)
-        );
-        const imagesToAdd = images
-          .filter((i) => i.image)
-          .filter(
-            (image) => !oldImages.some((oldImage) => image.id === oldImage.id)
-          );
-        const imagesToUpdate = images.filter((image) => {
-          const oldImage = oldImages.find(
-            (oldImage) => oldImage.id === image.id
-          );
-          return (
-            oldImage &&
-            (oldImage.descriptionBG !== image.descriptionBG ||
-              oldImage.descriptionEN !== image.descriptionEN ||
-              oldImage.mainImage !== image.mainImage)
-          );
-        });
-
-        Promise.all([
-          ...imagesToAdd.map((image) =>
-            createImage({
-              ...image,
-              propertyId: data.id,
-            })
-          ),
-          ...imagesToDelete.map((image) => deleteImage(image.id)),
-          ...imagesToUpdate.map((image) => updateImage(image)),
-        ]).then(async () => {
-          await queryClient.invalidateQueries({
-            queryKey: ["propertyImages", String(data.id)],
-          });
-          await queryClient.invalidateQueries({
-            queryKey: ["mainImage", data.id],
-          });
-        });
-      });
+      await updateRealEstate(data).then(() =>
+        handleImageChanges({ images, oldImages, propertyId: data.id }).then(
+          async () => {
+            await queryClient.invalidateQueries({
+              queryKey: ["propertyImages", String(data.id)],
+            });
+            await queryClient.invalidateQueries({
+              queryKey: ["mainImage", data.id],
+            });
+          }
+        )
+      );
     },
     onMutate: async (data) => {
       await queryClient.cancelQueries({
