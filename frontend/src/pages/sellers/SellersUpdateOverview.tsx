@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { ExtendedSeller, Seller } from "@/models/Seller";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 const SellersUpdateOverview = ({
   selectedSeller,
@@ -22,6 +23,7 @@ const SellersUpdateOverview = ({
   onSubmit: () => void;
 }) => {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const form = useForm<Partial<Seller>>({
     values: {
       firstName: selectedSeller?.firstName,
@@ -72,7 +74,7 @@ const SellersUpdateOverview = ({
           onSubmit={form.handleSubmit(handleSubmit)}
           className="grid grid-cols-2 gap-6 items-end pb-4 border-b"
         >
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{t("submit")}</Button>
           <FormField
             control={form.control}
             name="firstName"

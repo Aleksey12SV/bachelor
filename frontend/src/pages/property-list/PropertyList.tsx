@@ -4,18 +4,19 @@ import { RealEstate } from "@/models/RealEstate";
 import {
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import PropertyCard from "./components/PropertyCard";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import PropertyOverview from "./components/PropertyOverview";
-import PropertyControls from "./components/PropertyControls";
 import { useKeycloak } from "@/components/auth/KeycloakProvider";
 import { Roles } from "@/components/auth/Roles";
 import PropertyUpdateOverview from "./components/PropertyUpdateOverview";
 import { FormType } from "@/models/RealEstateForm";
-import { deleteRealEstate } from "@/api/real-estates";
+import { deleteRealEstate, getRealEstateById } from "@/api/real-estates";
+import ControlButtons from "@/components/common/ControlButtons";
 
 const getFilteredProperties = (
   filters: Partial<FormType & { page: number; size: number }>
@@ -23,12 +24,26 @@ const getFilteredProperties = (
   axiosInstance.post(`real-estate/filtered`, filters).then(({ data }) => data);
 
 const PropertyList = () => {
+  const { id } = useParams();
+
   const [selectedProperty, setSelectedProperty] = useState<RealEstate>();
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { hasRole } = useKeycloak();
+
+  const { data: loadedProperty } = useQuery({
+    queryKey: ["property", id],
+    queryFn: async () => await getRealEstateById(id ?? ""),
+    enabled: id !== undefined,
+  });
+
+  useEffect(() => {
+    if (id !== undefined && loadedProperty !== selectedProperty) {
+      setSelectedProperty(loadedProperty);
+    }
+  }, [id, loadedProperty, selectedProperty]);
   const { data, isFetching, fetchNextPage } = useInfiniteQuery({
     queryKey: ["real-estates"],
     initialPageParam: 0,
@@ -83,63 +98,71 @@ const PropertyList = () => {
     )
       setSelectedProperty(realEstates[0]);
   }, [isAdding, realEstates, selectedProperty]);
-
+  console.log(selectedProperty);
   return (
     <div className="w-full flex flex-row">
-      <div
-        ref={scrollableRef}
-        className="flex flex-col overflow-auto p-2 gap-2 scrollable min-w-[250px]"
-      >
-        {hasRole([Roles.ADMIN]) && (
-          <PropertyControls
-            onDelete={() =>
-              deletePropertyMutation
-                .mutateAsync()
-                .then(() => setSelectedProperty(undefined))
-            }
-            hasSelectedProperty={!!selectedProperty}
-            onAdd={() => {
-              setIsEditing(false);
-              setIsAdding(true);
-              setSelectedProperty(undefined);
-            }}
-            onEdit={() => {
-              setIsEditing(true);
-              setIsAdding(false);
-            }}
-          />
-        )}
-        {realEstates.length ? realEstates.map((property) => (
-          <PropertyCard
-            key={property.id}
-            property={property}
-            onPreview={() => {
-              setSelectedProperty(property);
-              setIsAdding(false);
-              setIsEditing(false);
-            }}
-          />
-        )) : <div>No properties matching the criteria were found.</div>}
-        {isFetching && <p>Loading...</p>}
-      </div>
-      <div className="flex p-4 flex-auto w-full overflow-hidden">
-        {selectedProperty && !isAdding && !isEditing && (
-          <PropertyOverview selectedProperty={selectedProperty} />
-        )}
-        {isAdding && (
-          <PropertyUpdateOverview
-            property={undefined}
-            onSubmit={() => setIsAdding(false)}
-          />
-        )}
-        {isEditing && (
-          <PropertyUpdateOverview
-            property={selectedProperty}
-            onSubmit={() => setIsEditing(false)}
-            isEditing
-          />
-        )}
-      </div>
+      {id === undefined && (
+        <div
+          ref={scrollableRef}
+          className="flex flex-col overflow-auto p-2 gap-2 scrollable min-w-[250px]"
+        >
+          {hasRole([Roles.ADMIN]) && (
+            <ControlButtons
+              onDelete={() =>
+                deletePropertyMutation
+                  .mutateAsync()
+                  .then(() => setSelectedProperty(undefined))
+              }
+              isDisabled={!selectedProperty}
+              onAdd={() => {
+                setIsEditing(false);
+                setIsAdding(true);
+                setSelectedProperty(undefined);
+              }}
+              onEdit={() => {
+                setIsEditing(true);
+                setIsAdding(false);
+              }}
+            />
+          )}
+          {realEstates.length ? (
+            realEstates.map((property) => (
+              <PropertyCard
+                key={property.id}
+                property={property}
+                onPreview={() => {
+                  setSelectedProperty(property);
+                  setIsAdding(false);
+                  setIsEditing(false);
+                }}
+              />
+            ))
+          ) : (
+            <div>No properties matching the criteria were found.</div>
+          )}
+          {isFetching && <p>Loading...</p>}
+        </div>
+      )}
+      {selectedProperty ? (
+        <div className="flex p-4 flex-auto w-full overflow-hidden">
+          {!isAdding && !isEditing && (
+            <PropertyOverview selectedProperty={selectedProperty} />
+          )}
+          {isAdding && (
+            <PropertyUpdateOverview
+              property={undefined}
+              onSubmit={() => setIsAdding(false)}
+            />
+          )}
+          {isEditing && (
+            <PropertyUpdateOverview
+              property={selectedProperty}
+              onSubmit={() => setIsEditing(false)}
+              isEditing
+            />
+          )}
+        </div>
+      ) : <div>Change filters</div>}
     </div>
   );
 };

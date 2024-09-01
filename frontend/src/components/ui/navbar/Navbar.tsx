@@ -2,7 +2,6 @@ import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./navigation-menu";
 import RealtorBGLogo from "../../../assets/realtorBG.svg?react";
@@ -11,6 +10,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useKeycloak } from "@/components/auth/KeycloakProvider";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../tooltip";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -18,8 +23,7 @@ export const Navbar = () => {
     i18n: { changeLanguage, language },
   } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
-  const { search } = useLocation();
-  const { keycloakInstance, authenticated, logout } = useKeycloak();
+  const { authenticated, logout } = useKeycloak();
   const handleChangeLanguage = () => {
     const newLanguage = currentLanguage === "en" ? "bg" : "en";
     setCurrentLanguage(newLanguage);
@@ -49,7 +53,21 @@ export const Navbar = () => {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <RealtorBGLogo className="w-24" onClick={() => navigate("/")} />
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <RealtorBGLogo
+              className="w-24 cursor-pointer"
+              onClick={() => navigate("/")}
+            />
+          </TooltipTrigger>
+          <TooltipContent asChild>
+            <div className="!z-50 p-2 rounded shadow-xl border border-neutral-200 bg-white text-neutral-950 shadow-sm dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50">
+              Return to homepage
+            </div>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <NavigationMenu>
         <NavigationMenuList className="gap-10">
           <NavigationMenuItem
@@ -61,11 +79,19 @@ export const Navbar = () => {
               Galery
             </Link>
           </NavigationMenuItem>
-          <NavigationMenuItem id="Contacts" className="w-[120px]">
-            <Link className={navigationMenuTriggerStyle()} to="/contacts">
-              Contacts
-            </Link>
-          </NavigationMenuItem>
+          {authenticated ? (
+            <NavigationMenuItem id="Sellers" className="w-[120px]">
+              <Link className={navigationMenuTriggerStyle()} to="/sellers">
+                Sellers
+              </Link>
+            </NavigationMenuItem>
+          ) : (
+            <NavigationMenuItem id="Contacts" className="w-[120px]">
+              <Link className={navigationMenuTriggerStyle()} to="/contacts">
+                Contacts
+              </Link>
+            </NavigationMenuItem>
+          )}
         </NavigationMenuList>
       </NavigationMenu>
       <div className="absolute flex flex-row items-center gap-4 right-0 top-6">
@@ -78,13 +104,8 @@ https://www.worldometers.info//img/flags/small/tn_${
           />
           <AvatarFallback>BG</AvatarFallback>
         </Avatar>
-        {(search.includes("login") || authenticated) && (
-          <Avatar
-            className="h-6 w-6"
-            onClick={() =>
-              authenticated ? logout() : keycloakInstance?.login()
-            }
-          >
+        {authenticated && (
+          <Avatar className="h-6 w-6" onClick={logout}>
             <AvatarImage />
             <AvatarFallback>A</AvatarFallback>
           </Avatar>

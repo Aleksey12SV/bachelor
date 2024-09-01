@@ -3,10 +3,10 @@ import { useState } from "react";
 import { deleteBuilding } from "@/api/buildings";
 import { useKeycloak } from "@/components/auth/KeycloakProvider";
 import { Roles } from "@/components/auth/Roles";
-import PropertyControls from "../property-list/components/PropertyControls";
 import { Building } from "@/models/Building";
 import PaginatedBuildings from "./components/PaginatedBuildings";
 import BuildingUpdateOverview from "./components/BuildingUpdateOverview";
+import ControlButtons from "@/components/common/ControlButtons";
 
 const Projects = () => {
   const queryClient = useQueryClient();
@@ -25,11 +25,11 @@ const Projects = () => {
   });
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col p-4">
       {hasRole([Roles.ADMIN]) && (
-        <PropertyControls
+        <ControlButtons
           onDelete={() => deletePropertyMutation.mutateAsync()}
-          hasSelectedProperty={!!selectedBuilding}
+          isDisabled={!selectedBuilding}
           onAdd={() => {
             setIsEditing(false);
             setIsAdding(true);

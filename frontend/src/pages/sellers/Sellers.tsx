@@ -17,11 +17,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SellersUpdateOverview from "./SellersUpdateOverview";
 import { toast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 
 const Sellers = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [selectedSeller, setSelectedSeller] = useState<ExtendedSeller>();
+  const { t } = useTranslation();
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const { data: sellers } = useQuery({
@@ -87,13 +89,13 @@ const Sellers = () => {
         />
       )}
       <Table>
-        <TableCaption>A list of all sellers.</TableCaption>
+        <TableCaption>{t("listSellers")}</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>First Name</TableHead>
-            <TableHead>Last Name</TableHead>
-            <TableHead>Phone Number</TableHead>
-            <TableHead>Associated real estates</TableHead>
+            <TableHead>{t("firstName")}</TableHead>
+            <TableHead>{t("lastName")}</TableHead>
+            <TableHead>{t("phoneNumber")}</TableHead>
+            <TableHead>{t("associatedRealEstates")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

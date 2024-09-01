@@ -35,11 +35,11 @@ const ProjectCard = ({
       <DialogTrigger asChild>
         <Card
           onClick={() => setIsDialogOpened(true)}
-          className="flex flex-col flex-auto cursor-pointer hover:bg-slate-200 max-w-[500px]"
+          className="flex flex-col flex-auto cursor-pointer hover:bg-slate-200 max-w-[500px] max-h-[600px]"
         >
           <CardHeader>
             <CardTitle>{building.name}</CardTitle>
-            <CardDescription>{`From ${building.year}`}</CardDescription>
+            <CardDescription>{`From ${building?.year}`}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col flex-auto h-full w-full">
             <Button
@@ -53,14 +53,14 @@ const ProjectCard = ({
             {isPending ? (
               <Loader />
             ) : (
-              <div className="flex w-full h-full">
+              <div className="flex w-full h-full max-h-[450px] items-center justify-center">
                 {mainImage ? (
                   <img
                     src={`data:image/jpeg;base64,${mainImage?.image}`}
                     className="object-contain"
                   />
                 ) : (
-                  <ImagePlaceholder className="h-full w-full" />
+                  <ImagePlaceholder className="max-w-[400px] max-h-[250px]" />
                 )}
               </div>
             )}

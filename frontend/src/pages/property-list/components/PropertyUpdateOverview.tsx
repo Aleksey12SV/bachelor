@@ -201,7 +201,7 @@ const PropertyUpdateOverview = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="grid grid-cols-2 gap-6"
+          className="grid grid-cols-2 gap-6 items-end"
         >
           <Button type="submit">Submit</Button>
           <FormField

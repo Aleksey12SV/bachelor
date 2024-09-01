@@ -89,7 +89,7 @@ const BuildingUpdateOverview = ({
       await queryClient.invalidateQueries({ queryKey: ["real-estates"] });
     },
   });
-  const updateRealEstateMutation = useMutation({
+  const updateBuildingMutation = useMutation({
     mutationFn: async (data: Partial<Building> & { id: number }) => {
       if (data.id === undefined) return;
       await updateBuilding(data).then(() => {
@@ -144,7 +144,7 @@ const BuildingUpdateOverview = ({
     }
     if (isEditing) {
       building !== undefined &&
-        updateRealEstateMutation.mutateAsync({ ...data, id: building.id });
+        updateBuildingMutation.mutateAsync({ ...data, id: building.id });
     } else {
       saveBuildingMutation.mutateAsync(data);
     }
@@ -157,7 +157,7 @@ const BuildingUpdateOverview = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="grid grid-cols-2 gap-6"
+          className="grid grid-cols-2 gap-6 items-end"
         >
           <Button type="submit">Submit</Button>
           <FormField
