@@ -28,7 +28,7 @@ const BuildingDialogContent = ({
         <DialogTitle>{building.name}</DialogTitle>
         <DialogDescription asChild>
           <div className="h-[90vh] w-[80vw]">
-            {building.description}s. shouldLoadImages:{" "}
+            {building.descriptionEN}s. shouldLoadImages:{" "}
             {String(shouldLoadImages)}
             {images.map((image) => (
               <span className="text-xl font-semibold w-full flex flex-col justify-center">

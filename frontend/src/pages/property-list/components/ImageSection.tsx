@@ -40,9 +40,9 @@ const ImageSection = ({
               id: imageId,
               image: (base64Image as string).split(",")[1],
               width: img.width,
-              height: img.height
+              height: img.height,
             });
-          }) 
+          });
         })
         .catch((error) => {
           console.error("Error converting file to base64", error);
@@ -74,18 +74,35 @@ const ImageSection = ({
               </div>
               {image.image && (
                 <div className="flex flex-col items-center h-full flex-auto gap-4 ">
-                  <div className="font-medium">Description</div>
+                  <div className="font-medium">Description BG</div>
                   <Input
                     key={image.id}
                     className="flex-auto w-full h-full"
-                    value={images[index].description}
+                    value={images[index].descriptionBG}
                     onChange={(e) =>
-                      onUpdate({ ...image, description: e.currentTarget.value })
+                      onUpdate({
+                        ...image,
+                        descriptionBG: e.currentTarget.value,
+                      })
+                    }
+                  />
+                  <div className="font-medium">Description EN</div>
+                  <Input
+                    key={image.id}
+                    className="flex-auto w-full h-full"
+                    value={images[index].descriptionEN}
+                    onChange={(e) =>
+                      onUpdate({
+                        ...image,
+                        descriptionEN: e.currentTarget.value,
+                      })
                     }
                   />
                   <input
                     type="checkbox"
-                    disabled={!image.mainImage && images.some(i => i.mainImage)}
+                    disabled={
+                      !image.mainImage && images.some((i) => i.mainImage)
+                    }
                     onChange={(e) => {
                       onUpdate({
                         ...image,

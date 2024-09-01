@@ -26,8 +26,11 @@ public class Building {
     @Column (name = "year")
     private int year;
 
-    @Column (name = "description")
-    private String description;
+    @Column (name = "descriptionBG")
+    private String descriptionBG;
+
+    @Column (name = "descriptionEN")
+    private String descriptionEN;
 
     @Column (name = "construction")
     private String construction;
@@ -76,12 +79,20 @@ public class Building {
         this.year = year;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionBG() {
+        return descriptionBG;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionBG(String descriptionBG) {
+        this.descriptionBG = descriptionBG;
+    }
+
+    public String getDescriptionEN() {
+        return descriptionEN;
+    }
+
+    public void setDescriptionEN(String descriptionEN) {
+        this.descriptionEN = descriptionEN;
     }
 
     public String getConstruction() {

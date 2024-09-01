@@ -27,7 +27,8 @@ public class ImageServiceImpl implements ImageService {
         Optional<Image> existingImageOpt = imageRepo.findById(image.getId());
         if (existingImageOpt.isPresent()) {
             Image existingImage = existingImageOpt.get();
-            existingImage.setDescription(image.getDescription());
+            existingImage.setDescriptionBG(image.getDescriptionBG());
+            existingImage.setDescriptionEN(image.getDescriptionEN());
             existingImage.setMainImage(image.getMainImage());
             return imageRepo.save(existingImage);
         }

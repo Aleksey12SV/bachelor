@@ -26,6 +26,8 @@ public class RealEstateRequest {
     private String heating;
     private String descriptionBG;
     private String descriptionEN;
+    private String titleBG;
+    private String titleEN;
     private String status;
 
     public Set<Seller> getSellers() {
@@ -106,6 +108,22 @@ public class RealEstateRequest {
 
     public void setDescriptionEN(String descriptionEN) {
         this.descriptionEN = descriptionEN;
+    }
+
+    public String getTitleBG() {
+        return titleBG;
+    }
+
+    public void setTitleBG(String titleBG) {
+        this.titleBG = titleBG;
+    }
+
+    public String getTitleEN() {
+        return titleEN;
+    }
+
+    public void setTitleEN(String titleEN) {
+        this.titleEN = titleEN;
     }
 
     public String getStatus() {

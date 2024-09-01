@@ -54,5 +54,10 @@
   "phoneNumber": "Phone Number",
   "associatedRealEstates": "Associated real estates",
   "listSellers": "A list of all sellers.",
-  "alreadyLoggedIn": "You are already logged in. Do you want to logout?"
+  "alreadyLoggedIn": "You are already logged in. Do you want to logout?",
+  "deleteError": "Delete Error",
+  "associatedPropertiesToSellerError": "There are associated properties to this seller. Make sure to exclude him first from all available properties and then delete him.",
+  "id": "ID",
+  "title": "Title",
+  "sellers": "Sellers"
 }

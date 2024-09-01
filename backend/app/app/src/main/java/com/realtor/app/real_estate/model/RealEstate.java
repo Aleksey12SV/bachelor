@@ -46,8 +46,11 @@ public class RealEstate {
     @Column (name = "top_property")
     private boolean topProperty;
 
-    @Column (name = "title")
-    private String title;
+    @Column (name = "titleBG")
+    private String titleBG;
+
+    @Column (name = "titleEN")
+    private String titleEN;
 
     public Integer getRooms() {
         return rooms;
@@ -57,12 +60,20 @@ public class RealEstate {
         this.rooms = rooms;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTitleBG() {
+        return titleBG;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitleBG(String titleBG) {
+        this.titleBG = titleBG;
+    }
+
+    public String getTitleEN() {
+        return titleEN;
+    }
+
+    public void setTitleEN(String titleEN) {
+        this.titleEN = titleEN;
     }
 
     @Column (name = "rooms")

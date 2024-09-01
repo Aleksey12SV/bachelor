@@ -23,7 +23,10 @@ const Sellers = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [selectedSeller, setSelectedSeller] = useState<ExtendedSeller>();
-  const { t } = useTranslation();
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const { data: sellers } = useQuery({
@@ -37,9 +40,8 @@ const Sellers = () => {
       if (selectedSeller?.id) {
         await deleteSeller(selectedSeller.id).catch(() =>
           toast({
-            title: "Deleting Error",
-            description:
-              "The seller is associated with some real estates. Please remove him from the real estates first.",
+            title: t("deleteError"),
+            description: t("associatedPropertiesToSellerError"),
           })
         );
         await queryClient.invalidateQueries({
@@ -118,9 +120,13 @@ const Sellers = () => {
                           navigate(`/property-list/${realEstate.id}`)
                         }
                       >
-                        <p className="font-medium pr-1">Id:</p> {realEstate.id},
-                        <p className="font-medium pl-1">Title:</p>
-                        <p className="pl-1">{realEstate.title}</p>
+                        <p className="font-medium pr-1">{t('id')}:</p> {realEstate.id},
+                        <p className="font-medium pl-1">{t('title')}:</p>
+                        <p className="pl-1">
+                          {language === "en"
+                            ? realEstate.titleEN
+                            : realEstate.titleBG}
+                        </p>
                       </button>
                     </div>
                   ))}

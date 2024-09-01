@@ -21,7 +21,8 @@ import java.util.UUID;
 class ImageRequest {
     private UUID id;
     private String image;
-    private String description;
+    private String descriptionBG;
+    private String descriptionEN;
     private Boolean mainImage;
 
     private int propertyId;
@@ -45,12 +46,20 @@ class ImageRequest {
         this.image = image;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionBG() {
+        return descriptionBG;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionBG(String descriptionBG) {
+        this.descriptionBG = descriptionBG;
+    }
+
+    public String getDescriptionEN() {
+        return descriptionEN;
+    }
+
+    public void setDescriptionEN(String descriptionEN) {
+        this.descriptionEN = descriptionEN;
     }
 
     public Boolean getMainImage() {
@@ -118,7 +127,7 @@ public class ImageController {
                 throw new Error("Main image was already saved");
             };
         }
-        Image imageToSave = new Image(imageRequest.getId(), imageRequest.getDescription(), imageBlob, property, building, imageRequest.getMainImage(), imageRequest.getHeight(), imageRequest.getWidth());
+        Image imageToSave = new Image(imageRequest.getId(), imageRequest.getDescriptionEN(), imageRequest.getDescriptionBG(), imageBlob, property, building, imageRequest.getMainImage(), imageRequest.getHeight(), imageRequest.getWidth());
         imageService.saveImage(imageToSave);
         return "New Image is saved";
     }

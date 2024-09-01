@@ -15,8 +15,11 @@ public class Image {
     @Column (nullable = false, updatable = false, unique = true, name = "id")
     private UUID id;
 
-    @Column (name = "description")
-    private String description;
+    @Column (name = "descriptionBG")
+    private String descriptionBG;
+
+    @Column (name = "descriptionEN")
+    private String descriptionEN;
 
     @Column (name = "height")
     private int height;
@@ -42,9 +45,10 @@ public class Image {
     public Image() {
     }
 
-    public Image(UUID id, String description, byte[] imageBlob, RealEstate realEstate, Building building, boolean mainImage, int height, int width) {
+    public Image(UUID id, String descriptionEN, String descriptionBG, byte[] imageBlob, RealEstate realEstate, Building building, boolean mainImage, int height, int width) {
         this.id = id;
-        this.description = description;
+        this.descriptionBG = descriptionBG;
+        this.descriptionEN = descriptionEN;
         this.image = imageBlob;
         this.realEstate = realEstate;
         this.building = building;
@@ -61,12 +65,20 @@ public class Image {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionBG() {
+        return descriptionBG;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionBG(String descriptionBG) {
+        this.descriptionBG = descriptionBG;
+    }
+
+    public String getDescriptionEN() {
+        return descriptionEN;
+    }
+
+    public void setDescriptionEN(String descriptionEN) {
+        this.descriptionEN = descriptionEN;
     }
 
     public byte[] getImage() {

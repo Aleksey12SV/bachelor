@@ -77,7 +77,8 @@ const PropertyUpdateOverview = ({
       descriptionBG: property?.descriptionBG,
       building: property?.building,
       sellers: property?.sellers,
-      title: property?.title,
+      titleBG: property?.titleBG,
+      titleEN: property?.titleEN,
       propertyType: property?.propertyType,
     },
   });
@@ -119,7 +120,8 @@ const PropertyUpdateOverview = ({
           );
           return (
             oldImage &&
-            (oldImage.description !== image.description ||
+            (oldImage.descriptionBG !== image.descriptionBG ||
+              oldImage.descriptionEN !== image.descriptionEN ||
               oldImage.mainImage !== image.mainImage)
           );
         });
@@ -218,10 +220,22 @@ const PropertyUpdateOverview = ({
           />
           <FormField
             control={form.control}
-            name="title"
+            name="titleBG"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Title</FormLabel>
+                <FormLabel>Title BG</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="titleEN"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title EN</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>

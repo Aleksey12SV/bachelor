@@ -10,7 +10,8 @@ export type RealEstate = {
   size: number;
   floor: number;
   heating: string;
-  title: string;
+  titleBG: string;
+  titleEN: string;
   rooms: number;
   descriptionBG: string;
   descriptionEN: string;

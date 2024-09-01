@@ -29,7 +29,8 @@ CREATE TABLE buildings (
   floors integer,
   year integer,
   construction varchar(255),
-  description varchar(65535),
+  descriptionBG varchar(65535),
+  descriptionEN varchar(65535),
   FOREIGN KEY (district_id) REFERENCES districts (id)
 );
 
@@ -47,7 +48,8 @@ CREATE TABLE real_estates (
   property_type_id integer,
   floor integer,
   heating varchar(255),
-  title varchar(255),
+  titleBG varchar(255),
+  titleEN varchar(255),
   rooms integer,
   descriptionBG varchar(65535),
   descriptionEN varchar(65535),
@@ -62,7 +64,8 @@ CREATE TABLE images (
   id BINARY(16) PRIMARY KEY NOT NULL,
   property_id integer,
   building_id INTEGER,
-  description varchar(255),
+  descriptionBG varchar(255),
+  descriptionEN varchar(255),
   height integer,
   width integer,
   image longblob,

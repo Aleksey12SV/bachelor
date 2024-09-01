@@ -3,7 +3,8 @@ import { RealEstate } from "./RealEstate";
 
 export type Image = {
   id: string;
-  description?: string;
+  descriptionBG?: string;
+  descriptionEN?: string;
   mainImage?: boolean;
   image: string;
   height?: number;

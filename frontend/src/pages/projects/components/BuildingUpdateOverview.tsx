@@ -60,7 +60,8 @@ const BuildingUpdateOverview = ({
       district: building?.district,
       floors: building?.floors,
       year: building?.year,
-      description: building?.description,
+      descriptionBG: building?.descriptionBG,
+      descriptionEN: building?.descriptionEN,
       construction: building?.construction,
     },
   });
@@ -107,7 +108,8 @@ const BuildingUpdateOverview = ({
           );
           return (
             oldImage &&
-            (oldImage.description !== image.description ||
+            (oldImage.descriptionBG !== image.descriptionBG ||
+              oldImage.descriptionEN !== image.descriptionEN ||
               oldImage.mainImage !== image.mainImage)
           );
         });
@@ -222,12 +224,24 @@ const BuildingUpdateOverview = ({
 
           <FormField
             control={form.control}
-            name="description"
+            name="descriptionBG"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Building Description" {...field} />
+                  <Textarea placeholder="Building Description BG" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="descriptionEN"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Building Description EN" {...field} />
                 </FormControl>
               </FormItem>
             )}
