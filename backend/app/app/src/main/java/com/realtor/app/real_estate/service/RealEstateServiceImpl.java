@@ -7,6 +7,7 @@ import com.realtor.app.real_estate.model.RealEstateRequest;
 import com.realtor.app.real_estate.repository.RealEstateRepo;
 import com.realtor.app.seller.model.Seller;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,11 @@ public class RealEstateServiceImpl implements RealEstateService {
     @Transactional
     @Override
     public void deleteRealEstate(Integer realEstateId) {
+        RealEstate realEstate = realEstateRepo.findById(realEstateId)
+                .orElseThrow(() -> new EntityNotFoundException("Real estate not found"));
+        realEstate.getSellers().clear();
+        realEstateRepo.save(realEstate);
+
         imageRepo.deleteByRealEstateId(realEstateId);
         realEstateRepo.deleteById(realEstateId);
     }
