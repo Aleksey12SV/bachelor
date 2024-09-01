@@ -44,7 +44,7 @@ const PaginationComponent = ({
       return middlePages.slice(-MAX_ITEMS_TO_SHOW);
     }
   };
-  console.log(lastPage - firstPage < MAX_ITEMS_TO_SHOW + 2);
+
   return (
     <Pagination className="h-8 pb-6">
       <PaginationContent>

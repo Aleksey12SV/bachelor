@@ -21,21 +21,23 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/realtor-bg?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/realtor-bg
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=admin
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
       - SPRING_JPA_SHOW_SQL=true
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
-      - SPRING_SQL_INIT_MODE=always
-      - SPRING_DATASOURCE_INITIALIZATION_MODE=always
+      - SPRING_SQL_INIT_MODE=never
+      - SPRING_DATASOURCE_INITIALIZATION_MODE=never
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_ID=realtor-bg-client
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_AUTHORIZATION_GRANT_TYPE=authorization_code
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_SECRET=sfOJIkBVaMPWD6sgL71aK8MlmxHVkUEZ
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_SCOPE=openid
-      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://localhost:9080/realms/RealtorBGRealm
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://keycloak:8080/realms/RealtorBGRealm
+      - SPRING_SECURUTY_OAUTH2_RESOURCESERVER_JWT_URI=http://keycloak:8080/realms/RealtorBGRealm/protocol/openid-connect/certs
     depends_on:
       - db
+      - keycloak
 
   db:
     image: mysql:8.0
@@ -45,7 +47,8 @@ services:
     ports:
       - "3300:3306"
     volumes:
-      - db_data:/var/lib/mysql
+      - "./backend/app/app/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql"
+      - "./backend/app/app/src/main/resources/data.sql:/docker-entrypoint-initdb.d/02-data.sql"
 
 volumes:
   db_data:

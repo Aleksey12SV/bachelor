@@ -28,8 +28,8 @@ CREATE TABLE buildings (
   floors integer,
   year integer,
   construction varchar(255),
-  descriptionBG varchar(65535),
-  descriptionEN varchar(65535),
+  descriptionBG text(65535),
+  descriptionEN text(65535),
   FOREIGN KEY (district_id) REFERENCES districts (id)
 );
 
@@ -50,8 +50,8 @@ CREATE TABLE real_estates (
   titleBG varchar(255),
   titleEN varchar(255),
   rooms integer,
-  descriptionBG varchar(65535),
-  descriptionEN varchar(65535),
+  descriptionBG text(65535),
+  descriptionEN text(65535),
   top_property BOOLEAN,
   publish_date date,
   status varchar(255),
