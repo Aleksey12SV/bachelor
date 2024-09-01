@@ -1,6 +1,5 @@
 -- Drop tables if they exist
 DROP TABLE IF EXISTS real_estates_sellers;
-DROP TABLE IF EXISTS sales;
 DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS real_estates;
 
