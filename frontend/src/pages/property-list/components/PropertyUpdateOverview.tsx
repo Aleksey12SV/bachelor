@@ -369,7 +369,6 @@ const PropertyUpdateOverview = ({
             control={form.control}
             name="propertyType"
             render={({ field }) => {
-              console.log(field);
               return (
                 <FormItem>
                   <FormLabel>Property Type</FormLabel>

@@ -43,10 +43,6 @@ export const HomePage = () => {
   const IMAGES_LENGTH = images.length > 5 ? 5 : images.length
 
   function onSubmit(data: FormType) {
-    console.log({
-      title: "You submitted the following values:",
-      data,
-    });
     const cleanData = JSON.parse(JSON.stringify(data));
     const queryString = new URLSearchParams(cleanData).toString();
     navigate(`/property-list?${queryString}`);

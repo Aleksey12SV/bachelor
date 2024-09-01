@@ -98,7 +98,7 @@ const PropertyList = () => {
     )
       setSelectedProperty(realEstates[0]);
   }, [isAdding, realEstates, selectedProperty]);
-  console.log(selectedProperty);
+
   return (
     <div className="w-full flex flex-row">
       {id === undefined && (
@@ -143,7 +143,7 @@ const PropertyList = () => {
           {isFetching && <p>Loading...</p>}
         </div>
       )}
-      {selectedProperty ? (
+      {(selectedProperty || isAdding) ? (
         <div className="flex p-4 flex-auto w-full overflow-hidden">
           {!isAdding && !isEditing && (
             <PropertyOverview selectedProperty={selectedProperty} />
