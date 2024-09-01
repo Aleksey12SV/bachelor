@@ -5,6 +5,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,8 +14,10 @@ import { contactFormSchema, ContactFormType } from "@/models/ContactsForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 const Contacts = () => {
+  const { t } = useTranslation();
   const [result, setResult] = useState("");
   const form = useForm<ContactFormType>({
     resolver: zodResolver(contactFormSchema),
@@ -30,21 +33,26 @@ const Contacts = () => {
       .then(() => {
         setResult("Form Submitted Successfully");
       })
-      .catch((e) => {
-        setResult(e?.message);
+      .catch(() => {
+        setResult("An error occured during form submission.");
       });
   };
 
   return (
-    <div className="flex flex-col w-full h-full items-center justify-center p-8">
+    <div className="flex flex-col w-full h-full items-center justify-center p-8 overflow-auto scrollable">
+      <div className="mb-8">{t("aboutUs")}</div>
+      <h2 className="font-medium text-xl">{t("sendYourRequest")}</h2>
       <Form {...form}>
-        <form className="w-full h-full" onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="flex flex-col w-full h-full gap-4"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>{t("name")}</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -56,10 +64,11 @@ const Contacts = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{t("email")}</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -68,7 +77,7 @@ const Contacts = () => {
             name="text"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Text</FormLabel>
+                <FormLabel>{t("message")}</FormLabel>
                 <FormControl>
                   <Textarea {...field} />
                 </FormControl>
@@ -76,7 +85,7 @@ const Contacts = () => {
             )}
           />
 
-          <Button type="submit">Submit Form</Button>
+          <Button type="submit">{t("submit")}</Button>
         </form>
       </Form>
       <span>{result}</span>
