@@ -2,6 +2,7 @@ import { MainContainer } from "@/components/common/MainContainer";
 import Contacts from "@/pages/contacts/Contacts";
 import Gallery from "@/pages/gallery/Gallery";
 import { HomePage } from "@/pages/home-page/HomePage";
+import LoginPage from "@/pages/login/LoginPage";
 import Projects from "@/pages/projects/Projects";
 import PropertyList from "@/pages/property-list/PropertyList";
 import Sellers from "@/pages/sellers/Sellers";
@@ -24,10 +25,7 @@ export const router = createBrowserRouter(
         <Route path="gallery" element={<Gallery />} />
         <Route path="contacts" element={<Contacts />} />
         <Route path="sellers" element={<Sellers />} />
-        {/* <Route element={<AuthLayout />}>
-          <Route path="login" element={<Login />} loader={redirectIfUser} />
-          <Route path="logout" action={logoutUser} />
-        </Route> */}
+        <Route path="login" element={<LoginPage />} />
       </Route>
     </>
   )
