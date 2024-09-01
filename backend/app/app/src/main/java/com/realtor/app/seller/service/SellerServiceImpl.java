@@ -41,6 +41,31 @@ public class SellerServiceImpl implements SellerService {
         return extendedSellers;
     }
 
+    @Override
+    public Seller createSeller(Seller seller) {
+        return sellerRepo.save(seller);
+    }
+
+    @Override
+    public Seller updateSeller(int id, Seller sellerDetails) {
+        Seller existingSeller = sellerRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Seller not found with id: " + id));
+
+        existingSeller.setFirstName(sellerDetails.getFirstName());
+        existingSeller.setLastName(sellerDetails.getLastName());
+        existingSeller.setPhoneNumber(sellerDetails.getPhoneNumber());
+
+        return sellerRepo.save(existingSeller);
+    }
+
+    @Override
+    public void deleteSeller(int id) {
+        Seller existingSeller = sellerRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Seller not found with id: " + id));
+
+        sellerRepo.delete(existingSeller);
+    }
+
     public static SellerWithAssociatedProperties convertToExtendedSeller(Seller seller) {
         SellerWithAssociatedProperties extendedSeller = new SellerWithAssociatedProperties();
         extendedSeller.setId(seller.getId());
