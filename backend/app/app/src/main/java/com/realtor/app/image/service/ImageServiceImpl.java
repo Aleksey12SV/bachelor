@@ -1,6 +1,5 @@
 package com.realtor.app.image.service;
 
-import com.realtor.app.building.model.Building;
 import com.realtor.app.image.model.Image;
 import com.realtor.app.image.repository.ImageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -38,6 +39,24 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public List<Image> getAllImages() {
         return imageRepo.findAll();
+    }
+
+    @Override
+    public List<Image> getRealEstateImages(){
+        return imageRepo.findByRealEstateIsNotNull();
+    }
+    @Override
+    public List<Image> getTopImages() {
+        List<Image> realEstateImages = getRealEstateImages();
+        Map<Integer, Image> topPropertyImages = realEstateImages.stream()
+                .filter(image -> image.getRealEstate() != null && image.getRealEstate().isTopProperty())
+                .collect(Collectors.toMap(
+                        image -> image.getRealEstate().getId(),
+                        image -> image,
+                        (existing, replacement) -> existing.getMainImage() ? existing : replacement
+                ));
+
+        return topPropertyImages.values().stream().collect(Collectors.toList());
     }
 
     @Override

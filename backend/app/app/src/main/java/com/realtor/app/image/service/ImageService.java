@@ -19,4 +19,6 @@ public interface ImageService {
     public Optional<Image> getMainImageByBuildingId(Long buildingId);
     public Optional<Image> getMainImageByPropertyId(Long propertyId);
     public ResponseEntity<Void> deleteImage(UUID imageId);
+    public List<Image> getRealEstateImages();
+    public List<Image> getTopImages();
 }

@@ -5,6 +5,9 @@ import { PaginatedData } from "@/models/PaginatedData";
 export const getImages = (): Promise<ImageResponse[]> =>
   axiosInstance.get("image/getAll").then(({ data }) => data);
 
+export const getTopImages = (): Promise<ImageResponse[]> =>
+  axiosInstance.get("image/getTopImages").then(({ data }) => data);
+
 export const createImage = (imageInformation: Partial<ImageRequest>) =>
   (imageInformation.propertyId || imageInformation.buildingId) &&
   axiosInstance.post("image/add", imageInformation);

@@ -137,6 +137,11 @@ public class ImageController {
         return imageService.getAllImages();
     }
 
+    @GetMapping("/getTopImages")
+    public List<Image> getTopImages(){
+        return imageService.getTopImages();
+    }
+
     @GetMapping(value = "/getAll/paginated")
     public Page<Image> getAllImagesPaginated(@RequestParam(defaultValue = "0") int page,
                                                    @RequestParam(defaultValue = "10") int size){
