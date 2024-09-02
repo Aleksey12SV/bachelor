@@ -5,7 +5,7 @@ import HttpBackend from 'i18next-http-backend';
 i18n.use(HttpBackend).use(initReactI18next).init({
   lng: "en",
   fallbackLng: "en",
-  keySeparator: false,
+  keySeparator: ".",
   interpolation: {
     escapeValue: false,
   },
