@@ -13,7 +13,6 @@ import { useKeycloak } from "@/components/auth/KeycloakProvider";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "../tooltip";
 
@@ -54,21 +53,19 @@ export const Navbar = () => {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger>
-            <RealtorBGLogo
-              className="w-24 cursor-pointer"
-              onClick={() => navigate("/")}
-            />
-          </TooltipTrigger>
-          <TooltipContent asChild>
-            <div className="!z-50 p-2 rounded shadow-xl border border-neutral-200 bg-white text-neutral-950 shadow-sm dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50">
-              {t("returnToHomePage")}
-            </div>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>
+          <RealtorBGLogo
+            className="w-24 cursor-pointer"
+            onClick={() => navigate("/")}
+          />
+        </TooltipTrigger>
+        <TooltipContent asChild>
+          <div className="!z-50 p-2 rounded shadow-xl border border-neutral-200 bg-white text-neutral-950 shadow-sm dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50">
+            {t("returnToHomePage")}
+          </div>
+        </TooltipContent>
+      </Tooltip>
       <NavigationMenu>
         <NavigationMenuList className="gap-10">
           <NavigationMenuItem
@@ -96,7 +93,10 @@ export const Navbar = () => {
         </NavigationMenuList>
       </NavigationMenu>
       <div className="absolute flex flex-row items-center gap-4 right-0 top-6">
-        <Avatar onClick={handleChangeLanguage} className="h-6 w-6 cursor-pointer z-50">
+        <Avatar
+          onClick={handleChangeLanguage}
+          className="h-6 w-6 cursor-pointer z-50"
+        >
           <AvatarImage
             src={`
 https://www.worldometers.info//img/flags/small/tn_${

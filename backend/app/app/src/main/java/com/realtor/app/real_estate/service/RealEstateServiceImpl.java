@@ -111,13 +111,13 @@ public class RealEstateServiceImpl implements RealEstateService {
 
     private List<RealEstate> sortRealEstates(List<RealEstate> realEstates, String sorting) {
         switch (sorting) {
-            case "PRICE_ASC":
+            case "priceAsc":
                 return realEstates.stream().sorted((a, b) -> Double.compare(a.getPrice(), b.getPrice())).collect(Collectors.toList());
-            case "PRICE_DESC":
+            case "priceDesc":
                 return realEstates.stream().sorted((a, b) -> Double.compare(b.getPrice(), a.getPrice())).collect(Collectors.toList());
-            case "NEWEST":
+            case "newest":
                 return realEstates.stream().sorted((a, b) -> b.getPublishDate().compareTo(a.getPublishDate())).collect(Collectors.toList());
-            case "OLDEST":
+            case "oldest":
                 return realEstates.stream().sorted((a, b) -> a.getPublishDate().compareTo(b.getPublishDate())).collect(Collectors.toList());
             default:
                 return realEstates;

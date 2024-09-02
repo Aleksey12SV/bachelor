@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { getCities } from "@/api/cities";
 import { getPropertyTypes } from "@/api/property-types";
 import { FormType, SortingEnum } from "@/models/RealEstateForm";
+import { useTranslation } from "react-i18next";
 
 const QuickFormContent = ({
   form,
@@ -30,6 +31,7 @@ const QuickFormContent = ({
   showAdditionalFilters: boolean;
   onShowAdditionalFilters: () => void;
 }) => {
+  const { t } = useTranslation();
   const { data: cities } = useQuery({
     queryKey: ["cities"],
     queryFn: getCities,
@@ -48,7 +50,7 @@ const QuickFormContent = ({
           name="location"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Location</FormLabel>
+              <FormLabel>{t("location")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="border solid">
@@ -58,7 +60,7 @@ const QuickFormContent = ({
                 <SelectContent>
                   {cities.map((city) => (
                     <SelectItem key={city.id} value={city.name}>
-                      {city.name}
+                      {t(`cities.${city.name}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -67,7 +69,7 @@ const QuickFormContent = ({
             </FormItem>
           )}
         />
-        <FormLabel>Property Type</FormLabel>
+        <FormLabel>{t("propertyType")}</FormLabel>
         <div className="grid grid-cols-2 gap-2">
           {propertyTypes.map((item) => (
             <FormField
@@ -97,7 +99,9 @@ const QuickFormContent = ({
                         }}
                       />
                     </FormControl>
-                    <FormLabel className="font-normal">{item.name}</FormLabel>
+                    <FormLabel className="font-normal">
+                      {t(`propertyTypes.${item.name.toLowerCase()}.name`)}
+                    </FormLabel>
                   </FormItem>
                 );
               }}
@@ -112,7 +116,7 @@ const QuickFormContent = ({
             name="priceFrom"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Min Price</FormLabel>
+                <FormLabel>{t("minPrice")}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -131,7 +135,7 @@ const QuickFormContent = ({
             name="priceTo"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Max Price</FormLabel>
+                <FormLabel>{t("maxPrice")}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -152,7 +156,7 @@ const QuickFormContent = ({
             name="minSize"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Min Size</FormLabel>
+                <FormLabel>{t("minSize")}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -171,7 +175,7 @@ const QuickFormContent = ({
             name="maxSize"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Max Size</FormLabel>
+                <FormLabel>{t("maxSize")}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -186,14 +190,14 @@ const QuickFormContent = ({
             )}
           />
         </div>
-        <FormLabel>Floors</FormLabel>
+        <FormLabel>{t("floors")}</FormLabel>
         <div className="grid grid-cols-2 gap-2">
           <FormField
             control={form.control}
             name="minFloor"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Min</FormLabel>
+                <FormLabel>{t("from")}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -220,7 +224,7 @@ const QuickFormContent = ({
             name="maxFloor"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Max</FormLabel>
+                <FormLabel>{t("to")}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -245,13 +249,15 @@ const QuickFormContent = ({
         </div>
       </div>
       <div className="flex flex-col gap-4">
-        <Button className="mt-8" type="submit">Submit</Button>
+        <Button className="mt-8" type="submit">
+          {t("search")}
+        </Button>
         <FormField
           control={form.control}
           name="sorting"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sort</FormLabel>
+              <FormLabel>{t("sort")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -261,7 +267,7 @@ const QuickFormContent = ({
                 <SelectContent>
                   {SortingEnum.map((sort) => (
                     <SelectItem key={sort} value={sort}>
-                      {sort}
+                      {t(sort)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -270,7 +276,7 @@ const QuickFormContent = ({
             </FormItem>
           )}
         />
-                <FormField
+        <FormField
           control={form.control}
           name="showRealEstatesWithoutImages"
           render={({ field }) => {
@@ -283,7 +289,7 @@ const QuickFormContent = ({
                   />
                 </FormControl>
                 <FormLabel className="font-normal">
-                  Show properties with images only
+                  {t("showPropertiesWithImagesOnly")}
                 </FormLabel>
               </FormItem>
             );
@@ -297,7 +303,7 @@ const QuickFormContent = ({
               onShowAdditionalFilters();
             }}
           >
-            Show additional filters
+            {t("showAdditionalFilters")}
           </Button>
         )}
       </div>

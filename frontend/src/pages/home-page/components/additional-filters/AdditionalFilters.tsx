@@ -17,6 +17,7 @@ import {
 import { FormType, RoomsEnum } from "@/models/RealEstateForm";
 import { useQuery } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 const AdditionalFilters = ({
   form,
@@ -25,6 +26,7 @@ const AdditionalFilters = ({
   form: UseFormReturn<FormType>;
   onHideAdditionalFilters: () => void;
 }) => {
+  const { t } = useTranslation();
   const { data: sellers } = useQuery({
     queryKey: ["sellers"],
     queryFn: getSellers,
@@ -38,7 +40,7 @@ const AdditionalFilters = ({
           name="rooms"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Rooms</FormLabel>
+              <FormLabel>{t("rooms")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="border solid">
@@ -61,7 +63,7 @@ const AdditionalFilters = ({
           name="seller"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Seller</FormLabel>
+              <FormLabel>{t('seller')}</FormLabel>
               <Select onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger>
@@ -85,7 +87,7 @@ const AdditionalFilters = ({
             name="priceFromSqM"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Min Price SqM</FormLabel>
+                <FormLabel>{t('minPriceSqM')}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -103,7 +105,7 @@ const AdditionalFilters = ({
             name="priceToSqM"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Max Price SqM</FormLabel>
+                <FormLabel>{t('maxPriceSqM')}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -124,7 +126,7 @@ const AdditionalFilters = ({
           name="status"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Status</FormLabel>
+              <FormLabel>{t('status')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -146,7 +148,7 @@ const AdditionalFilters = ({
           name="heating"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Heating</FormLabel>
+              <FormLabel>{t('heating')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -195,7 +197,7 @@ const AdditionalFilters = ({
           name="construction"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Construction</FormLabel>
+              <FormLabel>{t('construction')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -214,7 +216,9 @@ const AdditionalFilters = ({
             </FormItem>
           )}
         />
-        <Button className="mt-8" onClick={onHideAdditionalFilters}>Hide filter</Button>
+        <Button className="mt-8" onClick={onHideAdditionalFilters}>
+          Hide filter
+        </Button>
       </div>
     </>
   );

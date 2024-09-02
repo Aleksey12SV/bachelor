@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const SortingEnum = [
-  "PRICE_ASC",
-  "PRICE_DESC",
-  "NEWEST",
-  "OLDEST",
+  "priceAsc",
+  "priceDesc",
+  "newest",
+  "oldest",
 ] as const;
 
 export const RoomsEnum = [
@@ -34,7 +34,7 @@ export const formSchema = z.object({
     .refine((v) => v.some((i) => i))
     .optional(),
   showRealEstatesWithoutImages: z.boolean(),
-  sorting: z.enum(SortingEnum).default("NEWEST"),
+  sorting: z.enum(SortingEnum).default("newest"),
   seller: z.string().optional(),
   status: z.string().optional(),
   heating: z.string().optional(),

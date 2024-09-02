@@ -2,6 +2,7 @@ import { useOutlet } from "react-router-dom";
 import { Navbar } from "../ui/navbar/Navbar";
 import { useKeycloak } from "../auth/KeycloakProvider";
 import { useEffect, useRef } from "react";
+import { TooltipProvider } from "../ui/tooltip";
 
 export const MainContainer = () => {
   const outlet = useOutlet();
@@ -15,13 +16,18 @@ export const MainContainer = () => {
   }, [initKeycloak]);
 
   return (
-    <div className="min-h-screen max-h-screen flex flex-col">
-      <div className="w-full flex py-4 px-8 shrink-0">
-        <Navbar />
+    <TooltipProvider>
+      <div className="min-h-screen max-h-screen flex flex-col">
+        <div className="w-full flex py-4 px-8 shrink-0">
+          <Navbar />
+        </div>
+        <div
+          id="main-container"
+          className="w-full flex flex-auto overflow-hidden"
+        >
+          {outlet}
+        </div>
       </div>
-      <div id="main-container" className="w-full flex flex-auto overflow-hidden">
-        {outlet}
-      </div>
-    </div>
+    </TooltipProvider>
   );
 };
