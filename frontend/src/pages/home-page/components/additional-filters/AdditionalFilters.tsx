@@ -14,7 +14,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FormType, RoomsEnum } from "@/models/RealEstateForm";
+import {
+  Construction,
+  FormType,
+  Heating,
+  Rooms,
+  Status,
+} from "@/models/RealEstateForm";
 import { useQuery } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -48,9 +54,9 @@ const AdditionalFilters = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {RoomsEnum.map((room) => (
+                  {Rooms.map((room) => (
                     <SelectItem key={room} value={room}>
-                      {room}
+                      {t(room)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -63,7 +69,7 @@ const AdditionalFilters = ({
           name="seller"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('seller')}</FormLabel>
+              <FormLabel>{t("seller")}</FormLabel>
               <Select onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger>
@@ -87,7 +93,7 @@ const AdditionalFilters = ({
             name="priceFromSqM"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('minPriceSqM')}</FormLabel>
+                <FormLabel>{t("minPriceSqM")}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -105,7 +111,7 @@ const AdditionalFilters = ({
             name="priceToSqM"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('maxPriceSqM')}</FormLabel>
+                <FormLabel>{t("maxPriceSqM")}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -126,7 +132,7 @@ const AdditionalFilters = ({
           name="status"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('status')}</FormLabel>
+              <FormLabel>{t("status")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -134,10 +140,11 @@ const AdditionalFilters = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="GRUB_STROEJ">Grub stroej</SelectItem>
-                  <SelectItem value="AKT_14">AKT 14</SelectItem>
-                  <SelectItem value="AKT_15">AKT 15</SelectItem>
-                  <SelectItem value="AKT_16">AKT 16</SelectItem>
+                  {Status.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {t(s)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FormItem>
@@ -148,7 +155,7 @@ const AdditionalFilters = ({
           name="heating"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('heating')}</FormLabel>
+              <FormLabel>{t("heating")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -156,9 +163,11 @@ const AdditionalFilters = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Gas">Gas</SelectItem>
-                  <SelectItem value="TEC">Tec</SelectItem>
-                  <SelectItem value="Lokalno">Lokalno</SelectItem>
+                  {Heating.map((h) => (
+                    <SelectItem key={h} value={h}>
+                      {t(h)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FormItem>
@@ -170,7 +179,7 @@ const AdditionalFilters = ({
             name="minYear"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Min Year</FormLabel>
+                <FormLabel>{t('fromYear')}</FormLabel>
                 <FormControl>
                   <Input {...field} type="number" pattern="\d*" min={0} />
                 </FormControl>
@@ -182,7 +191,7 @@ const AdditionalFilters = ({
             name="maxYear"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Max Year</FormLabel>
+                <FormLabel>{t('toYear')}</FormLabel>
                 <FormControl>
                   <Input {...field} type="number" pattern="\d*" min={0} />
                 </FormControl>
@@ -197,7 +206,7 @@ const AdditionalFilters = ({
           name="construction"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('construction')}</FormLabel>
+              <FormLabel>{t("construction")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -205,19 +214,18 @@ const AdditionalFilters = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Panel">Panel</SelectItem>
-                  <SelectItem value="Brick">Brick</SelectItem>
-                  <SelectItem value="EPK">EPK</SelectItem>
-                  <SelectItem value="Temporary construction">
-                    Temporary construction
-                  </SelectItem>
+                  {Construction.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {t(c)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FormItem>
           )}
         />
         <Button className="mt-8" onClick={onHideAdditionalFilters}>
-          Hide filter
+          {t("hideAdditionalFilters")}
         </Button>
       </div>
     </>

@@ -77,26 +77,26 @@ INSERT INTO districts (id, name, city_id) VALUES (39, 'Vazrazhdane', 2);
 
 -- Insert initial data into buildings table
 INSERT INTO buildings (id, name, district_id, floors, year, construction, descriptionEN, descriptionBG) VALUES
-(1, 'Building One', 1, 10, 2000, 'Brick', 'A modern office building located in downtown.', 'Модерна офис сграда, разположена в центъра на града.'),
-(2, 'Building Two', 2, 20, 2010, 'Panel', 'A high-rise building with panoramic city views.', 'Висок блок с панорамна гледка към града.'),
-(3, 'Building Three', 1, 15, 2005, 'Brick', 'A classic brick building with historical significance.', 'Класическа тухлена сграда с историческо значение.'),
-(4, 'Building Four', 2, 8, 2015, 'Panel', 'An eco-friendly building with sustainable materials.', 'Екологична сграда с устойчиви материали.'),
-(5, 'Building Five', 1, 25, 2020, 'Brick', 'A state-of-the-art building with a glass facade.', 'Модерна сграда със стъклена фасада.'),
-(6, 'Building Six', 2, 12, 2008, 'Panel', 'A mid-rise building with commercial spaces.', 'Средноетажна сграда с търговски площи.'),
-(7, 'Building Seven', 1, 18, 2012, 'Brick', 'A residential building with modern amenities.', 'Жилищна сграда с модерни удобства.'),
-(8, 'Building Eight', 2, 6, 2018, 'Panel', 'A low-rise building designed for community use.', 'Нискоетажна сграда, предназначена за обществено ползване.'),
-(9, 'Building Nine', 1, 22, 2011, 'Brick', 'A high-rise building known for its unique architecture.', 'Висока сграда, известна със своята уникална архитектура.'),
-(10, 'Building Ten', 2, 30, 2022, 'Panel', 'The tallest building in the district with luxury apartments.', 'Най-високата сграда в района с луксозни апартаменти.'),
-(11, 'Building Eleven', 1, 12, 2001, 'Brick', 'An office building with flexible workspaces.', 'Офис сграда с гъвкави работни пространства.'),
-(12, 'Building Twelve', 2, 18, 2013, 'Panel', 'A residential tower with green rooftop amenities.', 'Жилищна кула със зелени удобства на покрива.'),
-(13, 'Building Thirteen', 1, 14, 2007, 'Brick', 'A historic building converted into luxury apartments.', 'Историческа сграда, превърната в луксозни апартаменти.'),
-(14, 'Building Fourteen', 2, 9, 2016, 'Panel', 'A modern building with energy-efficient systems.', 'Модерна сграда с енергийно ефективни системи.'),
-(15, 'Building Fifteen', 1, 28, 2021, 'Brick', 'A skyscraper with panoramic elevators.', 'Небостъргач с панорамни асансьори.'),
-(16, 'Building Sixteen', 2, 11, 2009, 'Panel', 'A commercial building with co-working spaces.', 'Търговска сграда с коуъркинг пространства.'),
-(17, 'Building Seventeen', 1, 19, 2014, 'Brick', 'A mixed-use building with retail and residential units.', 'Сграда със смесено предназначение с търговски и жилищни единици.'),
-(18, 'Building Eighteen', 2, 7, 2019, 'Panel', 'A boutique residential building with custom finishes.', 'Бутикова жилищна сграда с персонализирани довършителни работи.'),
-(19, 'Building Nineteen', 1, 23, 2012, 'Brick', 'A high-rise building with a rooftop pool.', 'Висока сграда с басейн на покрива.'),
-(20, 'Building Twenty', 2, 35, 2023, 'Panel', 'A luxury building with private elevators for each unit.', 'Луксозна сграда с частни асансьори за всяко жилище.');
+(1, 'Building One', 1, 10, 2000, 'brick', 'A modern office building located in downtown.', 'Модерна офис сграда, разположена в центъра на града.'),
+(2, 'Building Two', 2, 20, 2010, 'panel', 'A high-rise building with panoramic city views.', 'Висок блок с панорамна гледка към града.'),
+(3, 'Building Three', 1, 15, 2005, 'brick', 'A classic brick building with historical significance.', 'Класическа тухлена сграда с историческо значение.'),
+(4, 'Building Four', 2, 8, 2015, 'panel', 'An eco-friendly building with sustainable materials.', 'Екологична сграда с устойчиви материали.'),
+(5, 'Building Five', 1, 25, 2020, 'brick', 'A state-of-the-art building with a glass facade.', 'Модерна сграда със стъклена фасада.'),
+(6, 'Building Six', 2, 12, 2008, 'panel', 'A mid-rise building with commercial spaces.', 'Средноетажна сграда с търговски площи.'),
+(7, 'Building Seven', 1, 18, 2012, 'brick', 'A residential building with modern amenities.', 'Жилищна сграда с модерни удобства.'),
+(8, 'Building Eight', 2, 6, 2018, 'panel', 'A low-rise building designed for community use.', 'Нискоетажна сграда, предназначена за обществено ползване.'),
+(9, 'Building Nine', 1, 22, 2011, 'brick', 'A high-rise building known for its unique architecture.', 'Висока сграда, известна със своята уникална архитектура.'),
+(10, 'Building Ten', 2, 30, 2022, 'panel', 'The tallest building in the district with luxury apartments.', 'Най-високата сграда в района с луксозни апартаменти.'),
+(11, 'Building Eleven', 1, 12, 2001, 'brick', 'An office building with flexible workspaces.', 'Офис сграда с гъвкави работни пространства.'),
+(12, 'Building Twelve', 2, 18, 2013, 'panel', 'A residential tower with green rooftop amenities.', 'Жилищна кула със зелени удобства на покрива.'),
+(13, 'Building Thirteen', 1, 14, 2007, 'brick', 'A historic building converted into luxury apartments.', 'Историческа сграда, превърната в луксозни апартаменти.'),
+(14, 'Building Fourteen', 2, 9, 2016, 'panel', 'A modern building with energy-efficient systems.', 'Модерна сграда с енергийно ефективни системи.'),
+(15, 'Building Fifteen', 1, 28, 2021, 'brick', 'A skyscraper with panoramic elevators.', 'Небостъргач с панорамни асансьори.'),
+(16, 'Building Sixteen', 2, 11, 2009, 'panel', 'A commercial building with co-working spaces.', 'Търговска сграда с коуъркинг пространства.'),
+(17, 'Building Seventeen', 1, 19, 2014, 'brick', 'A mixed-use building with retail and residential units.', 'Сграда със смесено предназначение с търговски и жилищни единици.'),
+(18, 'Building Eighteen', 2, 7, 2019, 'panel', 'A boutique residential building with custom finishes.', 'Бутикова жилищна сграда с персонализирани довършителни работи.'),
+(19, 'Building Nineteen', 1, 23, 2012, 'brick', 'A high-rise building with a rooftop pool.', 'Висока сграда с басейн на покрива.'),
+(20, 'Building Twenty', 2, 35, 2023, 'panel', 'A luxury building with private elevators for each unit.', 'Луксозна сграда с частни асансьори за всяко жилище.');
 
 -- Insert initial data into property_type table
 INSERT INTO property_type (id, name, description) VALUES (1, 'Apartment', 'Residential apartment');
@@ -109,27 +109,29 @@ INSERT INTO property_type (id, name, description) VALUES (7, 'Garage', 'Enclosed
 INSERT INTO property_type (id, name, description) VALUES (8, 'Villa', 'Luxurious, often spacious residential property');
 
 -- Insert initial data into real_estates table
-INSERT INTO real_estates (id, building_id, price, property_size, property_type_id, floor, heating, descriptionBG, descriptionEN, top_property, status, publish_date, rooms, titleBG, titleEN) VALUES
-(1, 1, 250000.00, 85.0, 1, 5, 'Central', 'Просторен апартамент с модерни удобства.', 'A spacious apartment with modern amenities.', FALSE, 'Ready to Use', '2023-01-01', 3, 'Просторен модерен апартамент', 'Spacious Modern Apartment'),
-(2, 2, 180000.00, 45.0, 2, 3, 'Electric', 'Уютен апартамент с отлична гледка.', 'A cozy apartment with a great view.', FALSE, 'In Building Process', '2023-02-15', 1, 'Уютен апартамент с гледка', 'Cozy Apartment with View'),
-(3, 1, 500000.00, 150.0, 2, 10, 'Gas', 'Луксозен пентхаус с панорамна гледка.', 'A luxury penthouse with panoramic views.', TRUE, 'Ready to Use', '2023-03-20', 4, 'Луксозен пентхаус', 'Luxury Penthouse'),
-(4, 2, 200000.00, 65.0, 1, 2, 'Central', 'Модерен апартамент с удобен достъп.', 'A modern apartment with convenient access.', FALSE, 'Ready to Use', '2023-04-25', 2, 'Модерен апартамент', 'Modern Apartment'),
-(5, 1, 220000.00, 55.0, 1, 6, 'Electric', 'Добре поддържан апартамент в отлична локация.', 'A well-maintained apartment in a prime location.', FALSE, 'In Building Process', '2023-05-30', 2, 'Добре поддържан апартамент в отлична локация', 'Well-Maintained Prime Location Apartment'),
-(6, 2, 240000.00, 70.0, 2, 4, 'Gas', 'Апартамент със съвременен дизайн.', 'An apartment with contemporary design.', FALSE, 'Ready to Use', '2023-06-10', 2, 'Апартамент със съвременен дизайн', 'Contemporary Design Apartment'),
-(7, 1, 600000.00, 180.0, 2, 12, 'Central', 'Просторен пентхаус с луксозни довършителни работи.', 'A spacious penthouse with luxury finishes.', TRUE, 'Ready to Use', '2023-07-15', 4, 'Просторен луксозен пентхаус', 'Luxury Finished Penthouse'),
-(8, 2, 280000.00, 90.0, 1, 7, 'Electric', 'Светъл и просторен апартамент с модерни характеристики.', 'A bright and airy apartment with modern features.', FALSE, 'Ready to Use', '2023-08-20', 3, 'Светъл и просторен апартамент с модерни характеристики', 'Bright and Airy Modern Apartment'),
-(9, 1, 150000.00, 40.0, 1, 1, 'Central', 'Компактен апартамент, идеален за самостоятелно живеене или двойки.', 'A compact apartment ideal for singles or couples.', FALSE, 'In Building Process', '2023-09-25', 1, 'Компактен апартамент за самостоятелно живеене или двойки', 'Compact Apartment for Singles/Couples'),
-(10, 2, 230000.00, 75.0, 2, 8, 'Gas', 'Елегантен апартамент с отлична планировка.', 'An elegant apartment with a great layout.', FALSE, 'Ready to Use', '2023-10-30', 3, 'Елегантен апартамент с отлична планировка', 'Elegant Apartment with Great Layout'),
-(11, 1, 200000.00, 50.0, 2, 2, 'Central', 'Стилен апартамент в добре свързан район.', 'A stylish apartment in a well-connected area.', FALSE, 'In Building Process', '2023-11-10', 2, 'Стилен апартамент в добре свързан район', 'Stylish Well-Connected Apartment'),
-(12, 2, 190000.00, 60.0, 1, 5, 'Electric', 'Очарователен апартамент с обновени уреди.', 'A charming apartment with updated appliances.', FALSE, 'Ready to Use', '2023-12-05', 2, 'Очарователен апартамент с обновени уреди', 'Charming Apartment with Updated Appliances'),
-(13, 1, 270000.00, 95.0, 1, 9, 'Gas', 'Красиво проектиран апартамент с отлични удобства.', 'A beautifully designed apartment with great amenities.', FALSE, 'Ready to Use', '2024-01-15', 3, 'Красиво проектиран апартамент с отлични удобства', 'Beautifully Designed Apartment with Amenities'),
-(14, 2, 210000.00, 55.0, 2, 3, 'Central', 'Удобен апартамент с модерен декор.', 'A comfortable apartment with modern decor.', FALSE, 'In Building Process', '2024-02-20', 2, 'Удобен апартамент с модерен декор', 'Comfortable Apartment with Modern Decor'),
-(15, 1, 400000.00, 130.0, 2, 11, 'Electric', 'Луксозен апартамент с висококачествени довършителни работи.', 'A luxury apartment with high-end finishes.', TRUE, 'Ready to Use', '2024-03-25', 4, 'Луксозен апартамент с висококачествени довършителни работи', 'Luxury Apartment with High-End Finishes'),
-(16, 2, 260000.00, 80.0, 1, 4, 'Gas', 'Светъл апартамент с просторна дневна зона.', 'A bright apartment with a spacious living area.', FALSE, 'Ready to Use', '2024-04-30', 3, 'Светъл апартамент с просторна дневна зона', 'Bright Apartment with Spacious Living Area'),
-(17, 1, 220000.00, 60.0, 1, 6, 'Central', 'Добре разположен апартамент с модерни характеристики.', 'A well-located apartment with modern features.', FALSE, 'In Building Process', '2024-05-10', 2, 'Добре разположен апартамент с модерни характеристики', 'Well-Located Apartment with Modern Features'),
-(18, 2, 350000.00, 100.0, 2, 10, 'Electric', 'Голям апартамент с премиум удобства.', 'A large apartment with premium amenities.', TRUE, 'Ready to Use', '2024-06-15', 4, 'Голям апартамент с премиум удобства', 'Large Apartment with Premium Amenities'),
-(19, 1, 250000.00, 85.0, 2, 7, 'Gas', 'Стилен апартамент в оживен квартал.', 'A stylish apartment in a vibrant neighborhood.', FALSE, 'Ready to Use', '2024-07-20', 3, 'Стилен апартамент в оживен квартал', 'Stylish Apartment in Vibrant Neighborhood'),
-(20, 2, 160000.00, 50.0, 1, 1, 'Central', 'Бюджетен апартамент в отлична локация.', 'A budget-friendly apartment in a great location.', FALSE, 'In Building Process', '2024-08-25', 1, 'Бюджетен апартамент в отлична локация', 'Budget-Friendly Apartment');
+INSERT INTO real_estates
+(id, building_id, price, property_size, property_type_id, floor, heating, descriptionBG, descriptionEN, top_property, status, publish_date, rooms, titleBG, titleEN)
+VALUES
+(1, 1, 250000.00, 85.0, 1, 5, 'tps', 'Просторен апартамент с модерни удобства.', 'A spacious apartment with modern amenities.', FALSE, 'finished', '2023-01-01', 'threeRooms', 'Просторен модерен апартамент', 'Spacious Modern Apartment'),
+(2, 2, 180000.00, 45.0, 2, 3, 'electricity', 'Уютен апартамент с отлична гледка.', 'A cozy apartment with a great view.', FALSE, 'inConstruction', '2023-02-15', 'oneRoom', 'Уютен апартамент с гледка', 'Cozy Apartment with View'),
+(3, 1, 500000.00, 150.0, 2, 10, 'gas', 'Луксозен пентхаус с панорамна гледка.', 'A luxury penthouse with panoramic views.', TRUE, 'finished', '2023-03-20', 'fourRooms', 'Луксозен пентхаус', 'Luxury Penthouse'),
+(4, 2, 200000.00, 65.0, 1, 2, 'tps', 'Модерен апартамент с удобен достъп.', 'A modern apartment with convenient access.', FALSE, 'finished', '2023-04-25', 'twoRooms', 'Модерен апартамент', 'Modern Apartment'),
+(5, 1, 220000.00, 55.0, 1, 6, 'local', 'Добре поддържан апартамент в отлична локация.', 'A well-maintained apartment in a prime location.', FALSE, 'inConstruction', '2023-05-30', 'twoRooms', 'Добре поддържан апартамент в отлична локация', 'Well-Maintained Prime Location Apartment'),
+(6, 2, 240000.00, 70.0, 2, 4, 'gas', 'Апартамент със съвременен дизайн.', 'An apartment with contemporary design.', FALSE, 'finished', '2023-06-10', 'twoRooms', 'Апартамент със съвременен дизайн', 'Contemporary Design Apartment'),
+(7, 1, 600000.00, 180.0, 2, 12, 'tps', 'Просторен пентхаус с луксозни довършителни работи.', 'A spacious penthouse with luxury finishes.', TRUE, 'finished', '2023-07-15', 'fourRooms', 'Просторен луксозен пентхаус', 'Luxury Finished Penthouse'),
+(8, 2, 280000.00, 90.0, 1, 7, 'electricity', 'Светъл и просторен апартамент с модерни характеристики.', 'A bright and airy apartment with modern features.', FALSE, 'finished', '2023-08-20', 'threeRooms', 'Светъл и просторен апартамент с модерни характеристики', 'Bright and Airy Modern Apartment'),
+(9, 1, 150000.00, 40.0, 1, 1, 'tps', 'Компактен апартамент, идеален за самостоятелно живеене или двойки.', 'A compact apartment ideal for singles or couples.', FALSE, 'inConstruction', '2023-09-25', 'oneRoom', 'Компактен апартамент за самостоятелно живеене или двойки', 'Compact Apartment for Singles/Couples'),
+(10, 2, 230000.00, 75.0, 2, 8, 'gas', 'Елегантен апартамент с отлична планировка.', 'An elegant apartment with a great layout.', FALSE, 'finished', '2023-10-30', 'threeRooms', 'Елегантен апартамент с отлична планировка', 'Elegant Apartment with Great Layout'),
+(11, 1, 200000.00, 50.0, 2, 2, 'electricity', 'Стилен апартамент в добре свързан район.', 'A stylish apartment in a well-connected area.', FALSE, 'inConstruction', '2023-11-10', 'twoRooms', 'Стилен апартамент в добре свързан район', 'Stylish Well-Connected Apartment'),
+(12, 2, 190000.00, 60.0, 1, 5, 'electricity', 'Очарователен апартамент с обновени уреди.', 'A charming apartment with updated appliances.', FALSE, 'finished', '2023-12-05', 'twoRooms', 'Очарователен апартамент с обновени уреди', 'Charming Apartment with Updated Appliances'),
+(13, 1, 270000.00, 95.0, 1, 9, 'gas', 'Красиво проектиран апартамент с отлични удобства.', 'A beautifully designed apartment with great amenities.', FALSE, 'finished', '2024-01-15', 'threeRooms', 'Красиво проектиран апартамент с отлични удобства', 'Beautifully Designed Apartment with Amenities'),
+(14, 2, 210000.00, 55.0, 2, 3, 'local', 'Удобен апартамент с модерен декор.', 'A comfortable apartment with modern decor.', FALSE, 'inConstruction', '2024-02-20', 'twoRooms', 'Удобен апартамент с модерен декор', 'Comfortable Apartment with Modern Decor'),
+(15, 1, 400000.00, 130.0, 2, 11, 'electricity', 'Луксозен апартамент с висококачествени довършителни работи.', 'A luxury apartment with high-end finishes.', TRUE, 'finished', '2024-03-25', 'fourRooms', 'Луксозен апартамент с висококачествени довършителни работи', 'Luxury Apartment with High-End Finishes'),
+(16, 2, 260000.00, 80.0, 1, 4, 'gas', 'Светъл апартамент с просторна дневна зона.', 'A bright apartment with a spacious living area.', FALSE, 'finished', '2024-04-30', 'threeRooms', 'Светъл апартамент с просторна дневна зона', 'Bright Apartment with Spacious Living Area'),
+(17, 1, 220000.00, 60.0, 1, 6, 'tps', 'Добре разположен апартамент с модерни характеристики.', 'A well-located apartment with modern features.', FALSE, 'inConstruction', '2024-05-10', 'twoRooms', 'Добре разположен апартамент с модерни характеристики', 'Well-Located Apartment with Modern Features'),
+(18, 2, 350000.00, 100.0, 2, 10, 'electricity', 'Голям апартамент с премиум удобства.', 'A large apartment with premium amenities.', TRUE, 'finished', '2024-06-15', 'fourRooms', 'Голям апартамент с премиум удобства', 'Large Apartment with Premium Amenities'),
+(19, 1, 250000.00, 85.0, 2, 7, 'gas', 'Стилен апартамент в оживен квартал.', 'A stylish apartment in a vibrant neighborhood.', FALSE, 'finished', '2024-07-20', 'threeRooms', 'Стилен апартамент в оживен квартал', 'Stylish Apartment in Vibrant Neighborhood'),
+(20, 2, 160000.00, 50.0, 1, 1, 'local', 'Бюджетен апартамент в отлична локация.', 'A budget-friendly apartment in a great location.', FALSE, 'inConstruction', '2024-08-25', 'oneRoom', 'Бюджетен апартамент в отлична локация', 'Budget-Friendly Apartment');
 
 -- Insert initial data into sellers table
 INSERT INTO sellers (id, first_name, last_name, phone_number) VALUES (1, 'John', 'Doe', '123-456-7890');

@@ -127,5 +127,21 @@
   "priceAsc": "Price Ascending",
   "priceDesc": "Price Descending",
   "newest": "Newest first",
-  "oldest": "Oldest first"
+  "oldest": "Oldest first",
+  "panel": "Panel",
+  "brick": "Brick",
+  "temporaryConstruction": "Temporary Construction",
+  "oneRoom": "One Room",
+  "twoRooms": "Two Rooms",
+  "threeRooms": "Three Rooms",
+  "fourRooms": "Four Rooms",
+  "manyRooms": "Many Rooms",
+  "inConstruction": "In Construction",
+  "finished": "Finished",
+  "furnished": "Furnished",
+  "gas": "Gas",
+  "tps": "Thermal power station",
+  "electricity": "Electricity",
+  "local": "Local",
+  "districts": "Districts"
 }

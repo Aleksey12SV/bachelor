@@ -52,11 +52,11 @@ public class RealEstate {
     @Column (name = "titleEN")
     private String titleEN;
 
-    public Integer getRooms() {
+    public String getRooms() {
         return rooms;
     }
 
-    public void setRooms(Integer rooms) {
+    public void setRooms(String rooms) {
         this.rooms = rooms;
     }
 
@@ -77,7 +77,7 @@ public class RealEstate {
     }
 
     @Column (name = "rooms")
-    private Integer rooms;
+    private String rooms;
 
     @Column (name = "heating")
     private String heating;

@@ -49,7 +49,7 @@ CREATE TABLE real_estates (
   heating varchar(255),
   titleBG varchar(255),
   titleEN varchar(255),
-  rooms integer,
+  rooms varchar(63),
   descriptionBG text(65535),
   descriptionEN text(65535),
   top_property BOOLEAN,

@@ -1,23 +1,28 @@
 import { z } from "zod";
 
-export const SortingEnum = [
-  "priceAsc",
-  "priceDesc",
-  "newest",
-  "oldest",
+export const Sorting = ["priceAsc", "priceDesc", "newest", "oldest"] as const;
+
+export const Rooms = [
+  "oneRoom",
+  "twoRooms",
+  "threeRooms",
+  "fourRooms",
+  "manyRooms",
 ] as const;
 
-export const RoomsEnum = [
-  "one room",
-  "two rooms",
-  "three rooms",
-  "four rooms",
-  "many rooms",
+export const Construction = [
+  "panel",
+  "brick",
+  "temporaryConstruction",
 ] as const;
+
+export const Status = ["inConstruction", "finished", "furnished"] as const;
+
+export const Heating = ["gas", "electricity", "tps", "local"];
 
 export const formSchema = z.object({
   location: z.string({ required_error: "Please select a location" }),
-  rooms: z.enum(RoomsEnum).optional(),
+  rooms: z.enum(Rooms).optional(),
   priceFrom: z.string().optional(),
   priceTo: z.string().optional(),
   priceFromSqM: z.string().optional(),
@@ -34,7 +39,7 @@ export const formSchema = z.object({
     .refine((v) => v.some((i) => i))
     .optional(),
   showRealEstatesWithoutImages: z.boolean(),
-  sorting: z.enum(SortingEnum).default("newest"),
+  sorting: z.enum(Sorting).default("newest"),
   seller: z.string().optional(),
   status: z.string().optional(),
   heating: z.string().optional(),

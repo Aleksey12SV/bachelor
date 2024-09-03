@@ -127,5 +127,21 @@
   "priceAsc": "Най-евтини",
   "priceDesc": "Най-скъпи",
   "newest": "Най-нови",
-  "oldest": "Най-стари"
+  "oldest": "Най-стари",
+  "panel": "Панел",
+  "brick": "Тухла",
+  "temporaryConstruction": "Временна конструкция",
+  "oneRoom": "Едностаен",
+  "twoRooms": "Двустаен",
+  "threeRooms": "Тристаен",
+  "fourRooms": "Четиристаен",
+  "manyRooms": "Многостаен",
+  "inConstruction": "В строеж",
+  "finished": "Завършен",
+  "furnished": "Обзаведен",
+  "gas": "Газ",
+  "tps": "ТЕЦ",
+  "electricity": "Електричество",
+  "local": "Локално",
+  "districts": "Квартали"
 }

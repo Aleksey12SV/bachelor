@@ -10,12 +10,9 @@
 
 .scrollable::-webkit-scrollbar {
   width: var(--sb-size);
-  height: 95%;
 }
 
 .scrollable::-webkit-scrollbar-track {
-  margin-top: 8px;
-  margin-bottom: 8px;
   background: var(--sb-track-color);
   border-radius: 4px;
 }
