@@ -39,7 +39,7 @@ const TopPropertiesCarousel = () => {
                 <div className="p-1">
                   <Card>
                     <CardContent
-                      className="flex items-center justify-center p-6 flex-auto w-full min-h-[22rem] cursor-pointer"
+                      className="flex items-center justify-center p-6 flex-auto w-full max-h-[22rem] cursor-pointer"
                       onClick={() =>
                         navigate(
                           `/property-list/${images[index].realEstate?.id}`

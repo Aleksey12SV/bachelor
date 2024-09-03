@@ -34,7 +34,7 @@ export const HomePage = () => {
       {!showMoreFilters && <TopPropertiesCarousel />}
       <div
         className={`${
-          !showMoreFilters ? "pt-10" : ""
+          !showMoreFilters ? "pt-2" : ""
         } px-10 flex flex-col flex-auto gap-4 pb-4`}
       >
         <span className="font-bold text-xl">{t("findYourDreamProperty")}</span>
