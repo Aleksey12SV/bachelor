@@ -167,7 +167,7 @@ const MultiSelectorTrigger = forwardRef<
     <div
       ref={ref}
       className={cn(
-        "flex flex-wrap gap-1 p-1 py-2 border border-muted rounded-lg bg-background",
+        "flex flex-wrap gap-1 p-1 py-2 border border-muted rounded-lg bg-background overflow-auto scrollable",
         className
       )}
       style={{marginTop: 0}}

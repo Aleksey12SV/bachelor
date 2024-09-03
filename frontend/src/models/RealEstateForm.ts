@@ -22,6 +22,7 @@ export const Heating = ["gas", "electricity", "tps", "local"];
 
 export const formSchema = z.object({
   location: z.string({ required_error: "Please select a location" }),
+  districts: z.string().array().optional(),
   rooms: z.enum(Rooms).optional(),
   priceFrom: z.string().optional(),
   priceTo: z.string().optional(),

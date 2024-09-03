@@ -5,6 +5,7 @@ import java.util.List;
 public class RealEstateFilters {
     private Integer buildingId;
     private String location;
+    private List<String> districts;
     private String heating;
     private String status;
     private String construction;
@@ -192,5 +193,13 @@ public class RealEstateFilters {
 
     public void setBuildingId(Integer buildingId) {
         this.buildingId = buildingId;
+    }
+
+    public List<String> getDistricts() {
+        return districts;
+    }
+
+    public void setDistricts(List<String> districts) {
+        this.districts = districts;
     }
 }

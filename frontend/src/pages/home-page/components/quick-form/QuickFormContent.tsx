@@ -19,8 +19,20 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getCities } from "@/api/cities";
 import { getPropertyTypes } from "@/api/property-types";
-import { FormType, SortingEnum } from "@/models/RealEstateForm";
+import { FormType, Sorting } from "@/models/RealEstateForm";
 import { useTranslation } from "react-i18next";
+import { getDistrictsByCityId } from "@/api/districts";
+import { useEffect, useState } from "react";
+import {
+  MultiSelector,
+  MultiSelectorContent,
+  MultiSelectorInput,
+  MultiSelectorItem,
+  MultiSelectorList,
+  MultiSelectorTrigger,
+} from "@/components/ui/multiselect";
+import { City } from "@/models/City";
+import clsx from "clsx";
 
 const QuickFormContent = ({
   form,
@@ -37,11 +49,22 @@ const QuickFormContent = ({
     queryFn: getCities,
     initialData: [],
   });
+  const [selectedCity, setSelectedCity] = useState<City>();
+  const { data: districts, refetch: getDistricts } = useQuery({
+    queryKey: ["districts"],
+    queryFn: async () => await getDistrictsByCityId(selectedCity?.id ?? -1),
+    enabled: selectedCity?.id !== undefined,
+    initialData: [],
+  });
   const { data: propertyTypes } = useQuery({
     queryKey: ["propertyTypes"],
     queryFn: getPropertyTypes,
     initialData: [],
   });
+  useEffect(() => {
+    getDistricts();
+    form.resetField("districts");
+  }, [form, getDistricts, selectedCity]);
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -51,7 +74,13 @@ const QuickFormContent = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t("location")}</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  setSelectedCity(cities.find((c) => c.name === value));
+                }}
+                defaultValue={field.value}
+              >
                 <FormControl>
                   <SelectTrigger className="border solid">
                     <SelectValue />
@@ -66,6 +95,48 @@ const QuickFormContent = ({
                 </SelectContent>
               </Select>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="districts"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel className={clsx(!selectedCity && "opacity-50")}>
+                {t("districts")}
+              </FormLabel>
+              <MultiSelector
+                onValuesChange={field.onChange}
+                values={field.value ?? []}
+              >
+                <MultiSelectorTrigger className="max-h-[42px]">
+                  <MultiSelectorInput
+                    className={clsx(
+                      "overflow-hidden",
+                      !selectedCity && "opacity-50"
+                    )}
+                    disabled={!selectedCity}
+                  />
+                </MultiSelectorTrigger>
+                <MultiSelectorContent>
+                  <MultiSelectorList
+                    className={clsx(
+                      "bg-white scrollable",
+                      !showAdditionalFilters && "!bottom-16 !top-auto"
+                    )}
+                  >
+                    {districts?.map((district) => (
+                      <MultiSelectorItem
+                        key={district.id}
+                        value={district.name}
+                      >
+                        {t(district.name)}
+                      </MultiSelectorItem>
+                    ))}
+                  </MultiSelectorList>
+                </MultiSelectorContent>
+              </MultiSelector>
             </FormItem>
           )}
         />
@@ -265,7 +336,7 @@ const QuickFormContent = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {SortingEnum.map((sort) => (
+                  {Sorting.map((sort) => (
                     <SelectItem key={sort} value={sort}>
                       {t(sort)}
                     </SelectItem>

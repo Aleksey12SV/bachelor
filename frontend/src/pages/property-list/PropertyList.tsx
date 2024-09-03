@@ -50,6 +50,11 @@ const PropertyList = () => {
     queryFn: async ({ pageParam }) =>
       await getFilteredProperties({
         ...Object.fromEntries(searchParams),
+        ...(Object.fromEntries(searchParams)?.districts
+          ? {
+              districts: Object.fromEntries(searchParams)?.districts.split(","),
+            }
+          : {}),
         page: pageParam,
         size: 5,
       }),
