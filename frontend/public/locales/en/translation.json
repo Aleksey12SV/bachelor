@@ -182,5 +182,17 @@
     "Zornitsa": "Zornitsa",
     "Sarafovo": "Sarafovo",
     "Vazrazhdane": "Vazrazhdane"
-  }
+  },
+  "year": "year",
+  "select": "Select",
+  "previous": "Previous",
+  "next": "Next",
+  "city": "City",
+  "description": "Description",
+  "building": "Building",
+  "images": "Images",
+  "addImage": "Add image",
+  "deleteImage": "Delete image",
+  "district": "District",
+  "markAsMainImage": "Mark as main image"
 }

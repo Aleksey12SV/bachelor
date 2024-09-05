@@ -154,7 +154,6 @@
     "Odessos": "Одесос",
     "Primorski": "Приморски",
     "Vladislav Varnenchik": "Владислав Варненчик",
-    
     "Vitosha": "Витоша",
     "Krasno Selo": "Красно Село",
     "Lozenets": "Лозенец",
@@ -168,7 +167,6 @@
     "Studentski": "Студентски",
     "Triaditsa": "Триадица",
     "Vrabnitsa": "Връбница",
-    
     "Center": "Център",
     "Trakia": "Тракия",
     "Izgrev": "Изгрев",
@@ -177,7 +175,6 @@
     "Yuzhen": "Южен",
     "Kamenitsa": "Каменица",
     "Smirnenski": "Смирненски",
-    
     "Bratya Miladinovi": "Братя Миладинови",
     "Lazur": "Лазур",
     "Meden Rudnik": "Меден Рудник",
@@ -185,6 +182,17 @@
     "Zornitsa": "Зорница",
     "Sarafovo": "Сарафово",
     "Vazrazhdane": "Възраждане"
-  }
-  
+  },
+  "year": "година",
+  "select": "Избери",
+  "previous": "Предишна",
+  "next": "Следваща",
+  "city": "Град",
+  "description": "Описание",
+  "building": "Сграда",
+  "images": "Снимки",
+  "addImage": "Добави снимка",
+  "deleteImage": "Изтрий снимка",
+  "district": "Квартал",
+  "markAsMainImage": "Маркирай като основно изображение"
 }

@@ -23,11 +23,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { handleImageChanges } from "@/components/utils/images";
 import { Building } from "@/models/Building";
 import { City } from "@/models/City";
-import ImageSection from "@/pages/property-list/components/ImageSection";
+import { Construction } from "@/models/RealEstateForm";
+import ImageSection from "@/components/shared/ImageSection";
 import useImages from "@/pages/property-list/hooks/useImages";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 const BuildingUpdateOverview = ({
   building,
@@ -38,6 +40,7 @@ const BuildingUpdateOverview = ({
   isEditing: boolean;
   onSubmit: () => void;
 }) => {
+  const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const [selectedCity, setSelectedCity] = useState<City | undefined>(
     building?.district.city
@@ -129,19 +132,19 @@ const BuildingUpdateOverview = ({
   };
 
   return (
-    <div className="flex flex-col overflow-auto scrollable">
+    <div className="flex flex-col overflow-auto scrollable p-2">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
           className="grid grid-cols-2 gap-6 items-end"
         >
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{t("submit")}</Button>
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>{t("name")}</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -153,9 +156,9 @@ const BuildingUpdateOverview = ({
             name="floors"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Floors</FormLabel>
+                <FormLabel>{t("floors")}</FormLabel>
                 <FormControl>
-                  <Input min={0} {...field} />
+                  <Input min={0} type="number" {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -165,45 +168,32 @@ const BuildingUpdateOverview = ({
             name="year"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Year</FormLabel>
+                <FormLabel>
+                  {t("year").charAt(0).toUpperCase() + t("year").slice(1)}
+                </FormLabel>
                 <FormControl>
-                  <Input type="number" min={0} defaultValue="" {...field} />
+                  <Input type="number" min={0} {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="construction"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Construction</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Panel">Panel</SelectItem>
-                    <SelectItem value="Brick">Brick</SelectItem>
-                    <SelectItem value="Temporary construction">
-                      Temporary construction
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
             name="descriptionBG"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>
+                  Описание{" "}
+                  {i18n.language !== "bg"
+                    ? ` (${t("description", { lng: "en" })})`
+                    : ""}
+                </FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Building Description BG" {...field} />
+                  <Textarea
+                    className="flex-auto"
+                    placeholder={t("building") + " " + t("description") + " BG"}
+                    {...field}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -213,16 +203,48 @@ const BuildingUpdateOverview = ({
             name="descriptionEN"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>
+                  Description{" "}
+                  {i18n.language !== "en"
+                    ? ` (${t("description", { lng: "bg" })})`
+                    : ""}
+                </FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Building Description EN" {...field} />
+                  <Textarea
+                    className="flex-auto"
+                    placeholder={t("building") + " " + t("description") + " EN"}
+                    {...field}
+                  />
                 </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="construction"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("construction")}</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Construction.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {t(c)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormItem>
             )}
           />
           <div>
             <FormItem>
-              <FormLabel>City</FormLabel>
+              <FormLabel>{t("city")}</FormLabel>
               <Select
                 onValueChange={(value) =>
                   setSelectedCity(cities.find((c) => c.name === value))
@@ -230,13 +252,13 @@ const BuildingUpdateOverview = ({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <div>{selectedCity?.name ?? ""}</div>
+                    <div>{selectedCity?.name ? t(`cities.${selectedCity?.name}`) : ''}</div>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {cities?.map((city) => (
+                  {cities.map((city) => (
                     <SelectItem key={city.id} value={city.name}>
-                      {city.name}
+                      {t(`cities.${city.name}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -249,7 +271,7 @@ const BuildingUpdateOverview = ({
               name="district"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>District</FormLabel>
+                  <FormLabel>{t("district")}</FormLabel>
                   <Select
                     onValueChange={(value) =>
                       field.onChange(
@@ -260,16 +282,14 @@ const BuildingUpdateOverview = ({
                     <FormControl>
                       <SelectTrigger>
                         <div>
-                          {field.value
-                            ? field.value?.name + ", " + field.value.city.name
-                            : ""}
+                          {field.value?.name ? t(`districtNames.${field.value?.name}`) : ''}
                         </div>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {(districts ?? [])?.map((d) => (
                         <SelectItem key={d.id} value={d.id.toString()}>
-                          {d.name}, {d.city.name}
+                          {t(`districtNames.${d.name}`)}
                         </SelectItem>
                       ))}
                     </SelectContent>
