@@ -110,7 +110,12 @@ const QuickFormContent = ({
                 onValuesChange={field.onChange}
                 values={field.value ?? []}
               >
-                <MultiSelectorTrigger className="max-h-[42px]">
+                <MultiSelectorTrigger
+                  className="max-h-[42px]"
+                  customValues={districts
+                    .filter((d) => field.value?.includes(d.name))
+                    .map((d) => t(`districtNames.${d.name}`))}
+                >
                   <MultiSelectorInput
                     className={clsx(
                       "overflow-hidden",
@@ -131,7 +136,7 @@ const QuickFormContent = ({
                         key={district.id}
                         value={district.name}
                       >
-                        {t(district.name)}
+                        {t(`districtNames.${district.name}`)}
                       </MultiSelectorItem>
                     ))}
                   </MultiSelectorList>

@@ -143,5 +143,48 @@
   "tps": "ТЕЦ",
   "electricity": "Електричество",
   "local": "Локално",
-  "districts": "Квартали"
+  "districts": "Квартали",
+  "districtNames": {
+    "Asparuhovo": "Аспарухово",
+    "Briz": "Бриз",
+    "Chayka": "Чайка",
+    "Galata": "Галата",
+    "Levski": "Левски",
+    "Mladost": "Младост",
+    "Odessos": "Одесос",
+    "Primorski": "Приморски",
+    "Vladislav Varnenchik": "Владислав Варненчик",
+    
+    "Vitosha": "Витоша",
+    "Krasno Selo": "Красно Село",
+    "Lozenets": "Лозенец",
+    "Lulin": "Люлин",
+    "Nadezhda": "Надежда",
+    "Oborishte": "Оборище",
+    "Ovcha Kupel": "Овча Купел",
+    "Pancharevo": "Панчарево",
+    "Serdika": "Сердика",
+    "Sredets": "Средец",
+    "Studentski": "Студентски",
+    "Triaditsa": "Триадица",
+    "Vrabnitsa": "Връбница",
+    
+    "Center": "Център",
+    "Trakia": "Тракия",
+    "Izgrev": "Изгрев",
+    "Severen": "Северен",
+    "Zapaden": "Западен",
+    "Yuzhen": "Южен",
+    "Kamenitsa": "Каменица",
+    "Smirnenski": "Смирненски",
+    
+    "Bratya Miladinovi": "Братя Миладинови",
+    "Lazur": "Лазур",
+    "Meden Rudnik": "Меден Рудник",
+    "Slaveykov": "Славейков",
+    "Zornitsa": "Зорница",
+    "Sarafovo": "Сарафово",
+    "Vazrazhdane": "Възраждане"
+  }
+  
 }

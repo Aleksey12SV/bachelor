@@ -154,8 +154,8 @@ const MultiSelector = ({
 
 const MultiSelectorTrigger = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { customValues?: string[] }
+>(({ className, children, customValues, ...props }, ref) => {
   const { value, onValueChange, activeIndex } = useMultiSelect();
 
   const mousePreventDefault = useCallback((e: React.MouseEvent) => {
@@ -170,10 +170,10 @@ const MultiSelectorTrigger = forwardRef<
         "flex flex-wrap gap-1 p-1 py-2 border border-muted rounded-lg bg-background overflow-auto scrollable",
         className
       )}
-      style={{marginTop: 0}}
+      style={{ marginTop: 0 }}
       {...props}
     >
-      {value.map((item, index) => (
+      {(customValues ?? value).map((item, index) => (
         <Badge
           key={item}
           className={cn(

@@ -55,7 +55,7 @@ INSERT INTO districts (id, name, city_id) VALUES (22, 'Triaditsa', 20);
 INSERT INTO districts (id, name, city_id) VALUES (23, 'Vrabnitsa', 20);
 
 -- Districts in Plovdiv (city_id = 13)
-INSERT INTO districts (id, name, city_id) VALUES (24, 'Central', 13);
+INSERT INTO districts (id, name, city_id) VALUES (24, 'Center', 13);
 INSERT INTO districts (id, name, city_id) VALUES (25, 'Trakia', 13);
 INSERT INTO districts (id, name, city_id) VALUES (26, 'Izgrev', 13);
 INSERT INTO districts (id, name, city_id) VALUES (27, 'Severen', 13);
