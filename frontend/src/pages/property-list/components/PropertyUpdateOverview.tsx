@@ -27,7 +27,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import ImageSection from "./ImageSection";
+import ImageSection from "../../../components/shared/ImageSection";
 import { getPropertyTypes } from "@/api/property-types";
 import {
   MultiSelector,

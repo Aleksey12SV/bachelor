@@ -1,9 +1,10 @@
 import { type Image } from "@/models/Image";
-import TrashBin from "../../../assets/trash-can.svg?react";
+import TrashBin from "../../assets/trash-can.svg?react";
 import { ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const fileToBase64 = (file: File) => {
   return new Promise((resolve, reject) => {
@@ -25,6 +26,7 @@ const ImageSection = ({
   onAdd: (image: Image) => void;
   onUpdate: (image: Image) => void;
 }) => {
+  const { t, i18n } = useTranslation();
   const handleImageUpload = (
     event: ChangeEvent<HTMLInputElement>,
     imageId: string
@@ -51,7 +53,7 @@ const ImageSection = ({
   };
   return (
     <div className="flex flex-col pt-4 gap-4">
-      <div className="font-medium">Images</div>
+      <div className="font-medium">{t("images")}</div>
       {images.map((image, index) => (
         <div key={index} className="flex p-4 border rounded gap-4">
           {!image.image && (
@@ -65,7 +67,7 @@ const ImageSection = ({
           )}
           {image.image && (
             <>
-              <div className="image-preview">
+              <div className="flex items-center justify-center">
                 <img
                   src={`data:image/jpeg;base64,${image.image}`}
                   alt={`Preview ${index}`}
@@ -74,7 +76,12 @@ const ImageSection = ({
               </div>
               {image.image && (
                 <div className="flex flex-col items-center h-full flex-auto gap-4 ">
-                  <div className="font-medium">Description BG</div>
+                  <div className="font-medium">
+                    Описание{" "}
+                    {i18n.language !== "bg"
+                      ? ` (${t("description", { lng: "en" })})`
+                      : ""}
+                  </div>
                   <Input
                     key={image.id}
                     className="flex-auto w-full h-full"
@@ -86,7 +93,12 @@ const ImageSection = ({
                       })
                     }
                   />
-                  <div className="font-medium">Description EN</div>
+                  <div className="font-medium">
+                    Description{" "}
+                    {i18n.language !== "en"
+                      ? ` (${t("description", { lng: "bg" })})`
+                      : ""}
+                  </div>
                   <Input
                     key={image.id}
                     className="flex-auto w-full h-full"
@@ -98,24 +110,32 @@ const ImageSection = ({
                       })
                     }
                   />
-                  <input
-                    type="checkbox"
-                    disabled={
-                      !image.mainImage && images.some((i) => i.mainImage)
-                    }
-                    onChange={(e) => {
-                      onUpdate({
-                        ...image,
-                        mainImage: e.target.checked,
-                      });
-                    }}
-                    checked={!!image.mainImage}
-                  />
+                  <div className="flex flex-row items-center gap-4">
+                    <label htmlFor="mainImage" className="font-medium">
+                      {t("markAsMainImage")}
+                    </label>
+                    <input
+                      id="mainImage"
+                      name="mainImage"
+                      className="w-4 h-4"
+                      type="checkbox"
+                      disabled={
+                        !image.mainImage && images.some((i) => i.mainImage)
+                      }
+                      onChange={(e) => {
+                        onUpdate({
+                          ...image,
+                          mainImage: e.target.checked,
+                        });
+                      }}
+                      checked={!!image.mainImage}
+                    />
+                  </div>
                   <button
                     onClick={() => onDelete(image)}
                     className="flex flex-row items-center border rounded p-2 gap-2"
                   >
-                    <span>Delete image</span>
+                    <span className="font-medium">{t("deleteImage")}</span>
                     <TrashBin className="h-4 w-4" />
                   </button>
                 </div>
@@ -125,7 +145,7 @@ const ImageSection = ({
         </div>
       ))}
       <Button onClick={() => onAdd({ id: uuidv4(), image: "" })}>
-        Add image
+        {t("addImage")}
       </Button>
     </div>
   );
