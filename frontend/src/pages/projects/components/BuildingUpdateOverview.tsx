@@ -25,20 +25,28 @@ import { Building } from "@/models/Building";
 import { City } from "@/models/City";
 import { Construction } from "@/models/RealEstateForm";
 import ImageSection from "@/components/shared/ImageSection";
-import useImages from "@/pages/property-list/hooks/useImages";
+import useImages from "@/hooks/useImages";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import {
+  buildingQueryKeys,
+  citiesQueryKeys,
+  districtsQueryKeys,
+  imageQueryKeys,
+} from "@/components/utils/queryFactory";
 
 const BuildingUpdateOverview = ({
   building,
   isEditing,
   onSubmit,
+  page,
 }: {
   building: Building | undefined;
   isEditing: boolean;
   onSubmit: () => void;
+  page: number;
 }) => {
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
@@ -48,12 +56,12 @@ const BuildingUpdateOverview = ({
   const { images, oldImages, onImageAdd, onImageDelete, onImageUpdate } =
     useImages(building?.id, "buildingImages");
   const { data: cities } = useQuery({
-    queryKey: ["cities"],
+    queryKey: citiesQueryKeys.allCities,
     queryFn: getCities,
     initialData: [],
   });
   const { data: districts, refetch: getDistricts } = useQuery({
-    queryKey: ["districts"],
+    queryKey: districtsQueryKeys.allDistricts,
     queryFn: async () => await getDistrictsByCityId(selectedCity?.id ?? -1),
     enabled: selectedCity?.id !== undefined,
     initialData: [],
@@ -91,7 +99,9 @@ const BuildingUpdateOverview = ({
       });
     },
     onMutate: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["real-estates"] });
+      await queryClient.invalidateQueries({
+        queryKey: buildingQueryKeys.allBuildings,
+      });
     },
   });
   const updateBuildingMutation = useMutation({
@@ -101,10 +111,10 @@ const BuildingUpdateOverview = ({
         handleImageChanges({ images, oldImages, buildingId: data.id }).then(
           async () => {
             await queryClient.invalidateQueries({
-              queryKey: ["buildingImages", String(data.id)],
+              queryKey: imageQueryKeys.allBuildingImages(data.id),
             });
             await queryClient.invalidateQueries({
-              queryKey: ["buildings"],
+              queryKey: buildingQueryKeys.paginatedBuildings(page),
             });
           }
         );
@@ -190,7 +200,7 @@ const BuildingUpdateOverview = ({
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    className="flex-auto"
+                    className="flex-auto scrollable"
                     placeholder={t("building") + " " + t("description") + " BG"}
                     {...field}
                   />
@@ -211,7 +221,7 @@ const BuildingUpdateOverview = ({
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    className="flex-auto"
+                    className="flex-auto scrollable"
                     placeholder={t("building") + " " + t("description") + " EN"}
                     {...field}
                   />
@@ -252,7 +262,11 @@ const BuildingUpdateOverview = ({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <div>{selectedCity?.name ? t(`cities.${selectedCity?.name}`) : ''}</div>
+                    <div>
+                      {selectedCity?.name
+                        ? t(`cities.${selectedCity?.name}`)
+                        : ""}
+                    </div>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -282,7 +296,9 @@ const BuildingUpdateOverview = ({
                     <FormControl>
                       <SelectTrigger>
                         <div>
-                          {field.value?.name ? t(`districtNames.${field.value?.name}`) : ''}
+                          {field.value?.name
+                            ? t(`districtNames.${field.value?.name}`)
+                            : ""}
                         </div>
                       </SelectTrigger>
                     </FormControl>

@@ -194,5 +194,6 @@
   "addImage": "Добави снимка",
   "deleteImage": "Изтрий снимка",
   "district": "Квартал",
-  "markAsMainImage": "Маркирай като основно изображение"
+  "markAsMainImage": "Маркирай като основно изображение",
+  "seeAllPropertiesInBuilding": "Виж всички имоти в сградата"
 }

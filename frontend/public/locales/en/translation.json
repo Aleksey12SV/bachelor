@@ -194,5 +194,6 @@
   "addImage": "Add image",
   "deleteImage": "Delete image",
   "district": "District",
-  "markAsMainImage": "Mark as main image"
+  "markAsMainImage": "Mark as main image",
+  "seeAllPropertiesInBuilding": "See all properties in the building"
 }

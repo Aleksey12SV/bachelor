@@ -7,6 +7,8 @@ import { Building } from "@/models/Building";
 import PaginatedBuildings from "./components/PaginatedBuildings";
 import BuildingUpdateOverview from "./components/BuildingUpdateOverview";
 import ControlButtons from "@/components/common/ControlButtons";
+import { buildingQueryKeys } from "@/components/utils/queryFactory";
+import usePaginatedBuildings from "./hooks/usePaginatedBuildings";
 
 const Projects = () => {
   const queryClient = useQueryClient();
@@ -14,18 +16,29 @@ const Projects = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedBuilding, setSelectedBuilding] = useState<Building>();
   const { hasRole } = useKeycloak();
+  const {
+    page,
+    setPage,
+    decrementPage,
+    incrementPage,
+    totalPages,
+    paginatedBuildings,
+  } = usePaginatedBuildings();
 
   const deletePropertyMutation = useMutation({
     mutationFn: async () => {
       if (selectedBuilding?.id) {
         await deleteBuilding(selectedBuilding.id);
-        await queryClient.invalidateQueries({ queryKey: ["buildings"] });
+        await queryClient.invalidateQueries({
+          queryKey: buildingQueryKeys.allBuildings,
+        });
+        setSelectedBuilding(undefined);
       }
     },
   });
 
   return (
-    <div className="w-full flex flex-col p-4">
+    <div className="w-full flex flex-col p-4 gap-4">
       {hasRole([Roles.ADMIN]) && (
         <ControlButtons
           onDelete={() => deletePropertyMutation.mutateAsync()}
@@ -39,19 +52,35 @@ const Projects = () => {
             setIsEditing(true);
             setIsAdding(false);
           }}
+          onClose={
+            isAdding || isEditing
+              ? () => {
+                  setIsAdding(false);
+                  setIsEditing(false);
+                }
+              : undefined
+          }
         />
       )}
       {!isEditing && !isAdding && (
         <PaginatedBuildings
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
+          decrementPage={decrementPage}
+          incrementPage={incrementPage}
+          paginatedBuildings={paginatedBuildings}
           onBuildingSelect={(building) => setSelectedBuilding(building)}
         />
       )}
       {(isEditing || isAdding) && (
         <BuildingUpdateOverview
+          page={page}
           building={selectedBuilding}
           onSubmit={() => {
             setIsAdding(false);
             setIsEditing(false);
+            setSelectedBuilding(undefined)
           }}
           isEditing={isEditing}
         />

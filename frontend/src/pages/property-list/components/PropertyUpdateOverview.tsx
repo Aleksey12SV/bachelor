@@ -38,8 +38,9 @@ import {
   MultiSelectorTrigger,
 } from "@/components/ui/multiselect";
 import { PaginatedData } from "@/models/PaginatedData";
-import useImages from "../hooks/useImages";
+import useImages from "../../../hooks/useImages";
 import { handleImageChanges } from "@/components/utils/images";
+import { buildingQueryKeys } from "@/components/utils/queryFactory";
 
 const PropertyUpdateOverview = ({
   property,
@@ -57,7 +58,7 @@ const PropertyUpdateOverview = ({
     queryFn: getPropertyTypes,
   });
   const { data: buildings } = useQuery({
-    queryKey: ["buildings"],
+    queryKey: buildingQueryKeys.allBuildings,
     queryFn: getBuildings,
   });
 
