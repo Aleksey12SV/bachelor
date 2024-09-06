@@ -191,7 +191,7 @@ const BuildingUpdateOverview = ({
             control={form.control}
             name="descriptionBG"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="h-full">
                 <FormLabel>
                   Описание{" "}
                   {i18n.language !== "bg"
@@ -212,7 +212,7 @@ const BuildingUpdateOverview = ({
             control={form.control}
             name="descriptionEN"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="h-full">
                 <FormLabel>
                   Description{" "}
                   {i18n.language !== "en"
