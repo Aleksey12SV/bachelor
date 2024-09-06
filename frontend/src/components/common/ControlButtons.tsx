@@ -16,7 +16,7 @@ const ControlButtons = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-row sticky gap-4">
+    <div className="flex flex-row sticky gap-4 top-0 bg-white py-2">
       <Button onClick={onAdd}>{t("add")}</Button>
       <Button onClick={onDelete} disabled={isDisabled}>
         {t("delete")}
