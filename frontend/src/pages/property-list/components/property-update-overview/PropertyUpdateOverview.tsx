@@ -1,6 +1,4 @@
 import { getBuildings } from "@/api/buildings";
-import { createImage } from "@/api/images";
-import { createRealEstate, updateRealEstate } from "@/api/real-estates";
 import { getSellers } from "@/api/sellers";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,14 +18,9 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { RealEstate } from "@/models/RealEstate";
-import {
-  InfiniteData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import ImageSection from "../../../components/shared/ImageSection";
+import ImageSection from "../../../../components/shared/ImageSection";
 import { getPropertyTypes } from "@/api/property-types";
 import {
   MultiSelector,
@@ -37,24 +30,33 @@ import {
   MultiSelectorList,
   MultiSelectorTrigger,
 } from "@/components/ui/multiselect";
-import { PaginatedData } from "@/models/PaginatedData";
-import useImages from "../../../hooks/useImages";
+import useImages from "../../../../hooks/useImages";
 import { handleImageChanges } from "@/components/utils/images";
-import { buildingQueryKeys } from "@/components/utils/queryFactory";
+import {
+  buildingQueryKeys,
+  propertyTypesQueryKeys,
+  sellersQueryKeys,
+} from "@/components/utils/queryFactory";
+import useSaveMutation from "./hooks/useSaveMutation";
+import useUpdateMutation from "./hooks/useUpdateMutation";
+import { useTranslation } from "react-i18next";
+import { Heating, Rooms, Status } from "@/models/RealEstateForm";
+import validatePropertyForm from "./utils/validatePropertyForm";
 
 const PropertyUpdateOverview = ({
   property,
   onSubmit,
+  onUpdate,
   isEditing,
 }: {
   property: RealEstate | undefined;
   onSubmit: () => void;
+  onUpdate?: (property: RealEstate) => void;
   isEditing?: boolean;
 }) => {
-  const queryClient = useQueryClient();
-
+  const { t, i18n } = useTranslation();
   const { data: propertyTypes } = useQuery({
-    queryKey: ["property-types"],
+    queryKey: propertyTypesQueryKeys.allPropertyTypes,
     queryFn: getPropertyTypes,
   });
   const { data: buildings } = useQuery({
@@ -63,7 +65,7 @@ const PropertyUpdateOverview = ({
   });
 
   const { data: sellers } = useQuery({
-    queryKey: ["sellers"],
+    queryKey: sellersQueryKeys.allSellers,
     queryFn: getSellers,
   });
   const { images, oldImages, onImageAdd, onImageDelete, onImageUpdate } =
@@ -77,6 +79,7 @@ const PropertyUpdateOverview = ({
       status: property?.status,
       price: property?.price,
       descriptionBG: property?.descriptionBG,
+      descriptionEN: property?.descriptionEN,
       building: property?.building,
       sellers: property?.sellers,
       titleBG: property?.titleBG,
@@ -85,83 +88,16 @@ const PropertyUpdateOverview = ({
     },
   });
 
-  const saveRealEstateMutation = useMutation({
-    mutationFn: async (data: Partial<RealEstate>) => {
-      await createRealEstate(data).then(async ({ data }) => {
-        Promise.all(
-          images
-            .filter((i) => i.image)
-            .map((image) =>
-              createImage({
-                ...image,
-                propertyId: data.id,
-              })
-            )
-        );
-      });
-    },
-    onMutate: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["real-estates"] });
-    },
+  const saveRealEstateMutation = useSaveMutation(images);
+  const updateRealEstateMutation = useUpdateMutation({
+    handleImageChanges,
+    images,
+    oldImages,
+    onUpdate,
   });
-  const updateRealEstateMutation = useMutation({
-    mutationFn: async (data: Partial<RealEstate> & { id: number }) => {
-      if (data.id === undefined) return;
-      await updateRealEstate(data).then(() =>
-        handleImageChanges({ images, oldImages, propertyId: data.id }).then(
-          async () => {
-            await queryClient.invalidateQueries({
-              queryKey: ["propertyImages", String(data.id)],
-            });
-            await queryClient.invalidateQueries({
-              queryKey: ["mainImage", data.id],
-            });
-          }
-        )
-      );
-    },
-    onMutate: async (data) => {
-      await queryClient.cancelQueries({
-        queryKey: ["real-estates"],
-      });
-      const previousFetchedRealEstates:
-        | InfiniteData<PaginatedData<RealEstate>>
-        | undefined = queryClient.getQueryData(["real-estates"]);
-      queryClient.setQueryData<InfiniteData<PaginatedData<RealEstate>>>(
-        ["real-estates"],
-        (oldPropertiesInformation) => {
-          if (oldPropertiesInformation === undefined)
-            return oldPropertiesInformation;
-          const newPropertiesPages = oldPropertiesInformation?.pages.map(
-            (page) => ({
-              ...page,
-              content: page.content.map((realEstate) => {
-                if (realEstate.id === data.id) {
-                  return {
-                    ...realEstate,
-                    ...data,
-                  };
-                }
-                return realEstate;
-              }),
-            })
-          );
-          return {
-            ...oldPropertiesInformation,
-            pages: newPropertiesPages,
-          };
-        }
-      );
-      return { previousFetchedRealEstates };
-    },
-    onError: (_err, _variables, context) => {
-      queryClient.setQueryData(
-        ["real-estates"],
-        context?.previousFetchedRealEstates
-      );
-    },
-  });
+
   const handleSubmit = (data: Partial<RealEstate>) => {
+    if (validatePropertyForm({ form, data })) return;
     if (isEditing) {
       property !== undefined &&
         updateRealEstateMutation.mutateAsync({ ...data, id: property.id });
@@ -173,20 +109,22 @@ const PropertyUpdateOverview = ({
   };
 
   return (
-    <div className="overflow-auto w-full h-full scrollable">
-      <h2>{isEditing ? "Edit property" : "Add property"}</h2>
+    <div className="overflow-auto w-full h-full px-2 scrollable">
+      <h2 className="font-medium">
+        {isEditing ? t("editProperty") : t("addProperty")}
+      </h2>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
           className="grid grid-cols-2 gap-6 items-end"
         >
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{t("submit")}</Button>
           <FormField
             control={form.control}
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>{t("price")}</FormLabel>
                 <FormControl>
                   <Input type="number" min={0} {...field} />
                 </FormControl>
@@ -198,7 +136,12 @@ const PropertyUpdateOverview = ({
             name="titleBG"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Title BG</FormLabel>
+                <FormLabel>
+                  Заглавие
+                  {i18n.language !== "bg"
+                    ? ` (${t("title", { lng: "en" })})`
+                    : ""}
+                </FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -210,7 +153,12 @@ const PropertyUpdateOverview = ({
             name="titleEN"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Title EN</FormLabel>
+                <FormLabel>
+                  Title
+                  {i18n.language !== "en"
+                    ? ` (${t("title", { lng: "bg" })})`
+                    : ""}
+                </FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -222,7 +170,7 @@ const PropertyUpdateOverview = ({
             name="floor"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Floor</FormLabel>
+                <FormLabel>{t("floor")}</FormLabel>
                 <FormControl>
                   <Input type="number" min={0} step={1} {...field} />
                 </FormControl>
@@ -234,10 +182,24 @@ const PropertyUpdateOverview = ({
             name="rooms"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Rooms</FormLabel>
-                <FormControl>
-                  <Input type="number" min={0} step={1} {...field} />
-                </FormControl>
+                <FormLabel>{t("rooms")}</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="border solid">
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Rooms.map((room) => (
+                      <SelectItem key={room} value={room}>
+                        {t(room)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormItem>
             )}
           />
@@ -246,7 +208,7 @@ const PropertyUpdateOverview = ({
             name="size"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Size</FormLabel>
+                <FormLabel>{t("size")}</FormLabel>
                 <FormControl>
                   <Input type="number" min={0} {...field} />
                 </FormControl>
@@ -258,39 +220,22 @@ const PropertyUpdateOverview = ({
             name="status"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <FormLabel>{t("status")}</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Ready to Use">Ready to use</SelectItem>
-                    <SelectItem value="In Building Process">
-                      In Building Process
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="heating"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Heating</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Central">Central</SelectItem>
-                    <SelectItem value="Electric">Electric</SelectItem>
-                    <SelectItem value="Gas">Gas</SelectItem>
+                    {Status.map((s) => (
+                      <SelectItem key={s} value={s}>
+                        {t(s)}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormItem>
@@ -300,10 +245,16 @@ const PropertyUpdateOverview = ({
             control={form.control}
             name="descriptionBG"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
+              <FormItem className="h-full">
+                <FormLabel>
+                  Описание
+                  {i18n.language !== "bg"
+                    ? ` (${t("description", { lng: "en" })})`
+                    : ""}
+                </FormLabel>
                 <FormControl>
                   <Textarea
+                    className="flex-auto scrollable"
                     placeholder="Real Estate Description BG"
                     {...field}
                   />
@@ -315,14 +266,46 @@ const PropertyUpdateOverview = ({
             control={form.control}
             name="descriptionEN"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
+              <FormItem className="h-full">
+                <FormLabel>
+                  Description
+                  {i18n.language !== "en"
+                    ? ` (${t("description", { lng: "bg" })})`
+                    : ""}
+                </FormLabel>
                 <FormControl>
                   <Textarea
+                    className="flex-auto scrollable"
                     placeholder="Real Estate Description EN"
                     {...field}
                   />
                 </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="heating"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("heating")}</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Heating.map((h) => (
+                      <SelectItem key={h} value={h}>
+                        {t(h)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormItem>
             )}
           />
@@ -346,7 +329,7 @@ const PropertyUpdateOverview = ({
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Property Type</FormLabel>
+                  <FormLabel>{t("propertyType")}</FormLabel>
                   <Select
                     onValueChange={(value) =>
                       field.onChange(
@@ -356,13 +339,19 @@ const PropertyUpdateOverview = ({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <div>{field.value?.name ?? ""}</div>
+                        <div>
+                          {field.value?.name
+                            ? t(
+                                `propertyTypes.${field.value?.name.toLowerCase()}.name`
+                              )
+                            : ""}
+                        </div>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {propertyTypes?.map((type) => (
                         <SelectItem key={type.id} value={type.id.toString()}>
-                          {type.name}
+                          {t(`propertyTypes.${type.name.toLowerCase()}.name`)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -376,7 +365,7 @@ const PropertyUpdateOverview = ({
             name="building"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Building</FormLabel>
+                <FormLabel>{t("building")}</FormLabel>
                 <Select
                   onValueChange={(value) =>
                     field.onChange(
@@ -414,7 +403,7 @@ const PropertyUpdateOverview = ({
             name="sellers"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Sellers</FormLabel>
+                <FormLabel>{t("sellers")}</FormLabel>
                 <MultiSelector
                   onValuesChange={(values) => {
                     field.onChange(
@@ -433,7 +422,7 @@ const PropertyUpdateOverview = ({
                     <MultiSelectorInput />
                   </MultiSelectorTrigger>
                   <MultiSelectorContent>
-                    <MultiSelectorList>
+                    <MultiSelectorList className="bg-white scrollable !bottom-16 !top-auto">
                       {sellers?.map((seller) => (
                         <MultiSelectorItem
                           key={seller.id}

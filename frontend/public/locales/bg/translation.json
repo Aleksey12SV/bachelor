@@ -195,5 +195,11 @@
   "deleteImage": "Изтрий снимка",
   "district": "Квартал",
   "markAsMainImage": "Маркирай като основно изображение",
-  "seeAllPropertiesInBuilding": "Виж всички имоти в сградата"
+  "seeAllPropertiesInBuilding": "Виж всички имоти в сградата",
+  "floor": "Етаж",
+  "price": "Цена",
+  "size": "Размер",
+  "addProperty": "Добавяне на имот",
+  "editProperty": "Редактиране на имот",
+  "publishDate": "Дата на публикуване"
 }

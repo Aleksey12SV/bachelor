@@ -1,5 +1,3 @@
-import { axiosInstance } from "@/lib/axios";
-import { PaginatedData } from "@/models/PaginatedData";
 import { RealEstate } from "@/models/RealEstate";
 import {
   useInfiniteQuery,
@@ -8,20 +6,19 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
-import PropertyCard from "./components/PropertyCard";
+import PropertyCard from "./components/property-card/PropertyCard";
 import { useParams, useSearchParams } from "react-router-dom";
 import PropertyOverview from "./components/PropertyOverview";
 import { useKeycloak } from "@/components/auth/KeycloakProvider";
 import { Roles } from "@/components/auth/Roles";
-import PropertyUpdateOverview from "./components/PropertyUpdateOverview";
-import { FormType } from "@/models/RealEstateForm";
-import { deleteRealEstate, getRealEstateById } from "@/api/real-estates";
+import PropertyUpdateOverview from "./components/property-update-overview/PropertyUpdateOverview";
+import {
+  deleteRealEstate,
+  getFilteredRealEstates,
+  getRealEstateById,
+} from "@/api/real-estates";
 import ControlButtons from "@/components/common/ControlButtons";
-
-const getFilteredProperties = (
-  filters: Partial<FormType & { page: number; size: number }>
-): Promise<PaginatedData<RealEstate>> =>
-  axiosInstance.post(`real-estate/filtered`, filters).then(({ data }) => data);
+import { realEstateQueryKeys } from "@/components/utils/queryFactory";
 
 const PropertyList = () => {
   const { id } = useParams();
@@ -34,7 +31,7 @@ const PropertyList = () => {
   const { hasRole } = useKeycloak();
 
   const { data: loadedProperty } = useQuery({
-    queryKey: ["property", id],
+    queryKey: realEstateQueryKeys.realEstateById(Number(id)),
     queryFn: async () => await getRealEstateById(id ?? ""),
     enabled: id !== undefined,
   });
@@ -45,10 +42,10 @@ const PropertyList = () => {
     }
   }, [id, loadedProperty, selectedProperty]);
   const { data, isFetching, fetchNextPage } = useInfiniteQuery({
-    queryKey: ["real-estates"],
+    queryKey: realEstateQueryKeys.allRealEstates,
     initialPageParam: 0,
     queryFn: async ({ pageParam }) =>
-      await getFilteredProperties({
+      await getFilteredRealEstates({
         ...Object.fromEntries(searchParams),
         ...(Object.fromEntries(searchParams)?.districts
           ? {
@@ -61,14 +58,17 @@ const PropertyList = () => {
     getNextPageParam: (response) => {
       const nextPage = response.pageable.pageNumber + 1;
       if (nextPage >= response.totalPages) return;
-      return response.pageable.pageNumber + 1;
+
+      return nextPage;
     },
   });
   const deletePropertyMutation = useMutation({
     mutationFn: async () => {
       if (selectedProperty?.id) {
         await deleteRealEstate(selectedProperty.id);
-        await queryClient.invalidateQueries({ queryKey: ["real-estates"] });
+        await queryClient.invalidateQueries({
+          queryKey: realEstateQueryKeys.allRealEstates,
+        });
       }
     },
   });
@@ -109,7 +109,7 @@ const PropertyList = () => {
       {id === undefined && (
         <div
           ref={scrollableRef}
-          className="flex flex-col overflow-auto p-2 gap-2 scrollable min-w-[250px]"
+          className="flex flex-col overflow-auto p-2 pt-0 gap-2 scrollable w-[650px]"
         >
           {hasRole([Roles.ADMIN]) && (
             <ControlButtons
@@ -148,9 +148,9 @@ const PropertyList = () => {
           {isFetching && <p>Loading...</p>}
         </div>
       )}
-      {(selectedProperty || isAdding) ? (
+      {selectedProperty || realEstates.length ? (
         <div className="flex p-4 flex-auto w-full overflow-hidden">
-          {!isAdding && !isEditing && (
+          {!isAdding && !isEditing && selectedProperty && (
             <PropertyOverview selectedProperty={selectedProperty} />
           )}
           {isAdding && (
@@ -163,11 +163,14 @@ const PropertyList = () => {
             <PropertyUpdateOverview
               property={selectedProperty}
               onSubmit={() => setIsEditing(false)}
+              onUpdate={(property: RealEstate) => setSelectedProperty(property)}
               isEditing
             />
           )}
         </div>
-      ) : <div>Change filters</div>}
+      ) : (
+        <div>test</div>
+      )}
     </div>
   );
 };

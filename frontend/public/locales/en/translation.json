@@ -195,5 +195,11 @@
   "deleteImage": "Delete image",
   "district": "District",
   "markAsMainImage": "Mark as main image",
-  "seeAllPropertiesInBuilding": "See all properties in the building"
+  "seeAllPropertiesInBuilding": "See all properties in the building",
+  "floor": "Floor",
+  "price": "Price",
+  "size": "Size",
+  "addProperty": "Add Property",
+  "editProperty": "Edit Property",
+  "publishDate": "Publish Date"
 }

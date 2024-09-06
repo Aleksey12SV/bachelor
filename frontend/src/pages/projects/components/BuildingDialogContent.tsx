@@ -25,7 +25,7 @@ const BuildingDialogContent = ({
   building: Building;
   onClose: () => void;
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { data: images } = useQuery({
     queryKey: imageQueryKeys.allBuildingImages(building.id),
@@ -84,8 +84,10 @@ const BuildingDialogContent = ({
                   {t(building.construction)}
                 </p>
               </div>
-              <div className="font-medium pt-2">{t('description')}</div>
-              {building.descriptionEN}
+              <div className="font-medium pt-2">{t("description")}</div>
+              {i18n.language === "en"
+                ? building.descriptionEN
+                : building.descriptionBG}
             </div>
           </div>
         </DialogDescription>
