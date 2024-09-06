@@ -33,6 +33,11 @@ import {
 } from "@/components/ui/multiselect";
 import { City } from "@/models/City";
 import clsx from "clsx";
+import {
+  citiesQueryKeys,
+  districtsQueryKeys,
+  propertyTypesQueryKeys,
+} from "@/components/utils/queryFactory";
 
 const QuickFormContent = ({
   form,
@@ -45,19 +50,19 @@ const QuickFormContent = ({
 }) => {
   const { t } = useTranslation();
   const { data: cities } = useQuery({
-    queryKey: ["cities"],
+    queryKey: citiesQueryKeys.allCities,
     queryFn: getCities,
     initialData: [],
   });
   const [selectedCity, setSelectedCity] = useState<City>();
   const { data: districts, refetch: getDistricts } = useQuery({
-    queryKey: ["districts"],
+    queryKey: districtsQueryKeys.allDistricts,
     queryFn: async () => await getDistrictsByCityId(selectedCity?.id ?? -1),
     enabled: selectedCity?.id !== undefined,
     initialData: [],
   });
   const { data: propertyTypes } = useQuery({
-    queryKey: ["propertyTypes"],
+    queryKey: propertyTypesQueryKeys.allPropertyTypes,
     queryFn: getPropertyTypes,
     initialData: [],
   });

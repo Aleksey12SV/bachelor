@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { sellersQueryKeys } from "@/components/utils/queryFactory";
 import {
   Construction,
   FormType,
@@ -34,7 +35,7 @@ const AdditionalFilters = ({
 }) => {
   const { t } = useTranslation();
   const { data: sellers } = useQuery({
-    queryKey: ["sellers"],
+    queryKey: sellersQueryKeys.allSellers,
     queryFn: getSellers,
     initialData: [],
   });
@@ -179,7 +180,7 @@ const AdditionalFilters = ({
             name="minYear"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('fromYear')}</FormLabel>
+                <FormLabel>{t("fromYear")}</FormLabel>
                 <FormControl>
                   <Input {...field} type="number" pattern="\d*" min={0} />
                 </FormControl>
@@ -191,7 +192,7 @@ const AdditionalFilters = ({
             name="maxYear"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('toYear')}</FormLabel>
+                <FormLabel>{t("toYear")}</FormLabel>
                 <FormControl>
                   <Input {...field} type="number" pattern="\d*" min={0} />
                 </FormControl>
