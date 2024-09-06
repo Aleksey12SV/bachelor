@@ -32,7 +32,7 @@ const PropertyHeader = ({
           </span>
           <span className="font-medium text-xl flex flex-row">
             {"("}
-            {selectedProperty.price / selectedProperty.size}
+            {(selectedProperty.price / selectedProperty.size).toFixed(2)}
             {" €/m"}
             <p className="font-medium text-xs">2</p>
             {")"}
@@ -44,7 +44,6 @@ const PropertyHeader = ({
             {", "}
           </span>
           <div className=" text-l flex flex-row gap-2 items-center">
-            {/* <SquareMeasurement className="h-4 w-4" /> */}
             <div className="flex flex-row font-medium">
               {selectedProperty.size}m<p className="font-medium text-xs">2</p>
             </div>

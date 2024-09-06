@@ -30,7 +30,7 @@ const PropertyCard = ({
       onClick={onPreview}
     >
       <CardHeader className="!p-3">
-        <CardTitle className="text-xl truncate">
+        <CardTitle className="text-lg truncate">
           {i18n.language === "en" ? property.titleEN : property.titleBG}
         </CardTitle>
       </CardHeader>
@@ -42,17 +42,17 @@ const PropertyCard = ({
             {image?.image ? (
               <img
                 src={`data:image/jpeg;base64,${image?.image}`}
-                className="h-[10rem] w-[12rem]"
+                className="h-[10rem] w-[12rem] border rounded p-2"
               />
             ) : (
-              <div className="flex h-[10rem] w-[12rem]">
+              <div className="flex h-[10rem] w-[12rem] border rounded">
               <ImagePlaceholder className="h-full" />
               </div>
             )}
             <div className="flex flex-col pl-3 gap-1 w-full overflow-hidden">
               <div className="flex flex-row gap-2">
-                <p className="flex font-medium text-xl">{property.price}€,</p>
-                <p className="flex font-medium text-xl">{t(property.rooms)}</p>
+                <p className="flex font-medium text-lg">{property.price}€,</p>
+                <p className="flex font-medium text-lg">{t(property.rooms)}</p>
               </div>
               <div className="flex flex-row w-full gap-2 items-center">
                 <Location className="h-4 w-4" />
