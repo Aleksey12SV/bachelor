@@ -201,5 +201,6 @@
   "size": "Размер",
   "addProperty": "Добавяне на имот",
   "editProperty": "Редактиране на имот",
-  "publishDate": "Дата на публикуване"
+  "publishDate": "Дата на публикуване",
+  "markAsTopProperty": "Отбележи като топ имот"
 }

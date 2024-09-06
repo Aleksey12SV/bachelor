@@ -85,6 +85,7 @@ const PropertyUpdateOverview = ({
       titleBG: property?.titleBG,
       titleEN: property?.titleEN,
       propertyType: property?.propertyType,
+      topProperty: property?.topProperty
     },
   });
 
@@ -313,13 +314,23 @@ const PropertyUpdateOverview = ({
             control={form.control}
             name="topProperty"
             render={({ field }) => (
-              <input
-                type="checkbox"
-                onChange={(e) => {
-                  field.onChange(e.target.checked);
-                }}
-                checked={field.value}
-              />
+              <div className="flex flex-col items-start h-full">
+                <FormLabel htmlFor="mainImage">
+                  {t("markAsTopProperty")}
+                </FormLabel>
+                <div className='flex h-full items-center'>
+                <input
+                  type="checkbox"
+                  id="topProperty"
+                  name="topProperty"
+                  className="h-6 w-6"
+                  onChange={(e) => {
+                    field.onChange(e.target.checked);
+                  }}
+                  checked={field.value}
+                />
+                </div>
+              </div>
             )}
           />
 

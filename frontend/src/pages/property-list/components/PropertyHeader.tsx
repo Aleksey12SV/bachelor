@@ -10,12 +10,12 @@ const PropertyHeader = ({
   return (
     <div className="flex flex-row justify-between">
       <div className="flex flex-col gap-2">
-        <h3 className="font-medium text-2xl">
+        <h3 className="font-medium text-xl">
           {i18n.language === "en"
             ? selectedProperty.titleEN
             : selectedProperty.titleBG}
         </h3>
-        <p className="font-medium text-xl">
+        <p className="font-medium text-l">
           {t("location")}
           {": "}
           {t(`districtNames.${selectedProperty.building.district.name}`) +
@@ -25,12 +25,12 @@ const PropertyHeader = ({
       </div>
       <div className="flex flex-col items-end gap-2">
         <div className="flex flex-row gap-4">
-          <span className="font-medium text-2xl">
+          <span className="font-medium text-xl">
             {t("price")}
             {": "}
             {selectedProperty.price}
           </span>
-          <span className="font-medium text-2xl flex flex-row">
+          <span className="font-medium text-xl flex flex-row">
             {"("}
             {selectedProperty.price / selectedProperty.size}
             {" €/m"}
@@ -39,11 +39,11 @@ const PropertyHeader = ({
           </span>
         </div>
         <div className="flex flex-row gap-4">
-          <span className="font-medium text-xl">
+          <span className="font-medium text-l">
             {t(selectedProperty.rooms)}
             {", "}
           </span>
-          <div className=" text-xl flex flex-row gap-2 items-center">
+          <div className=" text-l flex flex-row gap-2 items-center">
             {/* <SquareMeasurement className="h-4 w-4" /> */}
             <div className="flex flex-row font-medium">
               {selectedProperty.size}m<p className="font-medium text-xs">2</p>

@@ -201,5 +201,6 @@
   "size": "Size",
   "addProperty": "Add Property",
   "editProperty": "Edit Property",
-  "publishDate": "Publish Date"
+  "publishDate": "Publish Date",
+  "markAsTopProperty": "Mark as top property"
 }

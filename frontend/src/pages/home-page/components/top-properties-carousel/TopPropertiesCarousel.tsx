@@ -7,6 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { imageQueryKeys } from "@/components/utils/queryFactory";
 import { useQuery } from "@tanstack/react-query";
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from "react";
@@ -16,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 const TopPropertiesCarousel = () => {
   const { t } = useTranslation();
   const { data: images } = useQuery({
-    queryKey: ["images"],
+    queryKey: imageQueryKeys.allImages,
     queryFn: getTopImages,
     initialData: [],
   });
