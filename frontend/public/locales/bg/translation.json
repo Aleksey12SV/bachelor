@@ -202,5 +202,8 @@
   "addProperty": "Добавяне на имот",
   "editProperty": "Редактиране на имот",
   "publishDate": "Дата на публикуване",
-  "markAsTopProperty": "Отбележи като топ имот"
+  "markAsTopProperty": "Отбележи като топ имот",
+  "sending": "Изпращане...",
+  "successfulFormSubmit": "Формулярът е изпратен успешно",
+  "contactFormError": "Възникна грешка при изпращането на формуляра."
 }

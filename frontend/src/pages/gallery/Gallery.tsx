@@ -20,7 +20,6 @@ const Gallery = () => {
     i18n: { language },
   } = useTranslation();
 
-  // lightbox photo
   const [lightboxPhotoIndex, setLightboxPhotoIndex] = useState(-1);
   const { data, isPending, fetchNextPage, isLoading } = useInfiniteQuery({
     queryKey: ["paginated-images"],
@@ -85,16 +84,12 @@ const Gallery = () => {
             className: "object-contain",
           },
         }}
+        columns={3}
         padding={5}
         photos={photos}
         onClick={({ event, index }) => {
-          // let a link open in a new tab / new window / download
           if (event.shiftKey || event.altKey || event.metaKey) return;
-
-          // prevent the default link behavior
           event.preventDefault();
-
-          // open photo in a lightbox
           setLightboxPhotoIndex(index);
         }}
       />

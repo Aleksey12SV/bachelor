@@ -1,9 +1,9 @@
 .multiline-text-truncation {
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Number of lines to show */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-height: 4.5em; /* Adjust based on line height (3 lines x 1.5em) */
-  line-height: 1.5em; /* Adjust this value for the height of each line */
+  max-height: 4.5em;
+  line-height: 1.5em;
 }

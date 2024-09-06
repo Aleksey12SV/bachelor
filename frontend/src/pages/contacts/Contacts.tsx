@@ -24,17 +24,17 @@ const Contacts = () => {
   });
 
   const onSubmit = async (data: ContactFormType) => {
-    setResult("Sending....");
+    setResult(t("sending"));
     axiosInstance
       .post("https://api.web3forms.com/submit", {
         ...data,
         access_key: "4df5a4d4-d1b8-43da-b2f7-34df591c4294",
       })
       .then(() => {
-        setResult("Form Submitted Successfully");
+        setResult(t("successfulFormSubmit"));
       })
       .catch(() => {
-        setResult("An error occured during form submission.");
+        setResult(t("contactFormError"));
       });
   };
 

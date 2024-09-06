@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import imageCompression from "browser-image-compression";
 
 const fileToBase64 = (file: File) => {
   return new Promise((resolve, reject) => {
@@ -33,22 +34,33 @@ const ImageSection = ({
   ) => {
     const file = event.target.files?.[0];
     if (file) {
-      fileToBase64(file)
-        .then((base64Image) => {
-          const img = new Image();
-          img.src = base64Image as string;
-          img.decode().then(() => {
-            onUpdate({
-              id: imageId,
-              image: (base64Image as string).split(",")[1],
-              width: img.width,
-              height: img.height,
-            });
-          });
-        })
-        .catch((error) => {
-          console.error("Error converting file to base64", error);
-        });
+      const compressOptions = {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
+      try {
+        imageCompression(file, compressOptions).then((file) =>
+          fileToBase64(file)
+            .then((base64Image) => {
+              const img = new Image();
+              img.src = base64Image as string;
+              img.decode().then(() => {
+                onUpdate({
+                  id: imageId,
+                  image: (base64Image as string).split(",")[1],
+                  width: img.width,
+                  height: img.height,
+                });
+              });
+            })
+            .catch((error) => {
+              console.error("Error converting file to base64", error);
+            })
+        );
+      } catch (error) {
+        console.log("Compressing error", error);
+      }
     }
   };
   return (

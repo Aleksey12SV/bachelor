@@ -202,5 +202,8 @@
   "addProperty": "Add Property",
   "editProperty": "Edit Property",
   "publishDate": "Publish Date",
-  "markAsTopProperty": "Mark as top property"
+  "markAsTopProperty": "Mark as top property",
+  "sending": "Sending...",
+  "successfulFormSubmit": "Form Submitted Successfully",
+  "contactFormError": "An error occured during form submission."
 }
