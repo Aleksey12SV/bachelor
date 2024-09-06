@@ -88,7 +88,7 @@ const Contacts = () => {
           <Button type="submit">{t("submit")}</Button>
         </form>
       </Form>
-      <span>{result}</span>
+      <span className="pt-4">{result}</span>
     </div>
   );
 };
