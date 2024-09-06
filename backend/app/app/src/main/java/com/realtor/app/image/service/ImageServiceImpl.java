@@ -76,20 +76,14 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Optional<Image> getMainImageByBuildingId(Long buildingId){
-        Optional<Image> foundImage = imageRepo.findByBuildingIdAndMainImageTrue(buildingId);
-        if(foundImage != null) return foundImage;
-        List<Image> allBuildingImages = imageRepo.getAllImagesByBuildingId(buildingId);
-        if(allBuildingImages.isEmpty()){
-            return null;
-        }
-        return Optional.ofNullable(imageRepo.getAllImagesByBuildingId(buildingId).get(0));
+        return imageRepo.findByBuildingIdAndMainImageTrue(buildingId)
+                .or(() -> imageRepo.getAllImagesByBuildingId(buildingId).stream().findFirst());
     }
 
     @Override
     public Optional<Image> getMainImageByPropertyId(Long propertyId){
-        Optional<Image> foundImage = imageRepo.findByRealEstateIdAndMainImageTrue(propertyId);
-        if(foundImage.isPresent()) return foundImage;
-        return Optional.ofNullable(imageRepo.getAllImagesByRealEstateId(propertyId).get(0));
+        return imageRepo.findByRealEstateIdAndMainImageTrue(propertyId)
+                .or(() -> imageRepo.getAllImagesByRealEstateId(propertyId).stream().findFirst());
     }
 
     @Override
