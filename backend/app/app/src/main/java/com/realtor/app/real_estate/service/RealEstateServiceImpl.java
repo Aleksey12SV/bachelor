@@ -17,7 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -28,6 +28,7 @@ public class RealEstateServiceImpl implements RealEstateService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
     @Autowired
     private RealEstateRepo realEstateRepo;
 
@@ -44,7 +45,6 @@ public class RealEstateServiceImpl implements RealEstateService {
         return realEstateRepo.findAll();
     }
 
-
     @Override
     public List<RealEstate> getAllPropertiesWithImages() {
         return realEstateRepo.findAllWithImages();
@@ -55,7 +55,6 @@ public class RealEstateServiceImpl implements RealEstateService {
         return realEstateRepo.findBySellerId(sellerId);
     }
 
-
     @Override
     public Page<RealEstate> getAllPaginatedRealEstates(Pageable pageable) {
         return realEstateRepo.findAll(pageable);
@@ -63,31 +62,20 @@ public class RealEstateServiceImpl implements RealEstateService {
 
     @Override
     public Page<RealEstate> getAllFilteredRealEstatesPaginated(RealEstateFilters filters) {
-        List<RealEstate> filteredRealEstates = new ArrayList<>();
-        if (filters.getBuildingId() != null) {
-            filteredRealEstates = realEstateRepo.findByBuildingId(filters.getBuildingId());
-        } else {
-            filteredRealEstates = (filters.getShowRealEstatesWithoutImages() == null || filters.getShowRealEstatesWithoutImages() == true ? getAllProperties() : getAllPropertiesWithImages()).stream().filter(estate -> filters.getLocation() == null || estate.getBuilding().getDistrict().getCity().getName().equalsIgnoreCase(filters.getLocation())).filter(estate -> filters.getDistricts() == null || filters.getDistricts().contains(estate.getBuilding().getDistrict().getName())).filter(estate -> filters.getHeating() == null || estate.getHeating().equalsIgnoreCase(filters.getHeating())).filter(estate -> filters.getStatus() == null || estate.getStatus().equalsIgnoreCase(filters.getStatus())).filter(estate -> filters.getConstruction() == null || estate.getBuilding().getConstruction().equalsIgnoreCase(filters.getConstruction())).filter(estate -> filters.getPriceFrom() == null || estate.getPrice() >= filters.getPriceFrom()).filter(estate -> filters.getPriceTo() == null || estate.getPrice() <= filters.getPriceTo()).filter(estate -> filters.getPriceFromSqM() == null || estate.getPrice() / estate.getSize() >= filters.getPriceFromSqM()).filter(estate -> filters.getPriceToSqM() == null || estate.getPrice() / estate.getSize() <= filters.getPriceTo()).filter(estate -> filters.getMinYear() == null || estate.getBuilding().getYear() >= filters.getMinYear()).filter(estate -> filters.getMaxYear() == null || estate.getBuilding().getYear() <= filters.getMaxYear()).filter(estate -> filters.getMinSize() == null || estate.getSize() >= filters.getMinSize()).filter(estate -> filters.getMaxSize() == null || estate.getSize() <= filters.getMaxSize()).filter(estate -> filters.getMinFloor() == null || estate.getFloor() >= filters.getMinFloor()).filter(estate -> filters.getMaxFloor() == null || estate.getFloor() <= filters.getMaxFloor()).filter(estate -> filters.getPropertyTypes() == null || filters.getPropertyTypes().contains(estate.getPropertyType().getName())).filter(estate -> filters.getSeller() == null || estate.getSellers().stream().anyMatch(seller -> filters.getSeller().equals(String.valueOf(seller.getId())))).collect(Collectors.toList());
-        }
+        List<RealEstate> filteredRealEstates = applyFilters(filters);
 
         if (filters.getSorting() != null) {
             filteredRealEstates = sortRealEstates(filteredRealEstates, filters.getSorting());
         }
 
-        int page = filters.getPage();
-        int size = filters.getSize();
-        int start = page * size;
-        int end = Math.min(start + size, filteredRealEstates.size());
-
-        List<RealEstate> paginatedList = filteredRealEstates.subList(start, end);
-        return new PageImpl<>(paginatedList, PageRequest.of(page, size), filteredRealEstates.size());
-
+        return paginateRealEstates(filteredRealEstates, filters.getPage(), filters.getSize());
     }
 
-    @Override
     @Transactional
+    @Override
     public RealEstate createRealEstate(RealEstateRequest realEstateRequest) {
         RealEstate newRealEstate = new RealEstate();
+        newRealEstate.setPublishDate(new Date());
         updateRealEstateFromRequest(newRealEstate, realEstateRequest);
         return realEstateRepo.save(newRealEstate);
     }
@@ -97,6 +85,7 @@ public class RealEstateServiceImpl implements RealEstateService {
     public void deleteRealEstate(Integer realEstateId) {
         RealEstate realEstate = realEstateRepo.findById(realEstateId)
                 .orElseThrow(() -> new EntityNotFoundException("Real estate not found"));
+
         realEstate.getSellers().clear();
         realEstateRepo.save(realEstate);
 
@@ -107,6 +96,39 @@ public class RealEstateServiceImpl implements RealEstateService {
     @Override
     public Optional<RealEstate> getRealEstateById(int id) {
         return realEstateRepo.findById(id);
+    }
+
+    @Override
+    public RealEstate updateRealEstate(int id, RealEstate realEstateDetails) {
+        RealEstate existingRealEstate = realEstateRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Real estate not found with id " + id));
+
+        updateRealEstate(existingRealEstate, realEstateDetails);
+        return realEstateRepo.save(existingRealEstate);
+    }
+
+    // Helper Methods
+    private List<RealEstate> applyFilters(RealEstateFilters filters) {
+        return (filters.getShowRealEstatesWithoutImages() == null || filters.getShowRealEstatesWithoutImages() == true ? getAllProperties() : getAllPropertiesWithImages()).stream()
+                .filter(estate -> filters.getBuildingId() == null || estate.getBuilding().getId() == filters.getBuildingId())
+                .filter(estate -> filters.getLocation() == null || estate.getBuilding().getDistrict().getCity().getName().equalsIgnoreCase(filters.getLocation()))
+                .filter(estate -> filters.getDistricts() == null || filters.getDistricts().contains(estate.getBuilding().getDistrict().getName()))
+                .filter(estate -> filters.getHeating() == null || estate.getHeating().equalsIgnoreCase(filters.getHeating()))
+                .filter(estate -> filters.getStatus() == null || estate.getStatus().equalsIgnoreCase(filters.getStatus()))
+                .filter(estate -> filters.getConstruction() == null || estate.getBuilding().getConstruction().equalsIgnoreCase(filters.getConstruction()))
+                .filter(estate -> filters.getPriceFrom() == null || estate.getPrice() >= filters.getPriceFrom())
+                .filter(estate -> filters.getPriceTo() == null || estate.getPrice() <= filters.getPriceTo())
+                .filter(estate -> filters.getPriceFromSqM() == null || estate.getPrice() / estate.getSize() >= filters.getPriceFromSqM())
+                .filter(estate -> filters.getPriceToSqM() == null || estate.getPrice() / estate.getSize() <= filters.getPriceToSqM())
+                .filter(estate -> filters.getMinYear() == null || estate.getBuilding().getYear() >= filters.getMinYear())
+                .filter(estate -> filters.getMaxYear() == null || estate.getBuilding().getYear() <= filters.getMaxYear())
+                .filter(estate -> filters.getMinSize() == null || estate.getSize() >= filters.getMinSize())
+                .filter(estate -> filters.getMaxSize() == null || estate.getSize() <= filters.getMaxSize())
+                .filter(estate -> filters.getMinFloor() == null || estate.getFloor() >= filters.getMinFloor())
+                .filter(estate -> filters.getMaxFloor() == null || estate.getFloor() <= filters.getMaxFloor())
+                .filter(estate -> filters.getPropertyTypes() == null || filters.getPropertyTypes().contains(estate.getPropertyType().getName()))
+                .filter(estate -> filters.getSeller() == null || estate.getSellers().stream().anyMatch(seller -> seller.getId() == Integer.parseInt(filters.getSeller())))
+                .collect(Collectors.toList());
     }
 
     private List<RealEstate> sortRealEstates(List<RealEstate> realEstates, String sorting) {
@@ -124,44 +146,48 @@ public class RealEstateServiceImpl implements RealEstateService {
         }
     }
 
-    private void updateRealEstateFromRequest(RealEstate realEstate, RealEstateRequest realEstateDTO) {
-        realEstate.setBuilding(realEstateDTO.getBuilding());
-        realEstate.setPropertyType(realEstateDTO.getPropertyType());
-        realEstate.setPrice(realEstateDTO.getPrice());
-        realEstate.setSize(realEstateDTO.getSize());
-        realEstate.setFloor(realEstateDTO.getFloor());
-        realEstate.setHeating(realEstateDTO.getHeating());
-        realEstate.setDescriptionBG(realEstateDTO.getDescriptionBG());
-        realEstate.setDescriptionEN(realEstateDTO.getDescriptionEN());
-        realEstate.setTopProperty(realEstateDTO.isTopProperty());
-        realEstate.setStatus(realEstateDTO.getStatus());
-        Set<Seller> mergedSellers = realEstateDTO.getSellers().stream().map(seller -> entityManager.merge(seller)).collect(Collectors.toSet());
+    private Page<RealEstate> paginateRealEstates(List<RealEstate> realEstates, int page, int size) {
+        int start = page * size;
+        int end = Math.min(start + size, realEstates.size());
+        List<RealEstate> paginatedList = realEstates.subList(start, end);
+        return new PageImpl<>(paginatedList, PageRequest.of(page, size), realEstates.size());
+    }
 
+    private void updateRealEstateFromRequest(RealEstate realEstate, RealEstateRequest request) {
+        realEstate.setBuilding(request.getBuilding());
+        realEstate.setPropertyType(request.getPropertyType());
+        realEstate.setPrice(request.getPrice());
+        realEstate.setSize(request.getSize());
+        realEstate.setFloor(request.getFloor());
+        realEstate.setHeating(request.getHeating());
+        realEstate.setDescriptionBG(request.getDescriptionBG());
+        realEstate.setDescriptionEN(request.getDescriptionEN());
+        realEstate.setTopProperty(request.isTopProperty());
+        realEstate.setStatus(request.getStatus());
+        realEstate.setTitleBG(request.getTitleBG());
+        realEstate.setTitleEN(request.getTitleEN());
+        realEstate.setRooms(request.getRooms());
+        Set<Seller> mergedSellers = request.getSellers().stream()
+                .map(entityManager::merge)
+                .collect(Collectors.toSet());
         realEstate.setSellers(mergedSellers);
     }
 
-    @Override
-    public RealEstate updateRealEstate(int id, RealEstate realEstateDetails) {
-        Optional<RealEstate> optionalRealEstate = realEstateRepo.findById(id);
-
-        if (optionalRealEstate.isPresent()) {
-            RealEstate existingRealEstate = optionalRealEstate.get();
-            existingRealEstate.setBuilding(realEstateDetails.getBuilding());
-            existingRealEstate.setPropertyType(realEstateDetails.getPropertyType());
-            existingRealEstate.setPrice(realEstateDetails.getPrice());
-            existingRealEstate.setSize(realEstateDetails.getSize());
-            existingRealEstate.setFloor(realEstateDetails.getFloor());
-            existingRealEstate.setHeating(realEstateDetails.getHeating());
-            existingRealEstate.setDescriptionBG(realEstateDetails.getDescriptionBG());
-            existingRealEstate.setDescriptionEN(realEstateDetails.getDescriptionEN());
-            existingRealEstate.setTopProperty(realEstateDetails.isTopProperty());
-            existingRealEstate.setPublishDate(realEstateDetails.getPublishDate());
-            existingRealEstate.setStatus(realEstateDetails.getStatus());
-            existingRealEstate.setSellers(realEstateDetails.getSellers());
-
-            return realEstateRepo.save(existingRealEstate);
-        } else {
-            throw new RuntimeException("Real estate not found with id " + id);
-        }
+    private void updateRealEstate(RealEstate existingRealEstate, RealEstate newDetails) {
+        existingRealEstate.setBuilding(newDetails.getBuilding());
+        existingRealEstate.setPropertyType(newDetails.getPropertyType());
+        existingRealEstate.setPrice(newDetails.getPrice());
+        existingRealEstate.setSize(newDetails.getSize());
+        existingRealEstate.setFloor(newDetails.getFloor());
+        existingRealEstate.setHeating(newDetails.getHeating());
+        existingRealEstate.setDescriptionBG(newDetails.getDescriptionBG());
+        existingRealEstate.setDescriptionEN(newDetails.getDescriptionEN());
+        existingRealEstate.setTopProperty(newDetails.isTopProperty());
+        existingRealEstate.setPublishDate(newDetails.getPublishDate());
+        existingRealEstate.setStatus(newDetails.getStatus());
+        existingRealEstate.setSellers(newDetails.getSellers());
+        existingRealEstate.setTitleBG(newDetails.getTitleBG());
+        existingRealEstate.setTitleEN(newDetails.getTitleEN());
+        existingRealEstate.setRooms(newDetails.getRooms());
     }
 }
