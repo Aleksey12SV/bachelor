@@ -19,9 +19,13 @@ import {
 } from "@/api/real-estates";
 import ControlButtons from "@/components/common/ControlButtons";
 import { realEstateQueryKeys } from "@/components/utils/queryFactory";
+import { useTranslation } from "react-i18next";
+import EmptyDocument from "../../assets/empty-document.svg?react";
+import Loader from "@/components/ui/loader/Loaders";
 
 const PropertyList = () => {
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const [selectedProperty, setSelectedProperty] = useState<RealEstate>();
   const [isAdding, setIsAdding] = useState(false);
@@ -54,6 +58,15 @@ const PropertyList = () => {
           : {}),
         page: pageParam,
         size: 5,
+      }).then((data) => {
+        if (
+          (selectedProperty?.id === realEstates[0]?.id &&
+            selectedProperty !== realEstates[0]) ||
+          !selectedProperty
+        ) {
+          setSelectedProperty(data.content?.[0]);
+        }
+        return data;
       }),
     getNextPageParam: (response) => {
       const nextPage = response.pageable.pageNumber + 1;
@@ -74,41 +87,25 @@ const PropertyList = () => {
   });
 
   const scrollableRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const handleScroll = () => {
-      if (scrollableRef.current) {
-        const { scrollTop, clientHeight, scrollHeight } = scrollableRef.current;
-        if (scrollTop + clientHeight >= scrollHeight - 20) {
-          fetchNextPage();
-        }
-      }
-    };
-
-    scrollableRef.current?.addEventListener("scroll", handleScroll);
-    return () => {
-      scrollableRef.current?.removeEventListener("scroll", handleScroll);
-    };
-  }, [fetchNextPage]);
   const realEstates = useMemo(
     () => data?.pages.flatMap((p) => p.content) ?? [],
     [data]
   );
-
-  useEffect(() => {
-    if (isAdding) return;
-    if (
-      !selectedProperty ||
-      (selectedProperty.id === realEstates[0]?.id &&
-        selectedProperty !== realEstates[0])
-    )
-      setSelectedProperty(realEstates[0]);
-  }, [isAdding, realEstates, selectedProperty]);
 
   return (
     <div className="w-full flex flex-row">
       {id === undefined && (
         <div
           ref={scrollableRef}
+          onScroll={() => {
+            if (scrollableRef.current) {
+              const { scrollTop, clientHeight, scrollHeight } =
+                scrollableRef.current;
+              if (scrollTop + clientHeight >= scrollHeight - 20) {
+                fetchNextPage();
+              }
+            }
+          }}
           className="flex flex-col overflow-auto p-2 pt-0 gap-2 scrollable w-[650px]"
         >
           {hasRole([Roles.ADMIN]) && (
@@ -143,9 +140,10 @@ const PropertyList = () => {
               />
             ))
           ) : (
-            <div>No properties matching the criteria were found.</div>
+            <div className="border rounded p-4 text-center mt-4">
+              {t("emptyResultProperties")}
+            </div>
           )}
-          {isFetching && <p>Loading...</p>}
         </div>
       )}
       {selectedProperty || realEstates.length ? (
@@ -168,8 +166,14 @@ const PropertyList = () => {
             />
           )}
         </div>
+      ) : isFetching ? (
+        <div className="flex w-full h-full items-center justify-center">
+          <Loader />
+        </div>
       ) : (
-        <div>test</div>
+        <div className="border rounded flex items-center justify-center flex-auto m-4">
+          <EmptyDocument className="w-72" />
+        </div>
       )}
     </div>
   );
