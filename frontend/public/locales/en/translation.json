@@ -205,5 +205,6 @@
   "markAsTopProperty": "Mark as top property",
   "sending": "Sending...",
   "successfulFormSubmit": "Form Submitted Successfully",
-  "contactFormError": "An error occured during form submission."
+  "contactFormError": "An error occured during form submission.",
+  "emptyResultProperties": "No properties matching the criteria were found."
 }
