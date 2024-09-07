@@ -44,11 +44,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: realtor-bg
+      LANG: C.UTF-8
     ports:
       - "3300:3306"
     volumes:
       - "./backend/app/app/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql"
       - "./backend/app/app/src/main/resources/data.sql:/docker-entrypoint-initdb.d/02-data.sql"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
 volumes:
   db_data:
