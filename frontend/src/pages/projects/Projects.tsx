@@ -25,7 +25,7 @@ const Projects = () => {
     paginatedBuildings,
   } = usePaginatedBuildings();
 
-  const deletePropertyMutation = useMutation({
+  const deleteBuildingMutation = useMutation({
     mutationFn: async () => {
       if (selectedBuilding?.id) {
         await deleteBuilding(selectedBuilding.id);
@@ -41,7 +41,7 @@ const Projects = () => {
     <div className="w-full flex flex-col p-4 gap-4">
       {hasRole([Roles.ADMIN]) && (
         <ControlButtons
-          onDelete={() => deletePropertyMutation.mutateAsync()}
+          onDelete={() => deleteBuildingMutation.mutateAsync()}
           isDisabled={!selectedBuilding}
           onAdd={() => {
             setIsEditing(false);
