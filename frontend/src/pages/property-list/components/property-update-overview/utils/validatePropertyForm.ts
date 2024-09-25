@@ -15,6 +15,7 @@ const validatePropertyForm = ({
     "titleEN",
     "building",
     "propertyType",
+    "sellers"
   ];
 
   fieldsToCheck.forEach((field) => {

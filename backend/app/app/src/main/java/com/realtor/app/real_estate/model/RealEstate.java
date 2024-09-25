@@ -26,7 +26,7 @@ public class RealEstate {
     @Column (name = "id")
     private int id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn
     private Building building;
 

@@ -20,7 +20,6 @@ public class DistrictController {
 
     @GetMapping("/{city_id}/district")
     public List<District> getDistrictsInCity(@PathVariable Integer city_id){
-        List<District> test = districtService.getDistrictsByCityId(city_id);
         return districtService.getDistrictsByCityId(city_id);
     }
 }

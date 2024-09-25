@@ -71,7 +71,7 @@ const PropertyOverview = ({
         ? selectedProperty.descriptionEN
         : selectedProperty.descriptionBG}
       <div className="font-medium pt-4">{t("sellers")}</div>
-      <div>
+      <div className="flex flex-col gap-2">
         {selectedProperty.sellers.map((seller) => (
           <div className="flex flex-row justify-between border p-2 rounded">
             <p>

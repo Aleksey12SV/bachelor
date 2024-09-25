@@ -56,7 +56,7 @@ public class BuildingServiceImpl implements BuildingService {
     @Override
     @Transactional
     public void deleteBuilding(Integer buildingId){
-        imageRepo.deleteByRealEstateId(buildingId);
+        imageRepo.deleteByBuildingId(buildingId);
         List<RealEstate> propertiesInBuilding = realEstateRepo.findByBuildingId(buildingId);
         propertiesInBuilding.forEach(property -> realEstateService.deleteRealEstate(property.getId()));
         buildingRepo.deleteById(buildingId);

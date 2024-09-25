@@ -4,6 +4,7 @@ import com.realtor.app.real_estate.model.RealEstate;
 import com.realtor.app.real_estate.model.RealEstateFilters;
 import com.realtor.app.real_estate.model.RealEstateRequest;
 import com.realtor.app.real_estate.service.RealEstateService;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,12 +55,14 @@ public class RealEstateController {
     }
 
     @PostMapping
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity<RealEstate> createRealEstate(@RequestBody RealEstateRequest realEstateRequest) {
         RealEstate createdRealEstate = realEstateService.createRealEstate(realEstateRequest);
         return ResponseEntity.ok(createdRealEstate);
     }
 
     @CrossOrigin(origins = "http://localhost:5173/")
+    @RolesAllowed({"ADMIN"})
     @PutMapping("/{id}")
     public ResponseEntity<RealEstate> updateRealEstate(@PathVariable int id, @RequestBody RealEstate realEstateDetails) {
         RealEstate updatedRealEstate = realEstateService.updateRealEstate(id, realEstateDetails);

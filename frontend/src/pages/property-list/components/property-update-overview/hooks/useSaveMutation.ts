@@ -1,6 +1,9 @@
 import { createImage } from "@/api/images";
 import { createRealEstate } from "@/api/real-estates";
-import { realEstateQueryKeys } from "@/components/utils/queryFactory";
+import {
+  imageQueryKeys,
+  realEstateQueryKeys,
+} from "@/components/utils/queryFactory";
 import { RealEstate } from "@/models/RealEstate";
 import { type Image } from "@/models/Image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -21,11 +24,15 @@ const useSaveMutation = (images: Image[]) => {
                 propertyId: data.id,
               })
             )
-        );
-        await queryClient.invalidateQueries({
-          queryKey: realEstateQueryKeys.allRealEstates,
+        ).then(async () => {
+          await queryClient.invalidateQueries({
+            queryKey: realEstateQueryKeys.allRealEstates,
+          });
+          await queryClient.invalidateQueries({
+            queryKey: imageQueryKeys.allRealEstateImages(data.id ?? 0),
+          });
+          navigate(`/property-list/${data.id}`);
         });
-        navigate(`/property-list/${data.id}`);
       });
     },
     onMutate: async () => {

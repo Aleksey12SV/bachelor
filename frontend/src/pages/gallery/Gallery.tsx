@@ -30,6 +30,7 @@ const Gallery = () => {
       if (nextPage >= response.totalPages) return;
       return response.pageable.pageNumber + 1;
     },
+    staleTime: 5 * 60 * 1000
   });
   const scrollableRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
