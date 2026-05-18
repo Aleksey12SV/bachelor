@@ -1,0 +1,35 @@
+app = "bachelor-keycloak"
+primary_region = "fra"
+
+[build]
+  # You can deploy with a local Dockerfile or specify an image during `flyctl deploy`.
+  # If you want to use the official image directly, deploy with:
+  # flyctl deploy --image quay.io/keycloak/keycloak:latest -a bachelor-keycloak
+
+[env]
+  # Do NOT put secrets here. Use `flyctl secrets set` for passwords and DB credentials.
+  # Example placeholders (set real values with flyctl secrets):
+  # KEYCLOAK_ADMIN = "admin"
+  # KC_DB = "postgres"
+  # KC_DB_URL_HOST = "<postgres-host>"
+  # KC_DB_URL_DATABASE = "<db>"
+  # KC_DB_USERNAME = "<user>"
+  # KC_DB_PASSWORD = "<password>"
+
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [services.http_checks]
+    path = "/health/ready"
+    interval = 10000
+    timeout = 2000
+    method = "get"
