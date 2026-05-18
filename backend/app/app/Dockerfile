@@ -1,14 +1,19 @@
-# Use an official Maven image to build the application
-FROM openjdk:19-jdk
+# Multi-stage Dockerfile: build with Maven, run with Temurin JRE
+FROM maven:3.9.4-eclipse-temurin-17 AS build
+WORKDIR /workspace
 
-# Set the working directory
+# Copy pom and source, then build the application (skip tests for speed)
+COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
+COPY src ./src
+RUN mvn -B -DskipTests package
+
+FROM eclipse-temurin:17-jre-jammy AS runtime
 WORKDIR /app
 
-# Copy the JAR file from the build stage
-COPY /target/*.jar app.jar
+# Copy the built jar from the build stage
+COPY --from=build /workspace/target/*.jar app.jar
 
-# Expose port 8080
 EXPOSE 8080
-
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
