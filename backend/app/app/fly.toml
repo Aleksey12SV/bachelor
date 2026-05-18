@@ -1,0 +1,27 @@
+app = "bachelor-backend"
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  # Do NOT put secrets here; use `flyctl secrets set` for DB credentials
+  SPRING_PROFILES_ACTIVE = "prod"
+
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [services.http_checks]
+    path = "/actuator/health"
+    interval = 10000
+    timeout = 2000
+    method = "get"
